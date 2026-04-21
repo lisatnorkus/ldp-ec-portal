@@ -163,16 +163,10 @@ export default async function DashboardPage() {
 
         {/* 1. Role-first Working Set — your seat's standing duties,
             the amplifier work that's always live, and the right-now
-            specifics. Cycle context is demoted below. */}
+            specifics. This is the operational center of the dashboard. */}
         <WorkingSet rightNow={rightNow} />
 
-        {/* 2. Cycle timeline — demoted to a thin reference strip. */}
-        <CycleTimeline />
-
-        {/* 3. The plans — full-arc reference material. */}
-        <PlanCards />
-
-        {/* 4. At-a-glance operational blocks. */}
+        {/* 2. At-a-glance operational blocks. */}
         <section className="mb-8 grid gap-4 lg:grid-cols-3">
           <Link
             href="/this-month"
@@ -377,7 +371,17 @@ export default async function DashboardPage() {
           </section>
         )}
 
-        {/* 6. Section nav at the bottom — still accessible, not dominant. */}
+        {/* 6. Cycle reference material — full-arc context after the
+            tactical blocks above. Doesn't need to lead. */}
+        <section className="mb-8">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            2026 – 2028 cycle reference
+          </h2>
+          <CycleTimeline />
+          <PlanCards />
+        </section>
+
+        {/* 7. Section nav at the bottom — still accessible, not dominant. */}
         <section className="mb-10">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             All sections

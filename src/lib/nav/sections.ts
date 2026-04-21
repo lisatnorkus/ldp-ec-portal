@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale, Clock, ArrowLeftRight } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -46,6 +46,13 @@ export const SECTION_NAV: SectionNavItem[] = [
     description: "Who's on the primary ballot — State House, State Senate, Metro Council. LDP endorsements flagged.",
   },
   {
+    slug: "early-voting",
+    label: "Early Voting",
+    href: "/early-voting",
+    icon: Clock,
+    description: "24 Jefferson County early voting locations for the May 19 primary. Countywide — any voter can use any site.",
+  },
+  {
     slug: "people",
     label: "People",
     href: "/people",
@@ -79,6 +86,13 @@ export const SECTION_NAV: SectionNavItem[] = [
     href: "/events",
     icon: Ticket,
     description: "Signature events + your $500 annual raise via ticket-sale links.",
+  },
+  {
+    slug: "transitions",
+    label: "Transitions",
+    href: "/transitions",
+    icon: ArrowLeftRight,
+    description: "Seats vacated since the June 2025 reorg + who filled them. CEC has 90 days to fill LD vacancies.",
   },
   {
     slug: "partners",
