@@ -1,4 +1,5 @@
-import { ExternalLink, Vote, Clock, Car, Share2 } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, Vote, Clock, Car, Share2, MapPin } from "lucide-react";
 
 // Primary-cycle callout. Switch the body copy post-May 19 2026 to
 // reflect General Election materials, or delete this component when
@@ -97,6 +98,13 @@ export function VoterGuideCallout({ url }: { url: string }) {
             <Share2 aria-hidden="true" className="size-4" />
             Share on X
           </a>
+          <Link
+            href="/early-voting"
+            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[var(--color-ldp-navy-900)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+          >
+            <MapPin aria-hidden="true" className="size-4" />
+            24 early voting locations →
+          </Link>
         </div>
       </div>
     </section>

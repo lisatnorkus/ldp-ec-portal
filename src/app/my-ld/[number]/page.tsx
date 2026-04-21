@@ -414,6 +414,14 @@ export default async function LdDetailPage({
             <MapPin className="size-4" /> Open LD{ld_number} on the Strategy Map
           </a>
         </Button>
+
+        <Link
+          href="/early-voting"
+          className="mt-4 inline-flex items-center gap-1.5 rounded border border-[var(--color-ldp-red)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[#FFF5F6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-red)] focus-visible:ring-offset-2"
+        >
+          <MapPin aria-hidden="true" className="size-4 text-[var(--color-ldp-red)]" />
+          24 early voting locations · May 14 – 16 →
+        </Link>
       </main>
     </div>
   );
