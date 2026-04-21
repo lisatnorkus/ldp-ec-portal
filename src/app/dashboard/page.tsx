@@ -7,6 +7,7 @@ import { CycleTimeline } from "@/components/cycle/CycleTimeline";
 import { PlanCards } from "@/components/cycle/PlanCards";
 import { WorkingSet } from "@/components/dashboard/WorkingSet";
 import { VoterGuideCallout } from "@/components/dashboard/VoterGuideCallout";
+import { fetchRightNowContext } from "@/lib/db/right-now";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
@@ -80,7 +81,11 @@ const MONTH_NAMES = [
 ];
 
 export default async function DashboardPage() {
-  const [data, members] = await Promise.all([fetchDashboardData(), fetchAllMembers()]);
+  const [data, members, rightNow] = await Promise.all([
+    fetchDashboardData(),
+    fetchAllMembers(),
+    fetchRightNowContext(),
+  ]);
   const { transitions, structural, monthCard, club120, nextEvent, voterGuideUrl } = data;
 
   const vacancies = transitions.filter((t) => t.status === "VACANT");
@@ -166,7 +171,7 @@ export default async function DashboardPage() {
         {/* 1. Role-first Working Set — your seat's standing duties,
             the amplifier work that's always live, and the right-now
             specifics. Cycle context is demoted below. */}
-        <WorkingSet />
+        <WorkingSet rightNow={rightNow} />
 
         {/* 2. Cycle timeline — demoted to a thin reference strip. */}
         <CycleTimeline />

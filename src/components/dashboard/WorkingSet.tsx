@@ -9,12 +9,35 @@ import {
   ExternalLink,
   ShieldCheck,
   Map as MapIcon,
+  Clock,
+  Star,
+  Users,
+  Vote,
 } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
 import type { RoleKey } from "@/content/highest-leverage-rules";
 import { ALWAYS_DUTIES } from "@/content/role-duties";
 import { SOCIAL_PLATFORMS } from "@/content/social-platforms";
 import { SocialIcon } from "@/components/social/SocialIcon";
+
+type LdSnapshotClient = {
+  ld_number: number;
+  precinct_count: number;
+  pc_count: number;
+  pc_precinct_count: number;
+  dark_precinct_count: number;
+  endorsed_candidate_count: number;
+};
+
+export type RightNowContextClient = {
+  days_to_primary: number | null;
+  primary_date_iso: string;
+  voter_guide_url: string | null;
+  next_event_name: string | null;
+  next_event_days_until: number | null;
+  next_event_tickets_url: string | null;
+  ld_snapshots: LdSnapshotClient[];
+};
 
 const SELECTABLE_ROLES: { key: RoleKey; label: string; needsLd: boolean }[] = [
   { key: "LD_CHAIR", label: "LD Chair", needsLd: true },
@@ -32,7 +55,7 @@ const SELECTABLE_ROLES: { key: RoleKey; label: string; needsLd: boolean }[] = [
 
 const LD_NUMBERS = [28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 46, 48];
 
-export function WorkingSet() {
+export function WorkingSet({ rightNow }: { rightNow?: RightNowContextClient }) {
   const { profile, setProfile, clearProfile, hydrated } = useUserProfile();
   const [editing, setEditing] = useState(false);
   const [roleDraft, setRoleDraft] = useState<RoleKey | "">(profile.role ?? "");
@@ -371,6 +394,217 @@ export function WorkingSet() {
           </div>
         </div>
       </div>
+
+      {rightNow && (
+        <RightNowPanel
+          rightNow={rightNow}
+          role={profile.role ?? null}
+          ldNumber={profile.ld_number ?? null}
+        />
+      )}
     </section>
+  );
+}
+
+function RightNowPanel({
+  rightNow,
+  role,
+  ldNumber,
+}: {
+  rightNow: RightNowContextClient;
+  role: RoleKey | null;
+  ldNumber: number | null;
+}) {
+  const ldSnap = ldNumber
+    ? rightNow.ld_snapshots.find((s) => s.ld_number === ldNumber) ?? null
+    : null;
+
+  const items: { id: string; icon: React.ReactNode; label: string; body: React.ReactNode; accent: string }[] = [];
+
+  // Days to primary — always show if primary is in the future.
+  if (rightNow.days_to_primary != null) {
+    const d = rightNow.days_to_primary;
+    const dateLabel = new Date(rightNow.primary_date_iso + "T00:00:00").toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+    items.push({
+      id: "primary",
+      icon: <Vote aria-hidden="true" className="size-4" />,
+      label: "Primary election",
+      body: (
+        <div>
+          <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            {d} day{d === 1 ? "" : "s"} out — {dateLabel}
+          </div>
+          <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
+            Share the voter guide. Plan poll rides (
+            <a href="tel:5025821999" className="text-[var(--color-ldp-navy-700)] hover:underline">
+              502-582-1999
+            </a>
+            ). Personal knocks move the needle for endorsed candidates.
+          </div>
+          {rightNow.voter_guide_url && (
+            <Link
+              href="/candidates"
+              className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-ldp-red)] hover:underline"
+            >
+              See the ballot →
+            </Link>
+          )}
+        </div>
+      ),
+      accent: "var(--color-ldp-red)",
+    });
+  }
+
+  // PC coverage for the user's LD — LD Chair / VC / PC roles.
+  if (ldSnap && (role === "LD_CHAIR" || role === "LD_VC" || role === "PRECINCT_CAPTAIN")) {
+    const totalSeats = ldSnap.precinct_count * 3;
+    items.push({
+      id: "pc-coverage",
+      icon: <Users aria-hidden="true" className="size-4" />,
+      label: `LD${ldSnap.ld_number} precinct captains`,
+      body: (
+        <div>
+          <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            {ldSnap.pc_count} of {totalSeats} seats filled · {ldSnap.dark_precinct_count} dark
+            precincts
+          </div>
+          <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
+            PC recruitment is a 90-day CEC obligation (KDP Art. III.B). Your LD page lists every
+            named PC with contact info where known.
+          </div>
+          <Link
+            href={`/my-ld/${ldSnap.ld_number}`}
+            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
+          >
+            Open LD{ldSnap.ld_number} →
+          </Link>
+        </div>
+      ),
+      accent: "var(--color-ldp-navy-800)",
+    });
+  }
+
+  // Endorsed candidates in the user's LD.
+  if (ldSnap && ldSnap.endorsed_candidate_count > 0) {
+    items.push({
+      id: "endorsed",
+      icon: <Star aria-hidden="true" className="size-4" />,
+      label: `LD${ldSnap.ld_number} endorsed candidates`,
+      body: (
+        <div>
+          <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            {ldSnap.endorsed_candidate_count} candidate
+            {ldSnap.endorsed_candidate_count === 1 ? "" : "s"} with an LDP endorsement
+          </div>
+          <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
+            Share their pages, donate personally, knock for them. Endorsements cleared a 60%
+            LDPEC vote — the party is on record.
+          </div>
+          <Link
+            href="/candidates"
+            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-ldp-gold)] hover:underline"
+          >
+            See who →
+          </Link>
+        </div>
+      ),
+      accent: "var(--color-ldp-gold)",
+    });
+  }
+
+  // Next signature event if close.
+  if (rightNow.next_event_days_until != null && rightNow.next_event_days_until <= 60) {
+    const d = rightNow.next_event_days_until;
+    items.push({
+      id: "event",
+      icon: <Clock aria-hidden="true" className="size-4" />,
+      label: "Next signature event",
+      body: (
+        <div>
+          <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            {rightNow.next_event_name} · {d} day{d === 1 ? "" : "s"} out
+          </div>
+          <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
+            {rightNow.next_event_tickets_url
+              ? "Your personal ticket-sale link is live — every ticket counts toward your $500 raise."
+              : "Ticket links open about 30 days out. Watch for yours from Comms."}
+          </div>
+          <Link
+            href="/events"
+            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
+          >
+            Open events →
+          </Link>
+        </div>
+      ),
+      accent: "var(--color-ldp-red)",
+    });
+  }
+
+  // Early voting window — within 30 days.
+  if (rightNow.days_to_primary != null && rightNow.days_to_primary <= 35) {
+    items.push({
+      id: "early-voting",
+      icon: <MapPin aria-hidden="true" className="size-4" />,
+      label: "Early voting",
+      body: (
+        <div>
+          <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            May 14 – 16, 8am – 6pm · 24 locations
+          </div>
+          <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
+            Any Jefferson County voter can use any location. Share the one nearest each voter.
+          </div>
+          <Link
+            href="/early-voting"
+            className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
+          >
+            Browse the 24 →
+          </Link>
+        </div>
+      ),
+      accent: "var(--color-ldp-navy-700)",
+    });
+  }
+
+  if (items.length === 0) return null;
+
+  return (
+    <div className="mt-4 rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
+      <div className="flex items-center gap-2">
+        <Clock aria-hidden="true" className="size-4 text-[var(--color-ldp-red)]" />
+        <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
+          Right now — {rightNow.days_to_primary != null ? `${rightNow.days_to_primary} days to primary` : "between cycles"}
+        </div>
+      </div>
+      <h3 className="mt-0.5 text-base font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+        What those duties look like this week
+      </h3>
+      <p className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
+        Cycle-aware prompts that apply the standing duties to what&apos;s time-sensitive. Pulled
+        from live data — precinct captains, endorsed candidates, event calendar, and the 2026
+        election timeline.
+      </p>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {items.map((it) => (
+          <div
+            key={it.id}
+            className="rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-3"
+            style={{ borderLeftWidth: 3, borderLeftColor: it.accent }}
+          >
+            <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+              <span style={{ color: it.accent }}>{it.icon}</span>
+              {it.label}
+            </div>
+            <div className="mt-1">{it.body}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
