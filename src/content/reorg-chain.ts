@@ -72,7 +72,7 @@ export const REORG_CHAIN: ReorgStep[] = [
       "Delegates elected by each LD Convention travel to the KDP State Convention. The state convention handles two separate tracks of business:",
       "DNC delegate selection — Kentucky's delegation to the Democratic National Convention is chosen.",
       "SCEC elections — the State Central Executive Committee is seated.",
-      "What LD Chairs and VCs do there: vote in both tracks. Being elected LD Chair or LD Vice Chair automatically puts you on SCEC — but you vote for SCEC officers and for DNC delegates at the state convention.",
+      "What LD Chairs and VCs do there: vote in both tracks — help select DNC delegates and help elect SCEC. Important: a seat on SCEC is NOT automatic for LD Chairs or VCs. If you want to sit on SCEC yourself, that's a separate election you declare for and run at the State Convention.",
     ],
   },
 ];

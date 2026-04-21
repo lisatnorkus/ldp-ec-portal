@@ -24,7 +24,7 @@ export default function AppleIcon() {
           <span>LDP</span>
           <span style={{ color: "#C8102E", marginLeft: 4 }}>EC</span>
         </div>
-        <div style={{ fontSize: 14, color: "#D4A017", letterSpacing: "0.15em", fontWeight: 600 }}>
+        <div style={{ fontSize: 14, color: "#60A5FA", letterSpacing: "0.15em", fontWeight: 600 }}>
           PORTAL
         </div>
       </div>

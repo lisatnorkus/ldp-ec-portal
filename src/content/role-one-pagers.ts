@@ -30,7 +30,7 @@ export const ROLE_ONE_PAGERS: RoleOnePager[] = [
       "Signs an NDA at the start of your term (LJCDP §2.2) — you have a fiduciary relationship with the EC",
     ],
     alsoNote:
-      "**Also: your SCEC seat.** Being elected LD Chair automatically puts you on the State Central Executive Committee — the statewide body that governs the KDP between state conventions. Everyone calls it SCEC. Meetings are quarterly in Frankfort, plus any called meetings to vote on something urgent. The vibe is more formal than CEC meetings. Your practice there is to show up, vote, and represent Jefferson County.",
+      "**SCEC is a separate election.** A seat on the State Central Executive Committee — the statewide body that governs the KDP between state conventions — does **not** come automatically with your LD Chair role. SCEC has its own election track at the State Convention, and you have to run for it. If you want that seat, plan to declare and campaign for it on top of your LD Chair responsibilities. SCEC meets quarterly in Frankfort, plus any called meetings.",
     startHere: [
       "Read the LJCDP bylaws and the KDP state bylaws. Your authority and your limits both live there.",
       "See Tour Step 3 for your LD — precinct list, who's active, who's dark.",
@@ -55,7 +55,7 @@ export const ROLE_ONE_PAGERS: RoleOnePager[] = [
       "Signs an NDA at the start of your term (LJCDP §2.2) — you have a fiduciary relationship with the EC",
     ],
     alsoNote:
-      "**Also: your SCEC seat.** Being elected LD Vice Chair automatically puts you on the State Central Executive Committee — same body as your LD Chair. Quarterly meetings in Frankfort, plus called meetings to vote. More formal than CEC meetings. Your vote there is independent of your Chair's.",
+      "**SCEC is a separate election.** A seat on the State Central Executive Committee — the statewide body that governs the KDP between state conventions — does **not** come automatically with your LD Vice Chair role. SCEC has its own election track at the State Convention, and you have to run for it. If you want that seat, declare and campaign for it on top of your LD VC responsibilities. SCEC meets quarterly in Frankfort, plus any called meetings.",
     startHere: [
       "Read the LJCDP bylaws and the KDP state bylaws. You're named in both.",
       "Talk to your LD Chair. Ask what they most want help on — or what they're not doing that you can pick up.",

@@ -228,7 +228,7 @@ function EventCard({ event, chair }: { event: Event; chair: Chair | null | undef
       </div>
 
       {withinWindow && (
-        <div className="mt-4 rounded-lg border border-[var(--color-ldp-gold)] bg-[#FFFDF5] p-3 text-sm">
+        <div className="mt-4 rounded-lg border border-[var(--color-ldp-gold)] bg-[#EFF6FF] p-3 text-sm">
           <strong className="text-[var(--color-ldp-navy-900)]">Ticket-link window open.</strong>{" "}
           Your personalized ticket link is live — every ticket sold through your link counts toward
           your $500 annual raise.

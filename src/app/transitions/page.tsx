@@ -233,7 +233,7 @@ function VacantCard({ t }: { t: Transition }) {
         </span>
       </div>
       {t.recommended_action && (
-        <div className="mt-3 rounded border border-dashed border-[var(--color-ldp-gold)] bg-[#FFFDF5] p-3 text-sm">
+        <div className="mt-3 rounded border border-dashed border-[var(--color-ldp-gold)] bg-[#EFF6FF] p-3 text-sm">
           <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
             Recommended action
           </span>

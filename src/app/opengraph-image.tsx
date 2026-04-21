@@ -49,7 +49,7 @@ export default function OgImage() {
             fontWeight: 900,
             letterSpacing: "-0.03em",
             lineHeight: 1,
-            color: "#D4A017",
+            color: "#60A5FA",
           }}
         >
           Portal
@@ -59,7 +59,7 @@ export default function OgImage() {
           style={{
             fontSize: 28,
             color: "rgba(255,255,255,0.8)",
-            borderLeft: "4px solid #D4A017",
+            borderLeft: "4px solid #60A5FA",
             paddingLeft: 20,
             maxWidth: 900,
           }}
