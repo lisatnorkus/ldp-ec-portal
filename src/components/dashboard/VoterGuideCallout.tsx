@@ -1,19 +1,83 @@
 import Link from "next/link";
 import { ExternalLink, Vote, Clock, Car, Share2, MapPin } from "lucide-react";
 
-// Primary-cycle callout. Switch the body copy post-May 19 2026 to
-// reflect General Election materials, or delete this component when
-// the general guide lands and build a new one.
+// Phase-aware voter-guide callout. Renders primary-mode copy before
+// May 19 2026 and general-mode copy after, reading the right URL
+// from Supabase settings. Hides itself cleanly if no URL exists for
+// the current phase (e.g., between primary and when Comms publishes
+// the general-election URL).
 
-const PRIMARY_DATE_LABEL = "Tuesday, May 19, 2026";
-const EARLY_VOTING_LABEL = "May 14 – 16 (Thu – Sat), 8am – 6pm";
-const EXCUSED_ABSENTEE_LABEL = "May 6 – 8 and May 11 – 13";
-const RIDE_PHONE = "(502) 582-1999";
+type Phase = "PRIMARY" | "GENERAL" | "OFF_CYCLE";
 
-export function VoterGuideCallout({ url }: { url: string }) {
-  const shareText = encodeURIComponent(
-    "The 2026 Louisville Democratic Party Voter Guide is live — ballot tool, endorsements, polling locations, and free rides to the polls. Share with every Democrat you know."
-  );
+type PhaseCopy = {
+  badge: string;
+  headline: string;
+  body: string;
+  electionDateLabel: string;
+  earlyVotingLabel: string;
+  excusedAbsenteeLabel: string;
+  ridePhone: string;
+};
+
+const PHASE_COPY: Record<Exclude<Phase, "OFF_CYCLE">, PhaseCopy> = {
+  PRIMARY: {
+    badge: "Live now · Primary is May 19",
+    headline: "The 2026 Louisville Democratic Voter Guide is live.",
+    body: "Personalized ballot tool, LDP endorsements, polling-location finder, early-voting times, mail-in ballot request, voter-registration links, and free rides to the polls. Every Democrat in Jefferson County needs to see this — share it.",
+    electionDateLabel: "Tuesday, May 19, 2026",
+    earlyVotingLabel: "May 14 – 16 (Thu – Sat), 8am – 6pm",
+    excusedAbsenteeLabel: "May 6 – 8 and May 11 – 13",
+    ridePhone: "(502) 582-1999",
+  },
+  GENERAL: {
+    badge: "Live now · General is November 3",
+    headline: "The 2026 General Election Voter Guide is live.",
+    body: "Who's on the ballot, LDP endorsements, polling-location finder, early-voting window, mail-in ballot request, and rides to the polls. The general election is where we close — share the guide with every Democrat you know.",
+    electionDateLabel: "Tuesday, November 3, 2026",
+    earlyVotingLabel: "October 29 – 31 (Thu – Sat), 8am – 6pm",
+    excusedAbsenteeLabel: "Check Jefferson County Clerk for dates",
+    ridePhone: "(502) 582-1999",
+  },
+};
+
+export type VoterGuideProps = {
+  primaryUrl: string | null;
+  generalUrl: string | null;
+  mode?: "AUTO" | "PRIMARY_ONLY" | "FORCE_HIDE" | string | null;
+};
+
+function determinePhase(now: Date = new Date()): Phase {
+  const primaryEnd = new Date("2026-05-19T23:59:59");
+  const generalEnd = new Date("2026-11-03T23:59:59");
+  if (now <= primaryEnd) return "PRIMARY";
+  if (now <= generalEnd) return "GENERAL";
+  return "OFF_CYCLE";
+}
+
+export function VoterGuideCallout({ primaryUrl, generalUrl, mode }: VoterGuideProps) {
+  if (mode === "FORCE_HIDE") return null;
+  const phase = determinePhase();
+
+  let url: string | null = null;
+  let copyKey: "PRIMARY" | "GENERAL" | null = null;
+  if (phase === "PRIMARY" && primaryUrl) {
+    url = primaryUrl;
+    copyKey = "PRIMARY";
+  } else if (phase === "GENERAL") {
+    if (mode === "PRIMARY_ONLY") return null;
+    if (generalUrl) {
+      url = generalUrl;
+      copyKey = "GENERAL";
+    }
+  }
+  if (!url || !copyKey) return null;
+
+  const copy = PHASE_COPY[copyKey];
+  return <VoterGuideBody url={url} copy={copy} />;
+}
+
+function VoterGuideBody({ url, copy }: { url: string; copy: PhaseCopy }) {
+  const shareText = encodeURIComponent(copy.body);
   const encodedUrl = encodeURIComponent(url);
   const fbShare = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
   const twShare = `https://twitter.com/intent/tweet?text=${shareText}&url=${encodedUrl}`;
@@ -23,7 +87,7 @@ export function VoterGuideCallout({ url }: { url: string }) {
       <div className="flex items-center gap-2 bg-[var(--color-ldp-red)] px-5 py-2">
         <span className="flex size-2 animate-pulse rounded-full bg-white" />
         <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">
-          Live now · Primary is {PRIMARY_DATE_LABEL.split(", ")[1]}
+          {copy.badge}
         </div>
       </div>
 
@@ -33,39 +97,34 @@ export function VoterGuideCallout({ url }: { url: string }) {
             <div className="flex items-center gap-2">
               <Vote aria-hidden="true" className="size-5 text-[var(--color-ldp-navy-800)]" />
               <h2 className="text-lg font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-                The 2026 Louisville Democratic Voter Guide is live.
+                {copy.headline}
               </h2>
             </div>
-            <p className="mt-2 text-sm text-[var(--color-ldp-ink-900)]">
-              Personalized ballot tool, LDP endorsements, polling-location finder, early-voting
-              times, mail-in ballot request, voter-registration links, and free rides to the polls.
-              Every Democrat in Jefferson County needs to see this — <strong>share it.</strong>
-            </p>
+            <p className="mt-2 text-sm text-[var(--color-ldp-ink-900)]">{copy.body}</p>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-3">
               <CalloutFact
                 icon={<Vote aria-hidden="true" className="size-4" />}
-                label="Primary Election Day"
-                value={PRIMARY_DATE_LABEL}
+                label="Election Day"
+                value={copy.electionDateLabel}
                 sub="6am – 6pm"
               />
               <CalloutFact
                 icon={<Clock aria-hidden="true" className="size-4" />}
                 label="Early voting"
-                value={EARLY_VOTING_LABEL}
+                value={copy.earlyVotingLabel}
                 sub="24 locations"
               />
               <CalloutFact
                 icon={<Car aria-hidden="true" className="size-4" />}
                 label="Need a ride?"
-                value={RIDE_PHONE}
+                value={copy.ridePhone}
                 sub="LDP transportation line"
               />
             </div>
 
             <div className="mt-2 text-[11px] text-[var(--color-ldp-ink-700)]">
-              Excused absentee voting: {EXCUSED_ABSENTEE_LABEL}. Mail-in ballot requests opened
-              April 4.
+              Excused absentee voting: {copy.excusedAbsenteeLabel}.
             </div>
           </div>
         </div>

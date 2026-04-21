@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -58,6 +58,20 @@ export const SECTION_NAV: SectionNavItem[] = [
     href: "/committees",
     icon: Building2,
     description: "All 11 committees: responsibilities, workflow, members, Drive folders.",
+  },
+  {
+    slug: "endorsement",
+    label: "Endorsement Process",
+    href: "/endorsement",
+    icon: Scale,
+    description: "How the LDP endorses — 60% threshold, secret ballot, Jan-Feb timeline per cycle.",
+  },
+  {
+    slug: "comms",
+    label: "Communications",
+    href: "/comms",
+    icon: Megaphone,
+    description: "How the party gets heard — social, email, ads, printed, photography. Beth's scope.",
   },
   {
     slug: "events",
