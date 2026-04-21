@@ -16,7 +16,10 @@ export function TourShell({ step, children }: { step: TourStep; children: React.
             </div>
             <div className="text-sm font-semibold">Welcome tour</div>
           </div>
-          <Link href="/dashboard" className="text-xs font-medium text-white/70 hover:text-white">
+          <Link
+            href="/dashboard"
+            className="rounded text-xs font-medium text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ldp-navy-900)]"
+          >
             Skip to dashboard →
           </Link>
         </div>
@@ -36,11 +39,11 @@ export function TourShell({ step, children }: { step: TourStep; children: React.
           {children}
         </div>
 
-        <div className="mt-12 flex items-center justify-between border-t border-white/10 pt-6">
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
           {prev ? (
             <Link
               href={`/tour/${prev.num}`}
-              className="text-sm font-medium text-white/60 hover:text-white"
+              className="rounded text-sm font-medium text-white/60 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ldp-navy-900)]"
             >
               ← Step {prev.num}: {prev.title}
             </Link>
@@ -65,7 +68,10 @@ export function TourShell({ step, children }: { step: TourStep; children: React.
 function ProgressBar({ currentStep }: { currentStep: number }) {
   return (
     <div className="mx-auto max-w-5xl px-6 pb-4">
-      <ol className="flex gap-1.5">
+      <ol
+        className="flex gap-1.5"
+        aria-label={`Tour progress: step ${currentStep} of ${TOUR_STEPS.length}`}
+      >
         {TOUR_STEPS.map((s) => (
           <li
             key={s.num}
@@ -78,7 +84,12 @@ function ProgressBar({ currentStep }: { currentStep: number }) {
                   ? "bg-[var(--color-ldp-gold)]"
                   : "bg-white/15",
             ].join(" ")}
-          />
+          >
+            <span className="sr-only">
+              Step {s.num}
+              {s.num < currentStep ? " (complete)" : s.num === currentStep ? " (current)" : ""}: {s.title}
+            </span>
+          </li>
         ))}
       </ol>
     </div>

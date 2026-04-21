@@ -42,9 +42,9 @@ export default async function TransitionsPage() {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
+            className="inline-flex items-center gap-1.5 rounded text-sm text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
           >
-            <ArrowLeft className="size-4" /> Dashboard
+            <ArrowLeft aria-hidden="true" className="size-4" /> Dashboard
           </Link>
           <Button asChild variant="ldp" size="sm">
             <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
@@ -71,7 +71,7 @@ export default async function TransitionsPage() {
 
         <div className="mb-8 rounded-xl border border-[var(--color-ldp-navy-800)] bg-white p-5">
           <div className="flex items-start gap-3">
-            <Scale className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-navy-800)]" />
+            <Scale aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-navy-800)]" />
             <div className="flex-1">
               <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
                 Different process: state House / Senate vacancies
@@ -85,7 +85,7 @@ export default async function TransitionsPage() {
               </p>
               <Link
                 href="/vacancies/legislative"
-                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
+                className="mt-3 inline-flex items-center gap-1.5 rounded text-sm font-semibold text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
               >
                 Read the process →
               </Link>

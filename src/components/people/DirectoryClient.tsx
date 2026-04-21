@@ -56,18 +56,33 @@ export function DirectoryClient({ members, committees }: Props) {
   return (
     <>
       <div className="relative mb-6">
-        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--color-ldp-ink-700)]" />
+        <label htmlFor="directory-search" className="sr-only">
+          Search the directory
+        </label>
+        <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--color-ldp-ink-700)]" />
         <input
+          id="directory-search"
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search by name, role, LD, committee, email, or phone…"
-          className="w-full rounded-lg border border-[var(--color-ldp-line)] bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-1 focus:ring-[var(--color-ldp-navy-700)]"
+          aria-describedby="directory-search-count"
+          className="w-full rounded-lg border border-[var(--color-ldp-line)] bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ldp-navy-700)]"
           autoComplete="off"
         />
+        <div id="directory-search-count" aria-live="polite" className="sr-only">
+          {query ? `${filtered.length} result${filtered.length === 1 ? "" : "s"}` : ""}
+        </div>
         {query && (
           <div className="mt-2 text-xs text-[var(--color-ldp-ink-700)]">
-            {filtered.length} match{filtered.length === 1 ? "" : "es"} · <button onClick={() => setQuery("")} className="text-[var(--color-ldp-navy-700)] hover:underline">clear</button>
+            {filtered.length} match{filtered.length === 1 ? "" : "es"} ·{" "}
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              className="rounded text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+            >
+              clear
+            </button>
           </div>
         )}
       </div>
@@ -279,7 +294,12 @@ function RoleGroup({
 
 function AttendanceCell({ m }: { m: EcMember }) {
   const pct = attendancePct(m);
-  if (pct == null) return <span className="text-[var(--color-ldp-ink-700)]">—</span>;
+  if (pct == null)
+    return (
+      <span aria-label="Attendance not available" className="text-[var(--color-ldp-ink-700)]">
+        —
+      </span>
+    );
   const color =
     pct >= 90
       ? "text-emerald-700"
@@ -289,7 +309,10 @@ function AttendanceCell({ m }: { m: EcMember }) {
           ? "text-amber-700"
           : "text-[var(--color-ldp-red)]";
   return (
-    <div className="shrink-0 text-right">
+    <div
+      className="shrink-0 text-right"
+      aria-label={`Attendance ${pct} percent: ${attendanceLabel(m)}`}
+    >
       <div className={`font-semibold ${color}`}>{pct}%</div>
       <div className="text-[10px] text-[var(--color-ldp-ink-700)]">{attendanceLabel(m)}</div>
     </div>

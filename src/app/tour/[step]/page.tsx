@@ -67,12 +67,29 @@ function Step1() {
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
         <h2 className="text-lg font-bold text-white">Where this party sits</h2>
         <p className="mt-2 text-sm leading-relaxed text-white/85">
-          The Democratic National Committee sets national strategy and funds key priorities. The
-          Kentucky Democratic Party runs statewide elections and provides the playbooks, tools, and
-          legal infrastructure counties operate within. The Louisville Democratic Party is the
-          county-level Executive Committee — we&apos;re the ones who actually organize the 629
-          precincts in Jefferson County, recruit and endorse local candidates, and deliver turnout in
-          the only place where Kentucky Democrats consistently win.
+          The{" "}
+          <a
+            href="https://democrats.org/playbook/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            Democratic National Committee
+          </a>{" "}
+          sets national strategy and funds key priorities. The{" "}
+          <a
+            href="https://www.kydemocrats.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            Kentucky Democratic Party
+          </a>{" "}
+          runs statewide elections and provides the playbooks, tools, and legal infrastructure
+          counties operate within. The Louisville Democratic Party is the county-level Executive
+          Committee — we&apos;re the ones who actually organize the 629 precincts in Jefferson
+          County, recruit and endorse local candidates, and deliver turnout in the only place where
+          Kentucky Democrats consistently win.
         </p>
       </section>
 
@@ -121,13 +138,31 @@ function Step1() {
         <h2 className="text-lg font-bold text-white">What this portal is (and isn&apos;t)</h2>
         <p className="mt-2 text-sm leading-relaxed text-white/85">
           <strong className="text-white">Is:</strong> the internal playbook for LDPEC members. A
-          companion to Google Drive (where working docs live) and louisvilledems.com (where the party
-          talks to voters). Source of truth for roster, monthly work, and what&apos;s live this cycle.
+          companion to Google Drive (where working docs live) and{" "}
+          <a
+            href="https://www.louisvilledems.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            louisvilledems.com
+          </a>{" "}
+          (where the party talks to voters). Source of truth for roster, monthly work, and
+          what&apos;s live this cycle.
         </p>
         <p className="mt-3 text-sm leading-relaxed text-white/85">
           <strong className="text-white">Isn&apos;t:</strong> the public-facing website.
-          That&apos;s louisvilledems.com — different audience, different management, owned by the
-          Communications Committee. If you need something published to voters, route through Comms.
+          That&apos;s{" "}
+          <a
+            href="https://www.louisvilledems.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            louisvilledems.com
+          </a>{" "}
+          — different audience, different management, owned by the Communications Committee. If you
+          need something published to voters, route through Comms.
         </p>
       </section>
     </>
@@ -170,13 +205,13 @@ function Step2({ roleParam }: { roleParam?: string }) {
 function RoleOnePagerView({ r }: { r: RoleOnePager }) {
   return (
     <article>
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h2 className="text-2xl font-bold text-white">{r.title}</h2>
         <Link
           href="/tour/2"
-          className="text-xs text-white/60 hover:text-white"
+          className="rounded text-xs text-white/60 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ldp-navy-900)]"
         >
-          · change role
+          change role
         </Link>
       </div>
 

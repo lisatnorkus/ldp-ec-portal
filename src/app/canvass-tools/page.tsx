@@ -179,17 +179,41 @@ export default async function CanvassToolsPage() {
               <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
                 {data.volunteerCard.body_md}
               </p>
-              {data.settings.get("volunteer_signup_url") && (
-                <Button asChild variant="ldpGold" size="sm" className="mt-4">
+              <div className="mt-4 flex flex-wrap gap-2">
+                {data.settings.get("volunteer_signup_url") && (
+                  <Button asChild variant="ldpGold" size="sm">
+                    <a
+                      href={data.settings.get("volunteer_signup_url")}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Public volunteer sign-up form <ExternalLink className="ml-1 size-3.5" />
+                    </a>
+                  </Button>
+                )}
+                <Button asChild variant="outline" size="sm">
                   <a
-                    href={data.settings.get("volunteer_signup_url")}
+                    href="https://www.mobilize.us/louisvilledemocrats/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Public volunteer sign-up form <ExternalLink className="ml-1 size-3.5" />
+                    LDP on Mobilize <ExternalLink className="ml-1 size-3.5" />
                   </a>
                 </Button>
-              )}
+                <Button asChild variant="outline" size="sm">
+                  <a
+                    href="https://www.facebook.com/groups/LouisvilleDemsVolunteers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Volunteers Facebook group <ExternalLink className="ml-1 size-3.5" />
+                  </a>
+                </Button>
+              </div>
+              <p className="mt-3 text-xs text-[var(--color-ldp-ink-700)]">
+                Mobilize is where every public LDP volunteer event lives. The Facebook group is the
+                primary intake community for new volunteers.
+              </p>
             </div>
           </section>
         )}
@@ -219,6 +243,16 @@ export default async function CanvassToolsPage() {
               title="Training Committee Drive"
               howto="All training materials; Cassie Blausey (Chair) adds to this folder."
               href="https://drive.google.com/drive/folders/1o60CbottUKlNJL0qTOyPpxTApXOqK9ss"
+            />
+            <GuideCard
+              title="Quarterly LD Chair Report template"
+              howto="Template every LD files quarterly — meetings held, contacts made, asks."
+              href="https://docs.google.com/document/d/1pKAYHlayn90PAZHZtvsKA2YgP_l0NtpC/edit"
+            />
+            <GuideCard
+              title="2026 LDP Election Year Plan"
+              howto="The year-by-year strategy tying DNC + KDP priorities to LDP execution."
+              href="https://drive.google.com/drive/folders/1wNc9Ea5K-xIvuWPftgSQiqMqYiB5gscx"
             />
           </div>
         </section>

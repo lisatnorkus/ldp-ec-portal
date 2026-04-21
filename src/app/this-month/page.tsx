@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, Calendar, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
@@ -25,6 +25,16 @@ async function fetchMonthCards(): Promise<MonthCard[]> {
   return data as MonthCard[];
 }
 
+async function fetchCalendarUrl(): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("key", "public_calendar_url")
+    .maybeSingle();
+  return (data?.value as string | undefined) ?? null;
+}
+
 const MONTH_NAMES = [
   "",
   "January",
@@ -46,7 +56,7 @@ export default async function ThisMonthPage() {
   const currentMonth = now.getMonth() + 1;
   const currentYear = now.getFullYear();
 
-  const cards = await fetchMonthCards();
+  const [cards, calendarUrl] = await Promise.all([fetchMonthCards(), fetchCalendarUrl()]);
   const current = cards.find((c) => c.month === currentMonth && c.year === currentYear);
   const next = cards.find(
     (c) =>
@@ -81,6 +91,16 @@ export default async function ThisMonthPage() {
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
             What&apos;s live right now
           </h1>
+          {calendarUrl && (
+            <a
+              href={calendarUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 rounded text-sm font-medium text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+            >
+              Open the public party calendar <ExternalLink aria-hidden="true" className="size-3.5" />
+            </a>
+          )}
         </div>
 
         {current ? (

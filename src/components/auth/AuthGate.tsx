@@ -28,7 +28,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!hydrated) {
     return (
-      <div className="min-h-screen bg-[var(--color-ldp-navy-900)]" aria-hidden="true" />
+      <div
+        className="min-h-screen bg-[var(--color-ldp-navy-900)]"
+        role="status"
+        aria-live="polite"
+      >
+        <span className="sr-only">Loading portal…</span>
+      </div>
     );
   }
 
@@ -63,12 +69,18 @@ export function AuthGate({ children }: { children: ReactNode }) {
               onChange={(e) => setInput(e.target.value)}
               autoFocus
               autoComplete="off"
-              className="mt-1 block w-full rounded-md border border-[var(--color-ldp-line)] px-3 py-2 text-sm shadow-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-1 focus:ring-[var(--color-ldp-navy-700)]"
+              aria-invalid={error != null}
+              aria-describedby={error ? "passphrase-error" : undefined}
+              className="mt-1 block w-full rounded-md border border-[var(--color-ldp-line)] px-3 py-2 text-sm shadow-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ldp-navy-700)]"
               placeholder="Enter passphrase"
             />
           </div>
           {error && (
-            <p className="text-sm text-[var(--color-ldp-red)]" role="alert">
+            <p
+              id="passphrase-error"
+              className="text-sm text-[var(--color-ldp-red)]"
+              role="alert"
+            >
               {error}
             </p>
           )}

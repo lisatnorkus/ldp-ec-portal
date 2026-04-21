@@ -71,12 +71,13 @@ export function PersonalizedHero() {
           post-testing.
         </p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          <label className="flex flex-col gap-1">
+          <label htmlFor="hero-role" className="flex flex-col gap-1">
             <span className="text-xs font-semibold text-[var(--color-ldp-ink-700)]">Your role</span>
             <select
+              id="hero-role"
               value={roleDraft}
               onChange={(e) => setRoleDraft(e.target.value as RoleKey | "")}
-              className="rounded border border-[var(--color-ldp-line)] bg-white px-3 py-2 text-sm"
+              className="rounded border border-[var(--color-ldp-line)] bg-white px-3 py-2 text-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ldp-navy-700)]"
             >
               <option value="">— pick one —</option>
               {SELECTABLE_ROLES.map((r) => (
@@ -87,12 +88,13 @@ export function PersonalizedHero() {
             </select>
           </label>
           {draftNeedsLd && (
-            <label className="flex flex-col gap-1">
+            <label htmlFor="hero-ld" className="flex flex-col gap-1">
               <span className="text-xs font-semibold text-[var(--color-ldp-ink-700)]">Your LD</span>
               <select
+                id="hero-ld"
                 value={ldDraft}
                 onChange={(e) => setLdDraft(e.target.value)}
-                className="rounded border border-[var(--color-ldp-line)] bg-white px-3 py-2 text-sm"
+                className="rounded border border-[var(--color-ldp-line)] bg-white px-3 py-2 text-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ldp-navy-700)]"
               >
                 <option value="">— pick one —</option>
                 {LD_NUMBERS.map((n) => (
@@ -106,20 +108,22 @@ export function PersonalizedHero() {
         </div>
         <div className="mt-4 flex gap-2">
           <button
+            type="button"
             onClick={save}
             disabled={!roleDraft || (draftNeedsLd && !ldDraft)}
-            className="rounded-md bg-[var(--color-ldp-navy-800)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-ldp-navy-900)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md bg-[var(--color-ldp-navy-800)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-ldp-navy-900)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Save
           </button>
           {hasProfile && (
             <button
+              type="button"
               onClick={() => {
                 setEditing(false);
                 setRoleDraft(profile.role ?? "");
                 setLdDraft(profile.ld_number != null ? String(profile.ld_number) : "");
               }}
-              className="rounded-md border border-[var(--color-ldp-line)] bg-white px-4 py-2 text-sm text-[var(--color-ldp-ink-900)] hover:border-[var(--color-ldp-navy-700)]"
+              className="rounded-md border border-[var(--color-ldp-line)] bg-white px-4 py-2 text-sm text-[var(--color-ldp-ink-900)] hover:border-[var(--color-ldp-navy-700)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
             >
               Cancel
             </button>
@@ -149,10 +153,20 @@ export function PersonalizedHero() {
           </div>
         </div>
         <div className="flex gap-3 text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-          <button onClick={() => setEditing(true)} className="hover:underline">
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            aria-label="Edit your role and district"
+            className="rounded hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+          >
             Edit
           </button>
-          <button onClick={clearProfile} className="hover:underline">
+          <button
+            type="button"
+            onClick={clearProfile}
+            aria-label="Clear your saved role and district"
+            className="rounded hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+          >
             Clear
           </button>
         </div>
@@ -162,7 +176,7 @@ export function PersonalizedHero() {
         {/* Priority 1: What your role requires */}
         <Link
           href={`/tour/2?role=${roleSlug}`}
-          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
         >
           <Users className="size-4 text-[var(--color-ldp-navy-800)]" />
           <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -180,7 +194,7 @@ export function PersonalizedHero() {
         {ldLink ? (
           <Link
             href={ldLink}
-            className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+            className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
           >
             <MapPin className="size-4 text-[var(--color-ldp-navy-800)]" />
             <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -196,7 +210,7 @@ export function PersonalizedHero() {
         ) : (
           <Link
             href="/canvass-tools"
-            className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+            className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
           >
             <MapPin className="size-4 text-[var(--color-ldp-navy-800)]" />
             <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -214,7 +228,7 @@ export function PersonalizedHero() {
         {/* Priority 3: What's happening this month */}
         <Link
           href="/this-month"
-          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
         >
           <Calendar className="size-4 text-[var(--color-ldp-navy-800)]" />
           <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -231,7 +245,7 @@ export function PersonalizedHero() {
         {/* Priority 4: How meetings work */}
         <Link
           href="/tour/4"
-          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
         >
           <Vote className="size-4 text-[var(--color-ldp-navy-800)]" />
           <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
