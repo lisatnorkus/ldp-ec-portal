@@ -99,11 +99,21 @@ const {
 
 // ─── Normalize + build people roster ─────────────────────────────────────
 
+// Countywide officers extracted from the #officers HTML section (lines ~2260–2307).
+// Maps name → { officer_role, phone }.
+const OFFICERS = {
+  "Logan Gatti":        { officer_role: "CHAIR", phone: "(502) 931-6721" },
+  "Roz Welch":          { officer_role: "VICE_CHAIR", phone: "(502) 295-5435" },
+  "Brook Benningfield": { officer_role: "SECRETARY", phone: null },
+  "Linda Jones":        { officer_role: "TREASURER", phone: "(502) 262-3728" },
+};
+
 // Unique people set. Sources:
 //   - LDS: {ld, chair, vc, ...}
 //   - AT_LARGE: [name, ld] tuples
 //   - COMMITTEES: {chair, members[]}
 //   - EMAILS/PHONES/ATTENDANCE: referenced by name
+//   - OFFICERS constant above
 // One row per unique person name.
 
 const people = new Map(); // name → {first, last, roles[], ld_number, phone, email, attendance}
@@ -124,7 +134,6 @@ const NAME_BLOCKLIST = new Set([
 function upsertPerson(name) {
   if (!name || typeof name !== "string") return null;
   if (NAME_BLOCKLIST.has(name)) return null;
-  // Skip any string that starts with "Members:" or looks like a label, not a name
   if (/^Members[:\s]/i.test(name)) return null;
   const canonical = NAME_ALIASES[name] ?? name;
   if (people.has(canonical)) return people.get(canonical);
@@ -145,6 +154,12 @@ function upsertPerson(name) {
     officer_role: null,
     attendance: null,
   };
+  // Apply officer overlay if this is one of the four countywide officers.
+  const officer = OFFICERS[trimmed];
+  if (officer) {
+    p.officer_role = officer.officer_role;
+    if (officer.phone) p.phone = officer.phone;
+  }
   people.set(trimmed, p);
   return p;
 }
