@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -37,6 +37,13 @@ export const SECTION_NAV: SectionNavItem[] = [
     href: "/canvass-tools",
     icon: Vote,
     description: "VoteBuilder, priority districts, volunteer pipeline, guides.",
+  },
+  {
+    slug: "candidates",
+    label: "2026 Candidates",
+    href: "/candidates",
+    icon: ClipboardList,
+    description: "Who's on the primary ballot — State House, State Senate, Metro Council. LDP endorsements flagged.",
   },
   {
     slug: "people",
