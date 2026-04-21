@@ -5,6 +5,7 @@ import { fetchAllMembers, fetchCommittees } from "@/lib/db/members";
 import { DirectoryClient } from "@/components/people/DirectoryClient";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Directory" };
 
 export default async function PeoplePage() {
   const [members, committees] = await Promise.all([fetchAllMembers(), fetchCommittees()]);

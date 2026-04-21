@@ -5,6 +5,7 @@ import { fetchCommittees } from "@/lib/db/members";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Drive" };
 
 async function fetchDriveSettings() {
   const supabase = await getSupabaseServer();

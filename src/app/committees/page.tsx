@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { fetchCommittees, fetchAllMembers, displayName } from "@/lib/db/members";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Committees" };
 
 export default async function CommitteesIndexPage() {
   const [committees, members] = await Promise.all([fetchCommittees(), fetchAllMembers()]);

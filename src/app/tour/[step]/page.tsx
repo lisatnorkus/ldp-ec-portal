@@ -11,6 +11,16 @@ import {
   type VerifyCallout as VerifyCalloutData,
 } from "@/content/reorg-chain";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ step: string }>;
+}) {
+  const { step: stepParam } = await params;
+  const s = getStep(Number(stepParam));
+  return { title: s ? `Tour — ${s.title}` : "Tour" };
+}
+
 export default async function TourStepPage({
   params,
   searchParams,

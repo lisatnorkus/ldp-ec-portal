@@ -5,6 +5,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchPrecinctsForMcPriority, countByStrategy } from "@/lib/db/precincts";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Canvass Tools" };
 
 type McPriority = {
   mc_number: number;

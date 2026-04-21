@@ -5,6 +5,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { displayName } from "@/lib/db/members";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Events" };
 
 type Event = {
   id: string;

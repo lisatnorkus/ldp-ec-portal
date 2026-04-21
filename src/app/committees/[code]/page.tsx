@@ -7,6 +7,16 @@ import { fetchAllMembers, displayName } from "@/lib/db/members";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ code: string }>;
+}) {
+  const { code } = await params;
+  const c = await fetchCommitteeByCode(code);
+  return { title: c ? `${c.name} Committee` : "Committee not found" };
+}
+
 export default async function CommitteeDetailPage({
   params,
 }: {

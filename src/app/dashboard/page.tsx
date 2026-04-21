@@ -5,6 +5,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchAllMembers } from "@/lib/db/members";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Dashboard" };
 
 type Transition = {
   seat_code: string;
@@ -26,7 +27,8 @@ type StructuralRow = {
 
 async function fetchDashboardData() {
   const supabase = await getSupabaseServer();
-  const [transitions, structural, monthCard, contentCards] = await Promise.all([
+  const today = new Date().toISOString().slice(0, 10);
+  const [transitions, structural, monthCard, contentCards, nextEvent] = await Promise.all([
     supabase.from("transitions").select("*").order("departed_date", { ascending: false, nullsFirst: false }),
     supabase.from("structural_template").select("*").order("display_order"),
     supabase
@@ -37,12 +39,21 @@ async function fetchDashboardData() {
       .eq("published", true)
       .maybeSingle(),
     supabase.from("content_cards").select("*").eq("slug", "120-club").maybeSingle(),
+    supabase
+      .from("events")
+      .select("id, name, event_date, event_window_description")
+      .eq("active", true)
+      .gte("event_date", today)
+      .order("event_date", { ascending: true })
+      .limit(1)
+      .maybeSingle(),
   ]);
   return {
     transitions: (transitions.data ?? []) as Transition[],
     structural: (structural.data ?? []) as StructuralRow[],
     monthCard: monthCard.data as { month: number; content_md: string; theme_tag: string | null } | null,
     club120: contentCards.data as { title: string; body_md: string } | null,
+    nextEvent: nextEvent.data as { id: string; name: string; event_date: string; event_window_description: string | null } | null,
   };
 }
 
@@ -64,12 +75,18 @@ const MONTH_NAMES = [
 
 export default async function DashboardPage() {
   const [data, members] = await Promise.all([fetchDashboardData(), fetchAllMembers()]);
-  const { transitions, structural, monthCard, club120 } = data;
+  const { transitions, structural, monthCard, club120, nextEvent } = data;
 
   const vacancies = transitions.filter((t) => t.status === "VACANT");
   const recentChanges = transitions.filter((t) => t.status === "FILLED").slice(0, 3);
 
   const currentMonth = new Date().getMonth() + 1;
+  const eventDaysUntil = nextEvent?.event_date
+    ? Math.round(
+        (new Date(nextEvent.event_date).getTime() - new Date().getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    : null;
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
@@ -110,29 +127,86 @@ export default async function DashboardPage() {
             <div className="mt-3 text-xs font-medium text-[var(--color-ldp-navy-700)]">See full playbook →</div>
           </Link>
 
+          {/* Next signature event */}
+          {nextEvent && eventDaysUntil != null ? (
+            <Link
+              href="/events"
+              className={`rounded-xl border p-5 transition-colors hover:shadow-sm ${
+                eventDaysUntil <= 30
+                  ? "border-[var(--color-ldp-red)] bg-white hover:border-[var(--color-ldp-red)]"
+                  : "border-[var(--color-ldp-line)] bg-white hover:border-[var(--color-ldp-navy-700)]"
+              }`}
+            >
+              <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+                Next signature event
+              </div>
+              <div className="mt-1 text-base font-bold text-[var(--color-ldp-navy-900)]">
+                {nextEvent.name}
+              </div>
+              <div className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
+                {nextEvent.event_window_description}
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <div
+                  className={`text-3xl font-bold ${
+                    eventDaysUntil <= 30
+                      ? "text-[var(--color-ldp-red)]"
+                      : "text-[var(--color-ldp-navy-900)]"
+                  }`}
+                >
+                  {eventDaysUntil}
+                </div>
+                <div className="text-xs text-[var(--color-ldp-ink-700)]">
+                  day{eventDaysUntil === 1 ? "" : "s"} out
+                </div>
+              </div>
+              {eventDaysUntil <= 30 && (
+                <div className="mt-2 text-xs font-semibold text-[var(--color-ldp-red)]">
+                  Your ticket link is live → push it.
+                </div>
+              )}
+            </Link>
+          ) : (
+            <div className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
+              <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+                Next signature event
+              </div>
+              <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
+                No upcoming event on the calendar. Check the{" "}
+                <Link href="/events" className="text-[var(--color-ldp-navy-700)] hover:underline">
+                  Events page
+                </Link>{" "}
+                for the full schedule.
+              </p>
+            </div>
+          )}
+
           {/* $120 Club */}
-          <div className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5 lg:col-span-2">
+          <div className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
             <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
               Board commitments
             </div>
             <h2 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">
               {club120?.title ?? "The $120 Club"}
             </h2>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-[var(--color-ldp-ink-700)]">
-              {club120?.body_md ?? ""}
+            <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
+              $120/year personal give ($10/mo auto-pay) + $500/year raised via signature-event
+              ticket links = $620 per member.
             </p>
-            <div className="mt-3 grid grid-cols-3 gap-3 rounded-lg bg-[#FAFAFA] p-3 text-center">
+            <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-[#FAFAFA] p-2 text-center">
               <div>
-                <div className="text-xs text-[var(--color-ldp-ink-700)]">Active members</div>
-                <div className="text-xl font-bold text-[var(--color-ldp-navy-900)]">{members.length}</div>
+                <div className="text-[10px] text-[var(--color-ldp-ink-700)]">Members</div>
+                <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">{members.length}</div>
               </div>
               <div>
-                <div className="text-xs text-[var(--color-ldp-ink-700)]">Floor/member</div>
-                <div className="text-xl font-bold text-[var(--color-ldp-navy-900)]">$620</div>
+                <div className="text-[10px] text-[var(--color-ldp-ink-700)]">Per member</div>
+                <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">$620</div>
               </div>
               <div>
-                <div className="text-xs text-[var(--color-ldp-ink-700)]">Annual floor</div>
-                <div className="text-xl font-bold text-emerald-700">${(members.length * 620).toLocaleString()}</div>
+                <div className="text-[10px] text-[var(--color-ldp-ink-700)]">Floor/yr</div>
+                <div className="text-base font-bold text-emerald-700">
+                  ${(members.length * 620).toLocaleString()}
+                </div>
               </div>
             </div>
           </div>

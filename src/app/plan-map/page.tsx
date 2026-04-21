@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { getKypoliticsServer } from "@/lib/supabase/kypolitics";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Plan & Map" };
 
 type Counts = {
   total: number;

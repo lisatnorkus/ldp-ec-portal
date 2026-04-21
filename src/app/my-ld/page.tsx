@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "My LD" };
 
 type LdSummary = {
   number: number;

@@ -3,8 +3,12 @@ import "./globals.css";
 import { AuthGate } from "@/components/auth/AuthGate";
 
 export const metadata: Metadata = {
-  title: "LDPEC Portal",
+  title: {
+    default: "LDPEC Portal",
+    template: "%s · LDPEC Portal",
+  },
   description: "Louisville Democratic Party Executive Committee — internal portal.",
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({

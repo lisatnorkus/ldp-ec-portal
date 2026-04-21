@@ -16,6 +16,15 @@ import { evaluateRules, getCurrentPhase, type UserContext } from "@/content/high
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ number: string }>;
+}) {
+  const { number } = await params;
+  return { title: `LD${number}` };
+}
+
 type LdRow = {
   number: number;
   chair_id: string | null;
