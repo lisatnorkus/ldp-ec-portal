@@ -3,6 +3,9 @@ import { SectionNav } from "@/components/nav/SectionNav";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchAllMembers } from "@/lib/db/members";
+import { CycleTimeline } from "@/components/cycle/CycleTimeline";
+import { PlanCards } from "@/components/cycle/PlanCards";
+import { PersonalizedHero } from "@/components/dashboard/PersonalizedHero";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
@@ -79,12 +82,14 @@ export default async function DashboardPage() {
 
   const vacancies = transitions.filter((t) => t.status === "VACANT");
   const recentChanges = transitions.filter((t) => t.status === "FILLED").slice(0, 3);
-
   const currentMonth = new Date().getMonth() + 1;
   const eventDaysUntil = nextEvent?.event_date
-    ? Math.round(
-        (new Date(nextEvent.event_date).getTime() - new Date().getTime()) /
-          (1000 * 60 * 60 * 24)
+    ? Math.max(
+        0,
+        Math.round(
+          (new Date(nextEvent.event_date + "T00:00:00").getTime() - new Date().getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
       )
     : null;
 
@@ -112,8 +117,17 @@ export default async function DashboardPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-10">
+        {/* 1. Cycle urgency at the top — the thing that sets the tone. */}
+        <CycleTimeline />
+
+        {/* 2. Personalized hero — tells YOU what to do this week. */}
+        <PersonalizedHero />
+
+        {/* 3. The plans — primary, general + GOTV, long horizon. */}
+        <PlanCards />
+
+        {/* 4. At-a-glance operational blocks. */}
         <section className="mb-8 grid gap-4 lg:grid-cols-3">
-          {/* This Month */}
           <Link
             href="/this-month"
             className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5 transition-colors hover:border-[var(--color-ldp-navy-700)]"
@@ -124,16 +138,15 @@ export default async function DashboardPage() {
             <p className="mt-2 line-clamp-5 text-sm text-[var(--color-ldp-ink-900)]">
               {monthCard?.content_md ?? "No card this month."}
             </p>
-            <div className="mt-3 text-xs font-medium text-[var(--color-ldp-navy-700)]">See full playbook →</div>
+            <div className="mt-3 text-xs font-medium text-[var(--color-ldp-navy-700)]">Full playbook →</div>
           </Link>
 
-          {/* Next signature event */}
           {nextEvent && eventDaysUntil != null ? (
             <Link
               href="/events"
               className={`rounded-xl border p-5 transition-colors hover:shadow-sm ${
                 eventDaysUntil <= 30
-                  ? "border-[var(--color-ldp-red)] bg-white hover:border-[var(--color-ldp-red)]"
+                  ? "border-[var(--color-ldp-red)] bg-white"
                   : "border-[var(--color-ldp-line)] bg-white hover:border-[var(--color-ldp-navy-700)]"
               }`}
             >
@@ -149,9 +162,7 @@ export default async function DashboardPage() {
               <div className="mt-3 flex items-baseline gap-2">
                 <div
                   className={`text-3xl font-bold ${
-                    eventDaysUntil <= 30
-                      ? "text-[var(--color-ldp-red)]"
-                      : "text-[var(--color-ldp-navy-900)]"
+                    eventDaysUntil <= 30 ? "text-[var(--color-ldp-red)]" : "text-[var(--color-ldp-navy-900)]"
                   }`}
                 >
                   {eventDaysUntil}
@@ -172,16 +183,15 @@ export default async function DashboardPage() {
                 Next signature event
               </div>
               <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-                No upcoming event on the calendar. Check the{" "}
+                No upcoming event on the calendar. See the{" "}
                 <Link href="/events" className="text-[var(--color-ldp-navy-700)] hover:underline">
-                  Events page
-                </Link>{" "}
-                for the full schedule.
+                  events page
+                </Link>
+                .
               </p>
             </div>
           )}
 
-          {/* $120 Club */}
           <div className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
             <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
               Board commitments
@@ -190,8 +200,7 @@ export default async function DashboardPage() {
               {club120?.title ?? "The $120 Club"}
             </h2>
             <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-              $120/year personal give ($10/mo auto-pay) + $500/year raised via signature-event
-              ticket links = $620 per member.
+              $120/year personal give + $500/year raised via ticket links = $620 per member.
             </p>
             <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-[#FAFAFA] p-2 text-center">
               <div>
@@ -212,7 +221,7 @@ export default async function DashboardPage() {
           </div>
         </section>
 
-        {/* Transitions / Vacancies */}
+        {/* 5. Transitions + structural gaps — "where the board stands" below the fold. */}
         {(vacancies.length > 0 || recentChanges.length > 0) && (
           <section className="mb-8">
             <div className="mb-3 flex items-baseline justify-between">
@@ -273,7 +282,6 @@ export default async function DashboardPage() {
           </section>
         )}
 
-        {/* Structural template */}
         {structural.length > 0 && (
           <section className="mb-8">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -296,9 +304,17 @@ export default async function DashboardPage() {
                         <span className="text-xs text-[var(--color-ldp-ink-700)]">{r.level} · </span>
                         {r.seat}
                       </td>
-                      <td className="px-4 py-2 text-right text-[var(--color-ldp-ink-700)]">{r.structural_count ?? "—"}</td>
-                      <td className="px-4 py-2 text-right font-semibold text-[var(--color-ldp-navy-900)]">{r.currently_filled ?? "—"}</td>
-                      <td className={`px-4 py-2 text-right font-semibold ${(r.gap ?? 0) > 0 ? "text-[var(--color-ldp-red)]" : "text-emerald-700"}`}>
+                      <td className="px-4 py-2 text-right text-[var(--color-ldp-ink-700)]">
+                        {r.structural_count ?? "—"}
+                      </td>
+                      <td className="px-4 py-2 text-right font-semibold text-[var(--color-ldp-navy-900)]">
+                        {r.currently_filled ?? "—"}
+                      </td>
+                      <td
+                        className={`px-4 py-2 text-right font-semibold ${
+                          (r.gap ?? 0) > 0 ? "text-[var(--color-ldp-red)]" : "text-emerald-700"
+                        }`}
+                      >
                         {r.gap ?? "—"}
                       </td>
                     </tr>
@@ -309,9 +325,10 @@ export default async function DashboardPage() {
           </section>
         )}
 
+        {/* 6. Section nav at the bottom — still accessible, not dominant. */}
         <section className="mb-10">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            Sections
+            All sections
           </h2>
           <SectionNav />
         </section>
