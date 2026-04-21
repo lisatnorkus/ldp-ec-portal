@@ -177,15 +177,45 @@ Both full-text files are committed to the repo. This reference tells you where t
 
 **§28.1:** Robert's Rules of Order apply in any case not covered by these bylaws.
 
+### Filling legislative vacancies (KY State House / Senate) — KDP Article VI
+
+When a Kentucky General Assembly Democrat vacates their seat mid-term, the LDPEC selects the replacement nominee through a Nominating Committee. The process differs depending on whether the seat is State House vs Senate, and whether the district is wholly or partially inside Jefferson County.
+
+**State House seat wholly in Jefferson County (KDP Art. VI.C.b):**
+- Voters: Precinct Committee members residing in the vacated LD
+- Weighted vote: each PC's vote = # registered Democrats in their precinct
+- Chair: LD Chair (or VC, or senior At-Large residing in the LD)
+- Process: LD Chair convenes organizing committee (CEC members residing in the LD) to set date/time/location + nomination process, then notifies PC members
+
+**State Senate seat wholly in Jefferson County (KDP Art. VI.C.a):**
+- Voters: LD Chairs of every LD wholly or partially in the Senate district
+- Weighted vote: each LD Chair's vote = # registered Democrats in their LD within the Senate district (per Art. VI.D)
+- Chair: County Chair (or VC, or LD Chair of the LD that cast largest Dem vote at preceding Presidential)
+
+**Multi-county seat (KDP Art. VI.B):**
+- Voters: voting CEC members of each affected county residing in the district. If <2 EC members reside in a county's portion, PC members represent.
+- Chair: County Chair of the county that cast largest Dem vote in the district at preceding Presidential.
+
+**Metro Council and other non-entire-county single-LD-county districts (KDP Art. VI.C.c):**
+- Voters: CEC members (+ LD VC) residing in the MC district's Legislative District(s)
+- Proportionally weighted per Art. VI.D
+
+**Governing authority (KDP Art. VI.F):** Nominating Committee has full authority on how to run the nomination. By majority it can include other Party Officials as voters.
+
+**Full Article VI text:** `/docs/bylaws/kdp-bylaws-2025-article-vi.md` — committed verbatim.
+
+**Portal surface:** `/vacancies/legislative` (linked from `/transitions` and Tour Step 4).
+
 ---
 
 ## File locations in the repo
 
 ```
 /docs/bylaws/
-  ljcdp-bylaws-full-text.txt      # Full LJCDP bylaws, 30 sections, 258 lines
-  kdp-bylaws-2025-full-text.txt   # Full KDP bylaws, 37 pages OCR'd, 1664 lines
-  bylaws-reference.md             # This file — a navigation layer
+  ljcdp-bylaws-full-text.txt        # Full LJCDP bylaws, 30 sections, 258 lines (pending commit)
+  kdp-bylaws-2025-full-text.txt     # Full KDP bylaws, 37 pages OCR'd (pending commit)
+  kdp-bylaws-2025-article-vi.md     # Article VI verbatim — Nominating Committees for special elections
+  bylaws-reference.md               # This file — a navigation layer
 ```
 
 **Do NOT modify the full-text bylaws files in the repo.** They're the source of truth. If the bylaws are amended, replace the full-text file with the new version AND update this reference file to reflect the changes.

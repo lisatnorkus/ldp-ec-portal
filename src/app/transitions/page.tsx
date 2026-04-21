@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
@@ -67,6 +67,30 @@ export default async function TransitionsPage() {
             {filled.length} filled. CEC has 90 days from notification to fill LD vacancies per state
             bylaws (KDP Art. III.B).
           </p>
+        </div>
+
+        <div className="mb-8 rounded-xl border border-[var(--color-ldp-navy-800)] bg-white p-5">
+          <div className="flex items-start gap-3">
+            <Scale className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-navy-800)]" />
+            <div className="flex-1">
+              <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+                Different process: state House / Senate vacancies
+              </div>
+              <p className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
+                When a Kentucky General Assembly Democrat vacates their seat mid-term, the
+                replacement nominee is selected by a Nominating Committee per{" "}
+                <strong>KDP Bylaws Article VI</strong> — a separate process from CEC vacancies.
+                Different people vote depending on whether it&apos;s a State House or State Senate
+                seat.
+              </p>
+              <Link
+                href="/vacancies/legislative"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
+              >
+                Read the process →
+              </Link>
+            </div>
+          </div>
         </div>
 
         {vacant.length > 0 && (

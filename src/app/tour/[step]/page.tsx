@@ -339,7 +339,7 @@ function Step4() {
         </ul>
       </section>
 
-      <section className="rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5">
+      <section className="mb-6 rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5">
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
           Quarterly LD reports (LD officers only)
         </h3>
@@ -348,6 +348,27 @@ function Step4() {
           volunteers recruited, canvasses run, PCs active. Template lives in the Comms Drive folder;
           Brook Benningfield (Secretary) collects them.
         </p>
+      </section>
+
+      <section className="rounded-lg border border-white/10 bg-white/5 p-5">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+          Rare but high-stakes: filling legislative vacancies
+        </h3>
+        <p className="text-sm text-white/85">
+          If a Kentucky State House or State Senate Democrat vacates mid-term, the LDPEC selects
+          the Democratic nominee for the special election — through a Nominating Committee per{" "}
+          <strong className="text-white">KDP Bylaws Article VI</strong>. For a State House seat in
+          Jefferson County, the voters are the <strong className="text-white">Precinct Committee members</strong>{" "}
+          in the vacated LD (weighted by Dem registration per precinct). For a State Senate seat,
+          the voters are the <strong className="text-white">LD Chairs whose LDs are in the Senate district</strong>.
+          The process, chairs, tie-breakers, and multi-county scenarios are documented in the portal.
+        </p>
+        <Link
+          href="/vacancies/legislative"
+          className="mt-3 inline-flex text-xs font-semibold text-[var(--color-ldp-gold)] hover:underline"
+        >
+          Read the full process →
+        </Link>
       </section>
     </>
   );
