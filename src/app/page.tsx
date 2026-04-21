@@ -118,7 +118,7 @@ function PriorityTile({
       href={href}
       className="group relative overflow-hidden rounded-xl border border-white/15 bg-white/5 p-5 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-[var(--color-ldp-gold)] hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ldp-navy-900)]"
     >
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
         {kicker}
       </div>
       <div className="mt-1 text-lg font-bold tracking-tight text-white">{label}</div>

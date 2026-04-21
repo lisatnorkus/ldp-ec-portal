@@ -28,14 +28,14 @@ export function TourShell({ step, children }: { step: TourStep; children: React.
 
       <main className="mx-auto max-w-3xl px-6 py-12">
         <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
             Step {step.num} of 6
           </div>
           <h1 className="mt-2 text-3xl font-bold tracking-tight">{step.title}</h1>
           <p className="mt-2 text-white/70">{step.subtitle}</p>
         </div>
 
-        <div className="prose prose-invert max-w-none text-white/90 [&_a]:text-[var(--color-ldp-gold)] [&_strong]:text-white">
+        <div className="prose prose-invert max-w-none text-white/90 [&_a]:text-[var(--color-ldp-gold-tint)] [&_a]:underline [&_a]:underline-offset-2 [&_strong]:text-white">
           {children}
         </div>
 

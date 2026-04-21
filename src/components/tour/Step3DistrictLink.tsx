@@ -21,7 +21,7 @@ export function Step3DistrictLink() {
           href={`/my-ld/${profile.ld_number}`}
           className="rounded-lg border-2 border-[var(--color-ldp-gold)] bg-white/5 p-5 transition-colors hover:bg-white/10"
         >
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
             Go directly
           </div>
           <div className="mt-1 text-lg font-bold text-white">LD{profile.ld_number} →</div>

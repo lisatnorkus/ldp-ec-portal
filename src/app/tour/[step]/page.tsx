@@ -191,7 +191,7 @@ function Step2({ roleParam }: { roleParam?: string }) {
             >
               <div className="text-base font-semibold text-white">{r.title}</div>
               <p className="mt-2 text-xs text-white/70 line-clamp-3">{r.whoYouAre}</p>
-              <div className="mt-3 text-xs font-medium text-[var(--color-ldp-gold)]">Open →</div>
+              <div className="mt-3 text-xs font-medium text-[var(--color-ldp-gold-tint)]">Open →</div>
             </Link>
           ))}
         </div>
@@ -216,20 +216,20 @@ function RoleOnePagerView({ r }: { r: RoleOnePager }) {
       </div>
 
       <section className="mb-6">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Who you are
         </h3>
         <div className="whitespace-pre-wrap text-sm leading-relaxed text-white/90">{r.whoYouAre}</div>
       </section>
 
       <section className="mb-6">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           What this role actually does
         </h3>
         <ul className="space-y-2 text-sm text-white/90">
           {r.whatTheRoleDoes.map((d, i) => (
             <li key={i} className="flex gap-2">
-              <span className="mt-0.5 text-[var(--color-ldp-gold)]">•</span>
+              <span className="mt-0.5 text-[var(--color-ldp-gold-tint)]">•</span>
               <span dangerouslySetInnerHTML={{ __html: formatMd(d) }} />
             </li>
           ))}
@@ -246,7 +246,7 @@ function RoleOnePagerView({ r }: { r: RoleOnePager }) {
       )}
 
       <section className="mb-6">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           If you haven&apos;t been doing it, start here
         </h3>
         <ol className="space-y-2 text-sm text-white/90">
@@ -262,7 +262,7 @@ function RoleOnePagerView({ r }: { r: RoleOnePager }) {
       </section>
 
       <section className="rounded-lg border-2 border-[var(--color-ldp-gold)] bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Your 2028 responsibility
         </h3>
         <p className="text-sm leading-relaxed text-white/90">{r.responsibility2028}</p>
@@ -303,7 +303,7 @@ function Step4() {
       </p>
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           The Zoom link
         </h3>
         <p className="text-sm text-white/85">
@@ -311,7 +311,7 @@ function Step4() {
             href="https://us02web.zoom.us/j/89692618777"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-[var(--color-ldp-gold)] hover:underline"
+            className="font-mono text-[var(--color-ldp-gold-tint)] hover:underline"
           >
             us02web.zoom.us/j/89692618777
           </a>
@@ -321,7 +321,7 @@ function Step4() {
       </section>
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           If you can&apos;t make it: proxy
         </h3>
         <p className="text-sm text-white/85">
@@ -330,7 +330,7 @@ function Step4() {
             href="https://forms.gle/dac7EBMbZXMMdMs59"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[var(--color-ldp-gold)] hover:underline"
+            className="text-[var(--color-ldp-gold-tint)] hover:underline"
           >
             proxy form
           </a>{" "}
@@ -341,7 +341,7 @@ function Step4() {
       </section>
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Robert&apos;s Rules — the five things to know
         </h3>
         <ol className="space-y-2 text-sm text-white/85">
@@ -355,7 +355,7 @@ function Step4() {
       </section>
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Voting types
         </h3>
         <ul className="space-y-2 text-sm text-white/85">
@@ -375,7 +375,7 @@ function Step4() {
       </section>
 
       <section className="mb-6 rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Quarterly LD reports (LD officers only)
         </h3>
         <p className="text-sm text-white/85">
@@ -386,7 +386,7 @@ function Step4() {
       </section>
 
       <section className="rounded-lg border border-white/10 bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Rare but high-stakes: filling legislative vacancies
         </h3>
         <p className="text-sm text-white/85">
@@ -400,7 +400,7 @@ function Step4() {
         </p>
         <Link
           href="/vacancies/legislative"
-          className="mt-3 inline-flex text-xs font-semibold text-[var(--color-ldp-gold)] hover:underline"
+          className="mt-3 inline-flex text-xs font-semibold text-[var(--color-ldp-gold-tint)] hover:underline"
         >
           Read the full process →
         </Link>
@@ -490,7 +490,7 @@ function Step6() {
       </section>
 
       <section className="mb-6 rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Why the 2025 cycle felt off
         </h3>
         <p className="text-sm leading-relaxed text-white/85">{WHY_2028_MATTERS.postponementNote}</p>
@@ -510,7 +510,7 @@ function Step6() {
                 </span>
                 <div className="text-base font-semibold text-white">{s.title}</div>
               </div>
-              <div className="mt-2 text-sm font-medium text-[var(--color-ldp-gold)]">{s.headline}</div>
+              <div className="mt-2 text-sm font-medium text-[var(--color-ldp-gold-tint)]">{s.headline}</div>
               <div className="mt-3 space-y-2 text-sm leading-relaxed text-white/85">
                 {s.bodyParagraphs.map((p, i) => (
                   <p key={i} dangerouslySetInnerHTML={{ __html: formatMd(p) }} />
@@ -538,7 +538,7 @@ function Step6() {
             >
               <div
                 className={`w-28 shrink-0 text-xs font-semibold uppercase tracking-widest ${
-                  t.unresolved ? "text-amber-400" : "text-[var(--color-ldp-gold)]"
+                  t.unresolved ? "text-amber-400" : "text-[var(--color-ldp-gold-tint)]"
                 }`}
               >
                 {t.label}
@@ -613,7 +613,7 @@ function VerifyCallout({ callout }: { callout: VerifyCalloutData }) {
 function Placeholder({ title, note }: { title: string; note: string }) {
   return (
     <div className="rounded-lg border border-white/10 bg-white/5 p-6">
-      <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+      <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
         Placeholder
       </div>
       <h2 className="mt-2 text-lg font-semibold">{title}</h2>
