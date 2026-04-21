@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2 } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -44,6 +44,13 @@ export const SECTION_NAV: SectionNavItem[] = [
     href: "/people",
     icon: Users,
     description: "LDPEC directory: officers, LD Chairs, committee chairs, at-large members.",
+  },
+  {
+    slug: "committees",
+    label: "Committees",
+    href: "/committees",
+    icon: Building2,
+    description: "All 11 committees: responsibilities, workflow, members, Drive folders.",
   },
   {
     slug: "drive",
