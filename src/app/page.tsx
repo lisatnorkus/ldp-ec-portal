@@ -11,9 +11,9 @@ export default function LandingPage() {
         <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">
           Executive Committee Portal
         </h1>
-        <p className="mt-4 max-w-2xl text-lg text-white/85">
-          The committee&apos;s internal playbook. What your role is, what we&apos;re working on,
-          and what&apos;s coming in 2028. If this is your first time, take the tour.
+        <p className="mt-5 max-w-2xl text-lg text-white/85">
+          Infrastructure for the LDPEC — concrete deliverables you can execute against. Your role,
+          your district, the plan right now, and the 2028 reorg ahead.
         </p>
 
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -30,10 +30,11 @@ export default function LandingPage() {
           </Button>
         </div>
 
-        <div className="mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
-          <LinkTile href="/tour/1" label="What the LDPEC is" />
-          <LinkTile href="/my-ld" label="My LD" />
+        <div className="mt-10 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
+          <LinkTile href="/tour/2" label="Your role" />
+          <LinkTile href="/my-ld" label="Your district" />
           <LinkTile href="/this-month" label="This month" />
+          <LinkTile href="/tour/4" label="Meetings" />
         </div>
 
         <div className="mt-auto pt-16 text-xs text-white/50">

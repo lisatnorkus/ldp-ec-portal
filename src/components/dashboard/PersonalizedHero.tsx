@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Target, User } from "lucide-react";
+import { Target, User, MapPin, Users, Calendar, Vote } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
 import type { RoleKey } from "@/content/highest-leverage-rules";
 
@@ -66,8 +66,9 @@ export function PersonalizedHero() {
           </h2>
         </div>
         <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-          Saved in your browser only — used to show your LD&apos;s highest-leverage move of the week
-          and personalize your dashboard. This gets replaced by Google sign-in post-testing.
+          Saved in your browser only. Used to route you directly to your role one-pager, your
+          district page, and your highest-leverage move this week. Replaced by Google sign-in
+          post-testing.
         </p>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <label className="flex flex-col gap-1">
@@ -128,70 +129,121 @@ export function PersonalizedHero() {
     );
   }
 
-  // Profile is set — render the personalized hero.
+  // Profile set — render the personalized hero with direct paths to the
+  // five priorities (role, district, month, meetings, reorg).
+  const roleSlug = profile.role?.toLowerCase() ?? "";
+  const ldLink = profile.ld_number != null ? `/my-ld/${profile.ld_number}` : null;
   return (
     <section className="mb-8 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-5 shadow-sm">
-      <div className="flex items-start gap-3">
-        <Target className="mt-1 size-5 shrink-0 text-[var(--color-ldp-red)]" />
-        <div className="flex-1">
-          <div className="flex flex-wrap items-baseline gap-2">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <div className="flex items-start gap-2">
+          <Target className="mt-1 size-5 shrink-0 text-[var(--color-ldp-red)]" />
+          <div>
             <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-              Your highest-leverage move this week
+              Your working set
             </div>
-            <button
-              onClick={() => setEditing(true)}
-              className="text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)] hover:underline"
-            >
-              Edit
-            </button>
-            <button
-              onClick={clearProfile}
-              className="text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)] hover:underline"
-            >
-              Clear
-            </button>
+            <div className="mt-0.5 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+              {selectedRole?.label}
+              {profile.ld_number != null && <> · LD{profile.ld_number}</>}
+            </div>
           </div>
-          <div className="mt-2 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
-            {selectedRole?.label}
-            {profile.ld_number != null && <> · LD{profile.ld_number}</>}
-          </div>
-          {profile.ld_number != null ? (
-            <div className="mt-3">
-              <p className="text-sm text-[var(--color-ldp-ink-700)]">
-                Your personalized recommendation lives on your LD page — it uses live precinct data
-                + cycle phase to tell you the one thing most worth doing this week.
-              </p>
-              <Link
-                href={`/my-ld/${profile.ld_number}`}
-                className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-red)] px-4 py-2 text-sm font-semibold text-white hover:brightness-95"
-              >
-                Open LD{profile.ld_number} with your move →
-              </Link>
-            </div>
-          ) : (
-            <div className="mt-3">
-              <p className="text-sm text-[var(--color-ldp-ink-700)]">
-                {profile.role === "AT_LARGE"
-                  ? "As At-Large, your highest-leverage work is countywide — jump into Canvass Tools to see the priority MC 7/17/21 coordination, or pick an LD that's thin on leadership to plug in."
-                  : "Your role-specific highest-leverage move this week renders on the role one-pager. The tour-step 2 role page has your full scope."}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Link
-                  href="/canvass-tools"
-                  className="rounded-md bg-[var(--color-ldp-red)] px-4 py-2 text-sm font-semibold text-white hover:brightness-95"
-                >
-                  Canvass Tools →
-                </Link>
-                <Link
-                  href={`/tour/2?role=${profile.role?.toLowerCase()}`}
-                  className="rounded-md border border-[var(--color-ldp-line)] bg-white px-4 py-2 text-sm text-[var(--color-ldp-navy-900)] hover:border-[var(--color-ldp-navy-700)]"
-                >
-                  Your role one-pager →
-                </Link>
-              </div>
-            </div>
-          )}
         </div>
+        <div className="flex gap-3 text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+          <button onClick={() => setEditing(true)} className="hover:underline">
+            Edit
+          </button>
+          <button onClick={clearProfile} className="hover:underline">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+        {/* Priority 1: What your role requires */}
+        <Link
+          href={`/tour/2?role=${roleSlug}`}
+          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+        >
+          <Users className="size-4 text-[var(--color-ldp-navy-800)]" />
+          <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Your role
+          </div>
+          <div className="mt-1 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            {selectedRole?.label}
+          </div>
+          <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
+            What you&apos;re supposed to do, how to catch up, 2028 ask →
+          </div>
+        </Link>
+
+        {/* Priority 2: Your district (applied targeting) */}
+        {ldLink ? (
+          <Link
+            href={ldLink}
+            className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+          >
+            <MapPin className="size-4 text-[var(--color-ldp-navy-800)]" />
+            <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+              Your district
+            </div>
+            <div className="mt-1 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+              LD{profile.ld_number}
+            </div>
+            <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
+              Strategy mix, precincts, races, this week&apos;s move →
+            </div>
+          </Link>
+        ) : (
+          <Link
+            href="/canvass-tools"
+            className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+          >
+            <MapPin className="size-4 text-[var(--color-ldp-navy-800)]" />
+            <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+              Countywide
+            </div>
+            <div className="mt-1 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+              Priority MCs 7 / 17 / 21
+            </div>
+            <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
+              Where countywide hours move the most votes →
+            </div>
+          </Link>
+        )}
+
+        {/* Priority 3: What's happening this month */}
+        <Link
+          href="/this-month"
+          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+        >
+          <Calendar className="size-4 text-[var(--color-ldp-navy-800)]" />
+          <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            This month
+          </div>
+          <div className="mt-1 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            What&apos;s live now
+          </div>
+          <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
+            Playbook, events, canvass windows →
+          </div>
+        </Link>
+
+        {/* Priority 4: How meetings work */}
+        <Link
+          href="/tour/4"
+          className="group rounded-lg border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white"
+        >
+          <Vote className="size-4 text-[var(--color-ldp-navy-800)]" />
+          <div className="mt-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Meetings
+          </div>
+          <div className="mt-1 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            Zoom, proxy, voting
+          </div>
+          <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
+            Robert&apos;s Rules basics + endorsement process →
+          </div>
+        </Link>
       </div>
     </section>
   );

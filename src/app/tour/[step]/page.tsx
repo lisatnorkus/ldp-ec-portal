@@ -10,6 +10,7 @@ import {
   STEP_6_UNRESOLVED,
   type VerifyCallout as VerifyCalloutData,
 } from "@/content/reorg-chain";
+import { Step3DistrictLink } from "@/components/tour/Step3DistrictLink";
 
 export async function generateMetadata({
   params,
@@ -240,28 +241,10 @@ function Step3() {
     <>
       <p className="mb-6 text-sm text-white/85">
         This step is the applied-education layer — your district&apos;s precincts, voter math, and
-        the one move that matters this week. The data is live in the portal now. To see it for a
-        specific LD, jump to <code className="rounded bg-white/10 px-1.5 py-0.5 text-xs">/my-ld</code>{" "}
-        and pick your district.
+        the one move that matters this week. If you&apos;ve told the dashboard which LD you&apos;re
+        in, this step jumps you straight there.
       </p>
-      <div className="grid gap-3 md:grid-cols-2">
-        <Link
-          href="/my-ld"
-          className="rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5 transition-colors hover:bg-white/10"
-        >
-          <div className="text-sm font-semibold text-white">All 18 LDs →</div>
-          <div className="mt-1 text-xs text-white/70">Pick your district; see leadership, precinct strategy mix, and races.</div>
-        </Link>
-        <div className="rounded-lg border border-white/10 bg-white/5 p-5">
-          <div className="text-sm font-semibold text-white">What you&apos;ll find there</div>
-          <ul className="mt-2 space-y-1 text-xs text-white/70">
-            <li>• Your LD&apos;s Chair + Vice Chair (or &ldquo;Vacant&rdquo;)</li>
-            <li>• Strategy mix: Power Base / Hold the Line / Wake the Vote / Plant the Flag</li>
-            <li>• Races on the 2026 ballot your LD&apos;s work moves</li>
-            <li>• Precinct-by-precinct playbook with voter counts and sleeper Dem numbers</li>
-          </ul>
-        </div>
-      </div>
+      <Step3DistrictLink />
     </>
   );
 }
