@@ -58,7 +58,7 @@ export default async function CommitteeDetailPage({
             <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
               <span className="font-semibold">Chair:</span>{" "}
               <Link
-                href="/people"
+                href={`/people/${chair.id}`}
                 className="text-[var(--color-ldp-navy-700)] hover:underline"
               >
                 {displayName(chair)}
@@ -140,7 +140,16 @@ export default async function CommitteeDetailPage({
               <ul className="grid grid-cols-1 gap-1 md:grid-cols-2">
                 {memberMatches.map(({ fullName, member }) => (
                   <li key={fullName} className="rounded px-3 py-1.5 text-sm hover:bg-[#FAFBFC]">
-                    <span className="font-medium text-[var(--color-ldp-navy-900)]">{fullName}</span>
+                    {member ? (
+                      <Link
+                        href={`/people/${member.id}`}
+                        className="font-medium text-[var(--color-ldp-navy-900)] hover:underline"
+                      >
+                        {fullName}
+                      </Link>
+                    ) : (
+                      <span className="font-medium text-[var(--color-ldp-navy-900)]">{fullName}</span>
+                    )}
                     {member?.ld_number && (
                       <span className="ml-1 text-xs text-[var(--color-ldp-ink-700)]">
                         · LD{member.ld_number}

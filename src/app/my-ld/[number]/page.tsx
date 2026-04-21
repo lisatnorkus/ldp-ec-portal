@@ -46,6 +46,20 @@ async function fetchMemberById(id: string | null) {
   return data;
 }
 
+async function fetchNextEvent() {
+  const supabase = await getSupabaseServer();
+  const today = new Date().toISOString().slice(0, 10);
+  const { data } = await supabase
+    .from("events")
+    .select("name, event_date")
+    .eq("active", true)
+    .gte("event_date", today)
+    .order("event_date", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  return data as { name: string; event_date: string } | null;
+}
+
 async function fetchCandidates(ld_number: number, mcs: number[]) {
   const supabase = await getSupabaseServer();
   // State House races = the LD number itself
@@ -83,10 +97,11 @@ export default async function LdDetailPage({
   const ld = await fetchLd(ld_number);
   if (!ld) notFound();
 
-  const [chair, vc, precincts] = await Promise.all([
+  const [chair, vc, precincts, nextEvent] = await Promise.all([
     fetchMemberById(ld.chair_id),
     fetchMemberById(ld.vc_id),
     fetchPrecinctsByLd(ld_number),
+    fetchNextEvent(),
   ]);
 
   const candidates = await fetchCandidates(ld_number, ld.metro_council_overlap ?? []);
@@ -116,9 +131,14 @@ export default async function LdDetailPage({
     priority_mc_overlap: priorityMcOverlap,
     has_contested_primary: dPrimaryCandidates.length >= 2,
     countywide_dark_precinct_count: 0,
-    // Next event + raise progress: future wiring; stubbed so Rule 9 won't fire without real data.
-    next_event_days_until: undefined,
-    next_event_name: undefined,
+    next_event_days_until: nextEvent?.event_date
+      ? Math.round(
+          (new Date(nextEvent.event_date).getTime() - new Date().getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : undefined,
+    next_event_name: nextEvent?.name,
+    // raise_progress_dollars: ticket-link tracking integration pending. Stubbed at 0.
     raise_progress_dollars: 0,
   };
   const recommendation = evaluateRules(ruleCtx);
