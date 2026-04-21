@@ -8,6 +8,7 @@ import {
   TIMELINE_2026_2028,
   WHY_2028_MATTERS,
   STEP_6_UNRESOLVED,
+  HOW_2025_ACTUALLY_RAN,
   type VerifyCallout as VerifyCalloutData,
 } from "@/content/reorg-chain";
 import { Step3DistrictLink } from "@/components/tour/Step3DistrictLink";
@@ -95,7 +96,7 @@ function Step1() {
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
         <h2 className="text-lg font-bold text-white">
-          Five things every Executive Committee owes its county
+          Six things every Executive Committee owes its county
         </h2>
         <ol className="mt-2 space-y-2 text-sm text-white/85">
           <li>
@@ -117,6 +118,13 @@ function Step1() {
           <li>
             <strong>5. Train the next generation.</strong> LD Chairs, Precinct Captains, canvassers,
             and candidates all need onboarding — not assumed competence.
+          </li>
+          <li>
+            <strong>6. Staff the County Board of Elections.</strong> Kentucky statute (KRS 117.035)
+            requires each county Board of Elections to include one member nominated by the county
+            Democratic Executive Committee. The LDPEC recommends one Jefferson County voter to the
+            Secretary of State for that seat; the Governor makes the appointment. It&apos;s a
+            four-year term that oversees how elections are physically run in our county.
           </li>
         </ol>
       </section>
@@ -524,8 +532,36 @@ function Step6() {
         </div>
       </section>
 
+      <section className="mb-8">
+        <h2 className="mb-2 text-lg font-bold text-white">
+          How 2025 actually ran — the concrete example
+        </h2>
+        <p className="mb-3 text-xs text-white/60">
+          Reconstructed from LDPEC minutes Dec 2024 – Mar 2025. Most of the current committee lived
+          through this one; this is the shape 2028 will take if it runs to schedule.
+        </p>
+        <ol className="space-y-2">
+          {HOW_2025_ACTUALLY_RAN.map((r, i) => (
+            <li
+              key={i}
+              className="flex gap-4 rounded-lg border border-white/10 bg-white/5 p-4"
+            >
+              <div className="w-44 shrink-0 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+                {r.when}
+              </div>
+              <div className="flex-1 text-sm text-white/85">{r.what}</div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       <section className="mb-6">
-        <h2 className="mb-3 text-lg font-bold text-white">Timeline 2026 → 2028</h2>
+        <h2 className="mb-2 text-lg font-bold text-white">Timeline 2026 → 2028</h2>
+        <p className="mb-3 text-xs text-white/60">
+          Items marked <span className="font-semibold text-amber-300">Unconfirmed</span> depend on
+          KDP setting the 2028 reorg calendar in fall 2027. Dates could also shift by a year if KDP
+          postpones, as they did before 2025.
+        </p>
         <ol className="space-y-2">
           {TIMELINE_2026_2028.map((t, i) => (
             <li
