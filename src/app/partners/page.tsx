@@ -6,7 +6,13 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Partners" };
 
-type OrgCategory = "LABOR" | "ADVOCACY" | "FAITH" | "POLITICAL_TRAINING" | "NEWS_MEDIA";
+type OrgCategory =
+  | "LABOR"
+  | "ADVOCACY"
+  | "FAITH"
+  | "POLITICAL_TRAINING"
+  | "NEWS_MEDIA"
+  | "DEMOCRATIC_CLUB";
 
 type Org = {
   id: string;
@@ -35,6 +41,12 @@ const CATEGORY_META: Record<
       "Louisville-based locals plus the KY-level umbrella bodies that endorse and fund in Jefferson County. Labor is LDPEC's biggest and most consistent political partnership.",
     accent: "var(--color-ldp-red)",
   },
+  DEMOCRATIC_CLUB: {
+    label: "Democratic clubs",
+    blurb:
+      "Louisville Democratic affinity clubs — grassroots organizing outside the formal LDPEC structure. Good door-in for new volunteers.",
+    accent: "var(--color-ldp-navy-900)",
+  },
   ADVOCACY: {
     label: "Advocacy organizations",
     blurb:
@@ -62,6 +74,7 @@ const CATEGORY_META: Record<
 
 const CATEGORY_ORDER: OrgCategory[] = [
   "LABOR",
+  "DEMOCRATIC_CLUB",
   "ADVOCACY",
   "POLITICAL_TRAINING",
   "FAITH",
@@ -86,6 +99,7 @@ export default async function PartnersPage() {
     FAITH: [],
     POLITICAL_TRAINING: [],
     NEWS_MEDIA: [],
+    DEMOCRATIC_CLUB: [],
   };
   for (const o of orgs) byCategory[o.category].push(o);
 
