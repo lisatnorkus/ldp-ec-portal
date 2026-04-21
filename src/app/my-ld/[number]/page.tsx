@@ -297,7 +297,8 @@ export default async function LdDetailPage({
                     </span>
                   </div>
                 </summary>
-                <div className="mt-3 overflow-x-auto">
+                {/* Desktop table */}
+                <div className="mt-3 hidden overflow-x-auto md:block">
                   <table className="w-full text-xs">
                     <thead className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ldp-ink-700)]">
                       <tr>
@@ -337,6 +338,66 @@ export default async function LdDetailPage({
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                {/* Mobile cards */}
+                <div className="mt-3 space-y-2 md:hidden">
+                  {group.map((p) => (
+                    <a
+                      key={p.precinct}
+                      href={`https://26ldp-strategy-map.vercel.app/?precinct=${encodeURIComponent(p.precinct)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block rounded border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-3"
+                    >
+                      <div className="flex items-baseline justify-between gap-2">
+                        <div className="font-semibold text-[var(--color-ldp-navy-900)]">
+                          Precinct {p.precinct}
+                          {p.metro_council && (
+                            <span className="ml-1 text-[10px] text-[var(--color-ldp-ink-700)]">
+                              · MC{p.metro_council}
+                            </span>
+                          )}
+                        </div>
+                        <div
+                          className="text-xs font-semibold"
+                          style={{
+                            color: (p.d_margin_pct ?? 0) >= 0 ? "var(--color-strategy-power-base)" : "#7a5a1f",
+                          }}
+                        >
+                          {p.d_margin_pct != null
+                            ? `${p.d_margin_pct > 0 ? "+" : ""}${p.d_margin_pct}%`
+                            : "—"}
+                        </div>
+                      </div>
+                      <div className="mt-1 grid grid-cols-4 gap-1 text-[10px] text-[var(--color-ldp-ink-700)]">
+                        <div>
+                          <div>Voters</div>
+                          <div className="font-semibold text-[var(--color-ldp-ink-900)]">
+                            {p.total_voters?.toLocaleString() ?? "—"}
+                          </div>
+                        </div>
+                        <div>
+                          <div>D</div>
+                          <div className="font-semibold text-emerald-700">
+                            {p.dem_total?.toLocaleString() ?? "—"}
+                          </div>
+                        </div>
+                        <div>
+                          <div>R</div>
+                          <div className="font-semibold text-[var(--color-ldp-red)]">
+                            {p.rep_total?.toLocaleString() ?? "—"}
+                          </div>
+                        </div>
+                        <div>
+                          <div>Sleeper D</div>
+                          <div className="font-semibold text-[var(--color-ldp-ink-900)]">
+                            {p.dem_gen_not_pri?.toLocaleString() ?? "—"}
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
                 </div>
               </details>
             );

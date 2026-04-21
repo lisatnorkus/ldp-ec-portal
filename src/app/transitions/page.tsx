@@ -112,7 +112,8 @@ export default async function TransitionsPage() {
               Recently filled · {filled.length}
             </h2>
             <div className="overflow-hidden rounded-lg border border-[var(--color-ldp-line)] bg-white">
-              <table className="w-full text-sm">
+              {/* Desktop table */}
+              <table className="hidden w-full text-sm md:table">
                 <thead className="bg-[#FAFAFA] text-xs font-semibold uppercase tracking-wider text-[var(--color-ldp-ink-700)]">
                   <tr>
                     <th className="px-4 py-2.5 text-left">Seat</th>
@@ -160,6 +161,46 @@ export default async function TransitionsPage() {
                   ))}
                 </tbody>
               </table>
+
+              {/* Mobile cards */}
+              <ul className="divide-y divide-[var(--color-ldp-line)] md:hidden">
+                {filled.map((t) => (
+                  <li key={t.id} className="p-4 text-sm">
+                    <div className="font-semibold text-[var(--color-ldp-navy-900)]">
+                      {formatSeat(t.seat_code)}
+                    </div>
+                    <div className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
+                      {t.previous_holder_name ?? "—"}
+                      {t.departed_date && <> · departed {t.departed_date}</>}
+                      {t.departure_reason && (
+                        <div className="italic">{t.departure_reason}</div>
+                      )}
+                    </div>
+                    <div className="mt-2 text-xs">
+                      {t.successor_id ? (
+                        <Link
+                          href={`/people/${t.successor_id}`}
+                          className="font-semibold text-[var(--color-ldp-navy-900)] hover:underline"
+                        >
+                          → {t.successor_name}
+                        </Link>
+                      ) : (
+                        <span className="font-semibold text-[var(--color-ldp-navy-900)]">
+                          → {t.successor_name}
+                        </span>
+                      )}
+                      <span className="ml-2 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-emerald-700">
+                        Filled
+                      </span>
+                    </div>
+                    {t.elected_date && (
+                      <div className="mt-1 text-[10px] text-[var(--color-ldp-ink-700)]">
+                        Elected {t.elected_date}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           </section>
         )}
