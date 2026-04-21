@@ -1,14 +1,29 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthGate } from "@/components/auth/AuthGate";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: {
     default: "LDPEC Portal",
     template: "%s · LDPEC Portal",
   },
-  description: "Louisville Democratic Party Executive Committee — internal portal.",
+  description:
+    "Louisville Democratic Party Executive Committee — internal portal. Roles, committees, canvass tools, and the reorg ahead.",
   robots: { index: false, follow: false },
+  openGraph: {
+    title: "LDPEC Portal",
+    description: "Louisville Democratic Party Executive Committee — internal portal.",
+    siteName: "LDPEC Portal",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary",
+    title: "LDPEC Portal",
+    description: "Louisville Democratic Party Executive Committee — internal portal.",
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +43,8 @@ export default function RootLayout({
       </head>
       <body>
         <AuthGate>{children}</AuthGate>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
