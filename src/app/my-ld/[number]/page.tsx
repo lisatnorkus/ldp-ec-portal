@@ -75,6 +75,28 @@ async function fetchNextEvent() {
   return data as { name: string; event_date: string } | null;
 }
 
+type EvLocationLite = {
+  id: string;
+  name: string;
+  address: string;
+  neighborhood: string | null;
+  hours_note: string | null;
+  date_window: string | null;
+};
+
+async function fetchEvLocationsForLd(ld_number: number): Promise<EvLocationLite[]> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase
+    .from("early_voting_locations")
+    .select("id, name, address, neighborhood, hours_note, date_window, ld_numbers")
+    .eq("active", true)
+    .eq("election_type", "PRIMARY")
+    .eq("cycle_year", 2026)
+    .contains("ld_numbers", [ld_number])
+    .order("display_order", { ascending: true });
+  return (data ?? []) as EvLocationLite[];
+}
+
 async function fetchCandidates(ld_number: number, mcs: number[]) {
   const supabase = await getSupabaseServer();
   // State House races = the LD number itself
@@ -112,12 +134,13 @@ export default async function LdDetailPage({
   const ld = await fetchLd(ld_number);
   if (!ld) notFound();
 
-  const [chair, vc, precincts, nextEvent, pcs] = await Promise.all([
+  const [chair, vc, precincts, nextEvent, pcs, evLocations] = await Promise.all([
     fetchMemberById(ld.chair_id),
     fetchMemberById(ld.vc_id),
     fetchPrecinctsByLd(ld_number),
     fetchNextEvent(),
     fetchPcsForLd(ld_number),
+    fetchEvLocationsForLd(ld_number),
   ]);
 
   const candidates = await fetchCandidates(ld_number, ld.metro_council_overlap ?? []);
@@ -424,15 +447,87 @@ export default async function LdDetailPage({
           </a>
         </Button>
 
+        <EvSection ld={ld_number} locations={evLocations} />
+
         <Link
           href="/early-voting"
           className="mt-4 inline-flex items-center gap-1.5 rounded border border-[var(--color-ldp-red)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[#FFF5F6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-red)] focus-visible:ring-offset-2"
         >
           <MapPin aria-hidden="true" className="size-4 text-[var(--color-ldp-red)]" />
-          24 early voting locations · May 14 – 16 →
+          All 24 early voting locations · May 14 – 16 →
         </Link>
       </main>
     </div>
+  );
+}
+
+function EvSection({ ld, locations }: { ld: number; locations: EvLocationLite[] }) {
+  const dateWindow = locations[0]?.date_window ?? "May 14 – 16, 2026";
+  const hours = locations[0]?.hours_note ?? "8:00 am – 6:00 pm";
+
+  return (
+    <section className="mb-8 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-5">
+      <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
+        Early voting inside LD{ld}
+      </div>
+      <h2 className="mt-0.5 text-base font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+        {locations.length === 0
+          ? `No early voting locations physically inside LD${ld}.`
+          : locations.length === 1
+            ? "One early voting location in your district."
+            : `${locations.length} early voting locations in your district.`}
+      </h2>
+      <p className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
+        {dateWindow} · {hours}. Jefferson County voters can use <strong>any of the 24 locations</strong> countywide —
+        these are just the ones inside LD{ld}&apos;s boundaries. Assignments are approximate (by street address +
+        neighborhood); confirm with the Clerk if precise.
+      </p>
+
+      {locations.length > 0 && (
+        <ul className="mt-4 divide-y divide-[var(--color-ldp-line)]">
+          {locations.map((l) => {
+            const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.address)}`;
+            return (
+              <li key={l.id} className="py-3 first:pt-0 last:pb-0">
+                <div className="flex items-start gap-2">
+                  <MapPin aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[var(--color-ldp-red)]" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+                      {l.name}
+                    </div>
+                    {l.neighborhood && (
+                      <div className="text-[11px] font-medium uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+                        {l.neighborhood}
+                      </div>
+                    )}
+                    <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
+                      {l.address}
+                    </div>
+                    <a
+                      href={mapHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-[var(--color-ldp-navy-700)] hover:underline"
+                    >
+                      Open in Maps <ExternalLink aria-hidden="true" className="size-3" />
+                    </a>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {locations.length === 0 && (
+        <p className="mt-3 text-sm text-[var(--color-ldp-ink-900)]">
+          Point your voters at the nearest location in an adjacent LD —{" "}
+          <Link href="/early-voting" className="text-[var(--color-ldp-navy-700)] underline">
+            see all 24 →
+          </Link>
+        </p>
+      )}
+    </section>
   );
 }
 
