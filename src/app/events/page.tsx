@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Calendar, ExternalLink, Folder } from "lucide-react";
+import { ArrowLeft, Calendar, ExternalLink, Folder, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { displayName } from "@/lib/db/members";
@@ -260,13 +260,19 @@ function EventCard({ event, chair }: { event: Event; chair: Chair | null | undef
           </div>
           <h3 className="mt-1 text-xl font-bold text-[var(--color-ldp-navy-900)]">{event.name}</h3>
           <div className="mt-2 flex items-center gap-2 text-sm text-[var(--color-ldp-ink-900)]">
-            <Calendar className="size-4 text-[var(--color-ldp-navy-700)]" />
+            <Calendar aria-hidden="true" className="size-4 text-[var(--color-ldp-navy-700)]" />
             {formatDate(event.event_date) ?? (
               <span className="italic text-[var(--color-ldp-ink-700)]">
                 Date on the public calendar
               </span>
             )}
           </div>
+          {event.venue && (
+            <div className="mt-1 flex items-start gap-2 text-sm text-[var(--color-ldp-ink-900)]">
+              <MapPin aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[var(--color-ldp-navy-700)]" />
+              <span>{event.venue}</span>
+            </div>
+          )}
         </div>
         {du != null && du >= 0 && du <= 60 && (
           <div className="rounded-lg border-2 border-[var(--color-ldp-red)] bg-[#FFF5F6] px-3 py-1.5 text-center">
