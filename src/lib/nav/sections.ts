@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -58,6 +58,13 @@ export const SECTION_NAV: SectionNavItem[] = [
     href: "/events",
     icon: Ticket,
     description: "Signature events + your $500 annual raise via ticket-sale links.",
+  },
+  {
+    slug: "partners",
+    label: "Partners",
+    href: "/partners",
+    icon: Handshake,
+    description: "Louisville-area labor, advocacy, and training orgs we work with.",
   },
   {
     slug: "drive",
