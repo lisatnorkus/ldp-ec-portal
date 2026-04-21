@@ -474,7 +474,7 @@ function Step6() {
               <div className="mt-2 text-sm font-medium text-[var(--color-ldp-gold)]">{s.headline}</div>
               <div className="mt-3 space-y-2 text-sm leading-relaxed text-white/85">
                 {s.bodyParagraphs.map((p, i) => (
-                  <p key={i}>{p}</p>
+                  <p key={i} dangerouslySetInnerHTML={{ __html: formatMd(p) }} />
                 ))}
               </div>
               {s.verifyAgainst?.map((v) => (

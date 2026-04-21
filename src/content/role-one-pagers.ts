@@ -27,6 +27,7 @@ export const ROLE_ONE_PAGERS: RoleOnePager[] = [
       "Fills PC vacancies in your LD when they come up (state bylaws require CEC to fill within 90 days)",
       "Elects delegates from your LD to Congressional District and State Conventions during reorg cycles",
       "Supports countywide CEC goals inside your LD",
+      "Signs an NDA at the start of your term (LJCDP §2.2) — you have a fiduciary relationship with the EC",
     ],
     alsoNote:
       "**Also: your SCEC seat.** Being elected LD Chair automatically puts you on the State Central Executive Committee — the statewide body that governs the KDP between state conventions. Everyone calls it SCEC. Meetings are quarterly in Frankfort, plus any called meetings to vote on something urgent. The vibe is more formal than CEC meetings. Your practice there is to show up, vote, and represent Jefferson County.",
@@ -38,7 +39,7 @@ export const ROLE_ONE_PAGERS: RoleOnePager[] = [
       "See Tour Step 5 for current LDPEC initiatives and pick the one your LD will plug into next.",
     ],
     responsibility2028:
-      "You call, advertise, and chair your LD's Precinct Conventions in spring 2028. You run the LD Convention that elects your successor and your VC's successor. Right after the LD Convention closes, you join the incoming Chairs + VCs to jointly elect the 18 At-Large CEC members and county officers. At the state convention that follows, you vote in both tracks — DNC delegate selection AND SCEC elections. (See Tour Step 6: Reorg & Delegate Selection reference card.)",
+      "You preside as Convention Chair over your LD's Precinct Conventions in spring 2028 — the CEC Chair is the one who formally calls and advertises them (KDP Art. II.B.f/g), but you're the Party Officer running each one. You run the LD Convention that elects your successor and your VC's successor. Right after the LD Convention closes, you join the incoming Chairs + VCs to jointly elect the 18 At-Large CEC members and county officers (KDP Art. II.D.c). At the state convention that follows, you vote in both tracks — DNC delegate selection AND SCEC elections. (See Tour Step 6: Reorg & Delegate Selection reference card.)",
   },
   {
     key: "LD_VC",
@@ -51,6 +52,7 @@ export const ROLE_ONE_PAGERS: RoleOnePager[] = [
       "Steps up to run the LD when the Chair is unavailable or inactive, without waiting for permission",
       "Is the second set of eyes on PC vacancies, precinct health, and candidate recruitment",
       "Supports countywide CEC goals inside the LD",
+      "Signs an NDA at the start of your term (LJCDP §2.2) — you have a fiduciary relationship with the EC",
     ],
     alsoNote:
       "**Also: your SCEC seat.** Being elected LD Vice Chair automatically puts you on the State Central Executive Committee — same body as your LD Chair. Quarterly meetings in Frankfort, plus called meetings to vote. More formal than CEC meetings. Your vote there is independent of your Chair's.",
@@ -62,7 +64,7 @@ export const ROLE_ONE_PAGERS: RoleOnePager[] = [
       "See Tour Step 5 for current LDPEC initiatives and pick one to own inside your LD.",
     ],
     responsibility2028:
-      "You co-run your LD's Precinct Conventions and LD Convention in spring 2028. If the Chair is absent, you run them alone. You vote jointly with incoming Chairs + VCs to elect the 18 At-Large CEC members and county officers right after the LD Convention closes. (See Tour Step 6: Reorg & Delegate Selection reference card.)",
+      "You co-preside over your LD's Precinct Conventions and LD Convention in spring 2028 with the Chair (per KDP Art. II.B.g — as Party Officers, LD officers preside over their Convention Level). If the Chair is unavailable, the County Chair appoints a Convention Chair; in practice, that's usually you. You vote jointly with incoming Chairs + VCs to elect the 18 At-Large CEC members and county officers right after the LD Convention closes (KDP Art. II.D.c). (See Tour Step 6: Reorg & Delegate Selection reference card.)",
   },
   {
     key: "AT_LARGE",
@@ -74,7 +76,8 @@ export const ROLE_ONE_PAGERS: RoleOnePager[] = [
       "Thinks and acts countywide — you don't represent one LD",
       "Fills standing committee seats and special assignments. The §26 committees rely on At-Large members showing up to do the work",
       "Brings a network or a skill the LD officers couldn't cover alone — that's why the At-Large slots exist",
-      "Shows up. Quorum math depends on it.",
+      "Shows up. Quorum math depends on it — 40% of LD Chairs + VCs + LD At-Large, in person or by proxy (LJCDP §22.1)",
+      "Signs an NDA at the start of your term (LJCDP §2.2) — you have a fiduciary relationship with the EC",
     ],
     startHere: [
       "Read the LJCDP bylaws and KDP state bylaws. Art. II.D.c is where your seat is defined.",

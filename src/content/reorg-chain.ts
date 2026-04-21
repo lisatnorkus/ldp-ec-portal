@@ -1,19 +1,15 @@
 // Reorg & Delegate Selection — structured content for Tour Step 6.
-// Source: docs/reorg-delegate-selection.md.
+// Source: docs/reorg-delegate-selection.md + docs/bylaws/bylaws-reference.md.
 //
-// Per Lisa's April 21, 2026 direction:
-// Specifics that require primary-source verification (day counts, 2028
-// dates, how the 2025 cycle actually ran) are rendered as VISIBLE "needs
-// verification" callouts, not hedged prose. Transparency beats cautious-
-// guess polish for a reference document first-term EC members will rely on.
-//
-// When a verifyAgainst entry is resolved against the primary source, move
-// the verified fact into a bodyParagraph and drop the callout entry.
+// Most "to be verified" callouts from Lisa's April 21 red-pen have been
+// resolved against KDP + LJCDP primary sources. Remaining hedges point
+// at the one question that requires a human (Brook or Logan) rather than
+// a bylaws read.
 
 export type VerifyCallout = {
   id: string;
-  claim: string;      // short plain-language version of what needs confirming
-  source: string;     // where someone goes to verify
+  claim: string;
+  source: string;
 };
 
 export type ReorgStep = {
@@ -31,16 +27,11 @@ export const REORG_CHAIN: ReorgStep[] = [
     headline: "Every precinct elects three people.",
     bodyParagraphs: [
       "Every precinct in Jefferson County holds a Precinct Convention. Registered Democrats in the precinct show up and elect three people: one Precinct Captain Man, one Precinct Captain Woman, and one Precinct Captain Youth (age 35 or under).",
-      "Basis: KDP Art. III.B (Precinct Committee). These three people are \"the primary Party Officials responsible for organizing and building Democratic power within [the] precinct.\"",
-      "Who convenes it: in practice, the outgoing LD Chair calls, advertises, and chairs the Precinct Conventions in their LD. KDP typically issues a countywide notice setting the window and procedural requirements; LD Chairs execute within that framework.",
-      "In a precinct with no active organizing, Precinct Conventions frequently attract almost no one — and the seats go empty. If that happens, the LDPEC has to fill the vacancy from above within 90 days.",
-    ],
-    verifyAgainst: [
-      {
-        id: "precinct-convention-notice",
-        claim: "Exact advance-notice requirements for Precinct Conventions (number of days, posting locations).",
-        source: "KDP Bylaws — search for \"notice,\" \"days,\" \"advance,\" \"call.\" Day counts intentionally not quoted here until verified.",
-      },
+      "Basis: KDP Article III, Section B. These three people are \"the primary Party Officials responsible for organizing and building Democratic power within [the] precinct.\"",
+      "Who convenes it: the **CEC Chair calls and advertises** the Convention (KDP Art. II.B.f). A Party Officer — in practice, the outgoing LD Chair — **presides as Convention Chair** over their applicable Convention Level (KDP Art. II.B.g). If the LD Chair is unavailable, the County Party Chair appoints a Convention Chair.",
+      "Advance notice: not less than 7 and not more than 30 days before the Convention (KDP Art. II.B.f). The CEC must use at least 3 of 6 notification methods — newspaper, radio/TV, social media, website, Mobilize/Facebook Events, or email/US Mail/phone.",
+      "In a precinct with no active organizing, Precinct Conventions frequently attract almost no one — and the seats go empty. If that happens, the CEC has 90 days to fill the vacancy from above (KDP Art. III.B).",
+      "PC candidates: no prefiling. Precinct Committee members are elected at the Precinct Convention itself; any eligible voter in the precinct can be nominated from the floor.",
     ],
   },
   {
@@ -51,19 +42,9 @@ export const REORG_CHAIN: ReorgStep[] = [
       "Each of Jefferson County's 18 Legislative Districts holds an LD Convention. The newly-elected Precinct Captains from that LD gather and elect two LD officers: an LD Chair and an LD Vice Chair, of opposite genders (KDP Art. III.C).",
       "Who votes: only the duly elected Precinct Committee members from that LD.",
       "What else: elects delegates from the LD to the Congressional District Convention, elects delegates from the LD to the State Convention, plus any business SCEC assigns in the Call to Convention.",
-      "Who runs it: the outgoing LD Chair. If the outgoing Chair is absent, the outgoing LD Vice Chair runs it.",
-    ],
-    verifyAgainst: [
-      {
-        id: "ld-convention-notice",
-        claim: "Advance-notice requirements for LD Conventions (KDP may differ from Precinct-Convention timing).",
-        source: "KDP Bylaws.",
-      },
-      {
-        id: "jeffco-pc-filing",
-        claim: "JeffCo-specific filing window for PC candidates ahead of their Precinct Convention.",
-        source: "LJCDP Bylaws at louisvilledems.com/ljcdp-bylaws — may layer requirements on top of KDP.",
-      },
+      "Advance notice: same 7–30 day window as Precinct Conventions (KDP Art. II.B.f).",
+      "Who runs it: the outgoing LD Chair presides as Convention Chair. If the outgoing Chair is unavailable, the County Chair appoints (KDP Art. II.B.g).",
+      "Candidate filing: LD Chair / LD Vice Chair / LD At-Large members may prefile between October 1 of the year before reorg and 5 p.m. of the candidate-filing deadline in the reorg year (LJCDP §4.2.1). Prefiling is optional — candidates can also be nominated from the floor at the LD Convention.",
     ],
   },
   {
@@ -71,16 +52,15 @@ export const REORG_CHAIN: ReorgStep[] = [
     title: "Joint post-LD election of At-Large members + LDPEC officers",
     headline: "The step most people don't know exists.",
     bodyParagraphs: [
-      "At close of the Legislative District Convention, newly elected LD Chairs and Vice Chairs meet to elect eighteen (18) at-large members of the County Executive Committee and Committee officers (KDP Art. II.D).",
+      "At close of the Legislative District Convention, newly elected LD Chairs and Vice Chairs meet to elect eighteen (18) at-large members of the County Executive Committee and Committee officers (KDP Art. II.D.c).",
       "In plain terms: as soon as the last LD Convention closes, all 36 newly-elected LD officers (18 Chairs + 18 Vice Chairs) convene together as one body. Together they elect the 18 At-Large members, the County Chair, and the County Vice Chair (opposite sex of Chair, must be a newly-elected LD Chair).",
-      "When: within 30 days of the Reorganization per LJCDP §4.4. State bylaws say \"at close\" of LD Convention — in practice this likely happens within a short window, not literally the same day.",
-      "This is the process the state bylaws require. LJCDP §4.4 and §6.6 still describe the older process (election by LD Chairs alone); state bylaws govern when they conflict.",
+      "**KDP / LJCDP drift:** KDP says this happens \"immediately at close\" of the LD Convention (Art. II.D.c). LJCDP §4.4 says it happens \"within thirty (30) days of the Reorganization.\" Where they conflict, KDP governs (LJCDP §5.3). LJCDP §§4.4, 6.6, and 8 describe the pre-2025 LD-specific At-Large model and need amendment to match current practice.",
     ],
     verifyAgainst: [
       {
         id: "2025-actual-sequence",
-        claim: "How the 2025 postponed cycle actually ran this step — did all 36 incoming Chairs + VCs convene as one body, or did it happen some other way?",
-        source: "LDPEC Secretary Brook Benningfield or outgoing Chair — the meeting minutes are authoritative.",
+        claim: "How the 2025 postponed cycle actually ran this step — did all 36 incoming Chairs + VCs convene as one body per KDP, or per LJCDP §4.4's 30-day window?",
+        source: "LDPEC Secretary Brook Benningfield or outgoing Chair — the meeting minutes are authoritative. Bylaws plus v1 content are consistent with the KDP process, but the 2025-in-practice answer needs a human.",
       },
     ],
   },
@@ -97,22 +77,6 @@ export const REORG_CHAIN: ReorgStep[] = [
   },
 ];
 
-// Top-level unresolved items rendered as a consolidated callout block at the
-// end of Tour Step 6. These are the items that are not tied to a single step
-// of the chain — they're general content-level TODOs.
-export const STEP_6_UNRESOLVED: VerifyCallout[] = [
-  {
-    id: "2028-cycle-confirmation",
-    claim: "Whether KDP has formally set 2028 as the next reorganization year (restoring normal presidential-year alignment after the postponed 2025 cycle).",
-    source: "Current KDP Bylaws — search for \"reorganization,\" \"four-year,\" \"cycle,\" \"2028.\" Do not quote specific 2028 dates anywhere in the portal until this is confirmed.",
-  },
-  {
-    id: "ljcdp-section-8-vs-9",
-    claim: "Whether LJCDP §8 (Legislative District At-Large) or §9 (Non-Legislative District At-Large) governs the current At-Large class elected under the 2025-reorg countywide mechanism.",
-    source: "LJCDP Bylaws §§7–10 read as a block. Likely a pre-2025 artifact that needs amendment alongside §4.4/§6.6.",
-  },
-];
-
 export type Timeline2028 = {
   label: string;
   description: string;
@@ -124,22 +88,35 @@ export const TIMELINE_2026_2028: Timeline2028[] = [
   { label: "Nov 3, 2026", description: "General election." },
   { label: "2027", description: "KY governor's race cycle. Reorg prep ramps." },
   {
-    label: "Spring 2028?",
-    description: "Next quadrennial Reorganization, assumed to follow the postponed 2025 cycle on a presidential-year schedule. Full chain runs — Precinct Conventions, LD Conventions, joint post-LD election, State Convention.",
-    unresolved: true,
+    label: "Spring 2028",
+    description:
+      "Quadrennial Reorganization. Per KDP Art. I.R (which sunset after the 2025 State Convention) and Art. II.A, reorganization is on a presidential-year cycle going forward — 2028, 2032, 2036. Full chain runs: Precinct Conventions, LD Conventions, joint post-LD election, State Convention.",
   },
   {
-    label: "Summer 2028?",
+    label: "Summer 2028",
     description: "State Convention — DNC delegate selection + SCEC elections.",
-    unresolved: true,
   },
 ];
 
 export const WHY_2028_MATTERS = {
   paragraph1:
-    "Most of the current LDPEC was elected in the 2025 reorg cycle. For almost everyone, this is their first party officer role and their first time hearing the word \"reorg.\" The next reorg — expected in 2028 — is the one this card prepares you for.",
+    "Most of the current LDPEC was elected in the 2025 reorg cycle. For almost everyone, this is their first party officer role and their first time hearing the word \"reorg.\" The next reorg is spring 2028 — and it's the one this card prepares you for.",
   paragraph2:
     "If you're an LD Chair, LD Vice Chair, At-Large Member, or Precinct Captain, the things that happen during reorg are things you have to do, not things that happen to you.",
   postponementNote:
-    "Normally reorg years align with presidential elections — 2012, 2016, 2020, and would have been 2024. For the last cycle, KDP postponed reorg from 2024 to 2025. That's why most of the current LDPEC was elected in June 2025, not spring 2024. The next cycle is expected to restore the normal presidential-year alignment, which would put it in 2028 — but confirm the exact timing against current KDP bylaws before planning dates.",
+    "Normally reorg years align with presidential elections. The 2024 cycle was formally postponed by KDP Article I Section R — a one-time shift to align Kentucky's party reorganization with presidential election years. That section sunset at the close of the 2025 State Convention. Going forward, per KDP Article II Section A, reorganization happens every four years in presidential election years: 2028, 2032, 2036.",
 };
+
+// Items still pending primary-source resolution before production.
+// (The four items that WERE here on April 21 have been resolved against
+// KDP + LJCDP bylaws and now render as cited facts in the body paragraphs
+// above. What remains requires a human to answer — bylaws alone won't.)
+export const STEP_6_UNRESOLVED: VerifyCallout[] = [
+  {
+    id: "ljcdp-amendments-pending",
+    claim:
+      "LJCDP §§4.4, 6.6, and 8 describe a pre-2025 LD-specific At-Large structure that doesn't match how the 18 countywide At-Large Chairs were elected under KDP Art. II.D.c in 2025. These sections need a Bylaws Committee amendment to reflect current practice.",
+    source:
+      "Bylaws Committee (Roz Welch, Chair). Flagged for a formal amendment pass. KDP governs today; cleaning up LJCDP removes the ambiguity.",
+  },
+];

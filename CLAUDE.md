@@ -323,17 +323,28 @@ If any of this content shows up in a work request to Claude Code, stop and kick 
 
 ---
 
-## 2028 reorg content — unresolved before production
+## 2028 reorg content — status
 
-Tour Step 6 (reorg + delegate selection) and the At-Large role one-pager both touch timing / procedural specifics that require primary-source verification. The current copy is correct-as-rule but hedged on specifics. Resolve all four before the 2028 reorg cycle runs for real:
+Lisa's April 21, 2026 red-pen of Tour Step 6 + At-Large role one-pager was resolved against primary sources. Authoritative nav file: `/docs/bylaws/bylaws-reference.md` (cite specific sections; don't paraphrase thresholds/deadlines).
 
-1. **Advance-notice day counts** for Precinct Conventions, LD Conventions, and the joint post-LD meeting. Source: KDP bylaws. Search for "notice," "days," "advance," "call." Portal copy currently says "set by KDP bylaws" without day counts.
-2. **JeffCo PC filing window.** Source: LJCDP bylaws (louisvilledems.com/ljcdp-bylaws). KDP has a statewide baseline; LJCDP may layer on top. Portal copy stays generic until verified.
-3. **How the 2025 postponed cycle actually ran the joint post-LD election.** Ship the state-bylaws mechanism as formal process; the 2025-in-practice note comes from LDPEC Secretary (Brook Benningfield) or outgoing Chair reviewing minutes. Don't conflate "the rule" with "what happened" in copy.
-4. **2028 cycle timing.** Current copy says "expected to restore normal presidential-year alignment." Confirm via current KDP bylaws before committing to a specific 2028 date or window anywhere in the portal.
-5. **LJCDP §8 vs §9 applicability to current At-Large class.** Requires a read of LJCDP §§7–10 as a block. Flagged in v2.2 one-pager as the §4.4/§6.6 parenthetical; the specific §8/§9 applicability question is separate and not yet resolved.
+**Resolved — copy now carries cited facts (no more hedged prose):**
 
-Claude Code: when editing Tour Step 6 or At-Large copy, do NOT add day counts, specific 2028 dates, or claims about "how 2025 ran" without Lisa's explicit sign-off on the primary source. Keep the hedged language.
+1. ✅ **Advance notice for Precinct + LD Conventions:** 7–30 days per KDP Art. II.B.f. CEC must use ≥3 of 6 notification methods.
+2. ✅ **JeffCo PC filing window:** No prefiling — PCs are elected at Precinct Convention itself. LD Chair / VC / LD At-Large can prefile Oct 1 year-before through 5pm filing deadline of reorg year, per LJCDP §4.2.1. Nomination from the floor also permitted.
+3. ✅ **2028 cycle confirmed on schedule:** KDP Art. I.R was a one-time shift for the 2025 cycle; it sunset at close of 2025 State Convention. Per KDP Art. II.A, reorg is on a presidential-year cadence going forward (2028, 2032, 2036). Portal copy now states this definitively.
+4. ✅ **Who calls Precinct Conventions:** CEC Chair calls + advertises (KDP Art. II.B.f). Party Officers (in practice, LD Chairs) preside as Convention Chairs (KDP Art. II.B.g). Role one-pagers updated to reflect this — LD Chair one-pager no longer says "you call" conventions; says "you preside."
+5. ✅ **LJCDP §8 vs §9:** Both exist but govern different types. §8 = pre-2025 LD-specific At-Large (elected per §6.6 by LD Chair). §9 = countywide non-LD At-Large. The current 18 At-Large Chairs elected jointly per KDP Art. II.D.c best match the §9 model. §§4.4, 6.6, 8 together describe the pre-2025 structure and need Bylaws Committee amendment.
+
+**Still unresolved — requires a human, not a bylaws read:**
+
+- **How the 2025 postponed cycle actually sequenced the joint post-LD election.** KDP Art. II.D.c says "at close" of LD Convention; LJCDP §4.4 says "within 30 days." KDP governs but we don't know which timing the 2025 cycle used in practice. Ask Brook Benningfield (Secretary) or Logan Gatti (Chair) — minutes are authoritative.
+
+**Active drift for Bylaws Committee to amend:**
+
+- LJCDP §§4.4, 6.6, 8 (pre-2025 LD-specific At-Large structure — superseded by KDP Art. II.D.c)
+- LJCDP §26 (lists 10 standing committees; practice runs 8 + 3 ad hoc; names drifted "Volunteering" → Volunteer, "Communication" → Communications; Youth + Labor dropped; Branding/Endorsement Process/Platform added)
+
+**Standing rule when editing Tour Step 6 or reorg copy:** cite specific bylaws sections (e.g. "per KDP Art. II.B.f"). Don't paraphrase thresholds, day counts, dollar amounts, or vote thresholds — those are in the bylaws reference for a reason. If you find new drift between KDP and LJCDP, surface it in copy as a flagged amendment need; don't silently resolve.
 
 ---
 
