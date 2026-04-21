@@ -6,6 +6,7 @@ import { fetchAllMembers } from "@/lib/db/members";
 import { CycleTimeline } from "@/components/cycle/CycleTimeline";
 import { PlanCards } from "@/components/cycle/PlanCards";
 import { WorkingSet } from "@/components/dashboard/WorkingSet";
+import { VoterGuideCallout } from "@/components/dashboard/VoterGuideCallout";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
@@ -31,7 +32,7 @@ type StructuralRow = {
 async function fetchDashboardData() {
   const supabase = await getSupabaseServer();
   const today = new Date().toISOString().slice(0, 10);
-  const [transitions, structural, monthCard, contentCards, nextEvent] = await Promise.all([
+  const [transitions, structural, monthCard, contentCards, nextEvent, voterGuide] = await Promise.all([
     supabase.from("transitions").select("*").order("departed_date", { ascending: false, nullsFirst: false }),
     supabase.from("structural_template").select("*").order("display_order"),
     supabase
@@ -50,6 +51,7 @@ async function fetchDashboardData() {
       .order("event_date", { ascending: true })
       .limit(1)
       .maybeSingle(),
+    supabase.from("settings").select("value").eq("key", "voter_guide_url").maybeSingle(),
   ]);
   return {
     transitions: (transitions.data ?? []) as Transition[],
@@ -57,6 +59,7 @@ async function fetchDashboardData() {
     monthCard: monthCard.data as { month: number; content_md: string; theme_tag: string | null } | null,
     club120: contentCards.data as { title: string; body_md: string } | null,
     nextEvent: nextEvent.data as { id: string; name: string; event_date: string; event_window_description: string | null } | null,
+    voterGuideUrl: (voterGuide.data?.value as string | undefined) ?? null,
   };
 }
 
@@ -78,7 +81,7 @@ const MONTH_NAMES = [
 
 export default async function DashboardPage() {
   const [data, members] = await Promise.all([fetchDashboardData(), fetchAllMembers()]);
-  const { transitions, structural, monthCard, club120, nextEvent } = data;
+  const { transitions, structural, monthCard, club120, nextEvent, voterGuideUrl } = data;
 
   const vacancies = transitions.filter((t) => t.status === "VACANT");
   const recentChanges = transitions.filter((t) => t.status === "FILLED").slice(0, 3);
@@ -156,6 +159,10 @@ export default async function DashboardPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-10">
+        {/* 0. Live primary callout — only renders while a voter_guide_url
+            is set in Supabase. Swap/remove post-primary. */}
+        {voterGuideUrl && <VoterGuideCallout url={voterGuideUrl} />}
+
         {/* 1. Role-first Working Set — your seat's standing duties,
             the amplifier work that's always live, and the right-now
             specifics. Cycle context is demoted below. */}

@@ -35,6 +35,16 @@ async function fetchCalendarUrl(): Promise<string | null> {
   return (data?.value as string | undefined) ?? null;
 }
 
+async function fetchVoterGuideUrl(): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("key", "voter_guide_url")
+    .maybeSingle();
+  return (data?.value as string | undefined) ?? null;
+}
+
 const MONTH_NAMES = [
   "",
   "January",
@@ -56,7 +66,11 @@ export default async function ThisMonthPage() {
   const currentMonth = now.getMonth() + 1;
   const currentYear = now.getFullYear();
 
-  const [cards, calendarUrl] = await Promise.all([fetchMonthCards(), fetchCalendarUrl()]);
+  const [cards, calendarUrl, voterGuideUrl] = await Promise.all([
+    fetchMonthCards(),
+    fetchCalendarUrl(),
+    fetchVoterGuideUrl(),
+  ]);
   const current = cards.find((c) => c.month === currentMonth && c.year === currentYear);
   const next = cards.find(
     (c) =>
@@ -91,16 +105,28 @@ export default async function ThisMonthPage() {
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
             What&apos;s live right now
           </h1>
-          {calendarUrl && (
-            <a
-              href={calendarUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-1.5 rounded text-sm font-medium text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
-            >
-              Open the public party calendar <ExternalLink aria-hidden="true" className="size-3.5" />
-            </a>
-          )}
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
+            {voterGuideUrl && (
+              <a
+                href={voterGuideUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-red)] px-3 py-1.5 text-white transition-colors hover:bg-[var(--color-ldp-red)]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-red)] focus-visible:ring-offset-2"
+              >
+                2026 Voter Guide <ExternalLink aria-hidden="true" className="size-3.5" />
+              </a>
+            )}
+            {calendarUrl && (
+              <a
+                href={calendarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+              >
+                Public party calendar <ExternalLink aria-hidden="true" className="size-3.5" />
+              </a>
+            )}
+          </div>
         </div>
 
         {current ? (
