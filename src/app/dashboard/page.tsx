@@ -257,6 +257,12 @@ export default async function DashboardPage() {
                 </div>
               </div>
             </div>
+            <Link
+              href="/events#money-rules"
+              className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-[var(--color-ldp-navy-700)] hover:underline"
+            >
+              Money rules — what the party can and can&apos;t take →
+            </Link>
           </div>
         </section>
 

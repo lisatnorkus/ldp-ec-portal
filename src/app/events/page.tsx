@@ -119,6 +119,58 @@ export default async function EventsPage() {
           </p>
         </div>
 
+        <section id="money-rules" className="mb-10 rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white p-5">
+          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+            Money rules — the quick reference
+          </div>
+          <h2 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">
+            What the party can and can&apos;t take
+          </h2>
+          <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
+            Kentucky has tight rules on who can give money to a party committee. Most surprise
+            rejections happen when a new member brings in a generous check from the wrong account.
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+              <div className="text-xs font-semibold uppercase tracking-widest text-emerald-800">
+                ✓ Can accept
+              </div>
+              <ul className="mt-2 space-y-1.5 text-sm text-[var(--color-ldp-ink-900)]">
+                <li>Personal checks from individuals (from a <em>personal</em> account)</li>
+                <li>Personal credit/debit cards</li>
+                <li>Ticket-sale revenue from signature events</li>
+                <li>Contributions from registered PACs, within KREF limits</li>
+              </ul>
+            </div>
+            <div className="rounded-lg border border-[var(--color-ldp-red)]/30 bg-[#FFF5F6] p-4">
+              <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
+                ✗ Cannot accept — will return
+              </div>
+              <ul className="mt-2 space-y-1.5 text-sm text-[var(--color-ldp-ink-900)]">
+                <li><strong>Corporate checks</strong> — including law firms, LLCs, partnerships, S-corps, medical practices</li>
+                <li>Union treasury funds (their PAC is fine)</li>
+                <li>Anonymous contributions over $100</li>
+                <li>Contributions from foreign nationals</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-4 rounded-lg border border-[var(--color-ldp-gold)] bg-[#EFF6FF] p-4 text-sm">
+            <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+              If someone hands you a check from the wrong account
+            </div>
+            <ol className="mt-2 space-y-1 text-[var(--color-ldp-ink-900)]">
+              <li>1. Don&apos;t deposit it. Hold it.</li>
+              <li>2. Ask the donor to rewrite it from a personal account.</li>
+              <li>3. If they ask why: <em>&ldquo;Kentucky law (KRS 121.150) prohibits corporate money to party committees. Your personal contribution is always welcome.&rdquo;</em></li>
+              <li>4. When in doubt, hand it to the LDP Treasurer before it&apos;s deposited.</li>
+            </ol>
+          </div>
+          <p className="mt-3 text-xs text-[var(--color-ldp-ink-700)]">
+            Authority: <a href="https://kref.ky.gov" target="_blank" rel="noopener noreferrer" className="text-[var(--color-ldp-navy-700)] underline">Kentucky Registry of Election Finance (KREF)</a>.
+            Full statute: <a href="https://apps.legislature.ky.gov/law/statutes/chapter.aspx?id=37247" target="_blank" rel="noopener noreferrer" className="text-[var(--color-ldp-navy-700)] underline">KRS Chapter 121</a>.
+          </p>
+        </section>
+
         {upcoming.length > 0 && (
           <section className="mb-10">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
