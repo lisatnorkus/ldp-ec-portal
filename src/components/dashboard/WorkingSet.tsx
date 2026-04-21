@@ -8,11 +8,13 @@ import {
   Megaphone,
   ExternalLink,
   ShieldCheck,
+  Map as MapIcon,
 } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
 import type { RoleKey } from "@/content/highest-leverage-rules";
 import { ALWAYS_DUTIES } from "@/content/role-duties";
 import { SOCIAL_PLATFORMS } from "@/content/social-platforms";
+import { SocialIcon } from "@/components/social/SocialIcon";
 
 const SELECTABLE_ROLES: { key: RoleKey; label: string; needsLd: boolean }[] = [
   { key: "LD_CHAIR", label: "LD Chair", needsLd: true },
@@ -184,7 +186,7 @@ export function WorkingSet() {
         </p>
 
         {/* Quick links for personalized depth */}
-        <div className="mt-4 grid gap-2 sm:grid-cols-3">
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {ldLink && (
             <Link
               href={ldLink}
@@ -194,6 +196,13 @@ export function WorkingSet() {
               Your LD{profile.ld_number} deep page →
             </Link>
           )}
+          <Link
+            href="/my-ld"
+            className="inline-flex items-center gap-1.5 rounded border border-[var(--color-ldp-line)] bg-[#FAFBFC] px-3 py-2 text-xs font-medium text-[var(--color-ldp-navy-900)] transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+          >
+            <MapIcon aria-hidden="true" className="size-3.5 text-[var(--color-ldp-navy-700)]" />
+            Browse all 18 LDs →
+          </Link>
           <Link
             href={`/tour/2?role=${profile.role?.toLowerCase() ?? ""}`}
             className="inline-flex items-center gap-1.5 rounded border border-[var(--color-ldp-line)] bg-[#FAFBFC] px-3 py-2 text-xs font-medium text-[var(--color-ldp-navy-900)] transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
@@ -272,11 +281,8 @@ export function WorkingSet() {
                 className="group flex items-center gap-2 rounded border border-[var(--color-ldp-line)] bg-[#FAFBFC] px-2.5 py-2 text-xs font-medium text-[var(--color-ldp-navy-900)] transition-colors hover:border-[var(--color-ldp-red)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
                 title={`${p.label} · ${p.handle}`}
               >
-                <span
-                  aria-hidden="true"
-                  className="flex size-6 shrink-0 items-center justify-center rounded bg-[var(--color-ldp-navy-800)] text-[10px] font-bold text-white group-hover:bg-[var(--color-ldp-red)]"
-                >
-                  {p.glyph}
+                <span className="flex size-7 shrink-0 items-center justify-center rounded bg-[var(--color-ldp-navy-800)] text-white transition-colors group-hover:bg-[var(--color-ldp-red)]">
+                  <SocialIcon platform={p.key} className="size-4" />
                 </span>
                 <span className="min-w-0 flex-1 truncate">{p.label}</span>
               </a>
