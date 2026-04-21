@@ -95,6 +95,79 @@ function Step1() {
       </section>
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
+        <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+          With thanks to our partners at KDP
+        </div>
+        <h2 className="mt-1 text-lg font-bold text-white">
+          Kentucky Democratic Party leadership
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-white/85">
+          The LDPEC operates inside a framework KDP builds and maintains. When the state party
+          does its job well, our job gets easier. Know who&apos;s there:
+        </p>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <div className="rounded border border-white/10 bg-white/5 p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+              Chair
+            </div>
+            <div className="mt-0.5 text-base font-semibold text-white">Colmon Elridge</div>
+            <div className="mt-1 text-xs text-white/60">
+              Elected party leader; represents KDP publicly and chairs SCEC.
+            </div>
+          </div>
+          <div className="rounded border border-white/10 bg-white/5 p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+              Executive Director
+            </div>
+            <div className="mt-0.5 text-base font-semibold text-white">Morgan Eaves</div>
+            <div className="mt-1 text-xs text-white/60">
+              Senior staff; runs day-to-day operations, coordinates with county parties.
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 rounded border border-dashed border-white/15 bg-white/5 p-4 text-xs text-white/65">
+          <div className="font-semibold text-white/80">Contact KDP directly:</div>
+          <ul className="mt-1.5 space-y-0.5">
+            <li>
+              General:{" "}
+              <a href="mailto:info@kydemocrats.org" className="text-[var(--color-ldp-gold-tint)] underline decoration-dotted underline-offset-2">
+                info@kydemocrats.org
+              </a>
+            </li>
+            <li>
+              Press:{" "}
+              <a href="mailto:press@kydemocrats.org" className="text-[var(--color-ldp-gold-tint)] underline decoration-dotted underline-offset-2">
+                press@kydemocrats.org
+              </a>
+            </li>
+            <li>
+              Office: (502) 695-4828 ·{" "}
+              <a href="https://www.kydemocrats.org" target="_blank" rel="noopener noreferrer" className="text-[var(--color-ldp-gold-tint)] underline decoration-dotted underline-offset-2">
+                kydemocrats.org
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mt-4 rounded border border-white/10 bg-white/5 p-4 text-xs text-white/70">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-white/50">
+            State Central Executive Committee
+          </div>
+          <p className="mt-1.5 leading-relaxed">
+            SCEC is the statewide body that governs KDP between state conventions. The full roster
+            isn&apos;t published on kydemocrats.org — KDP maintains it internally. To see the
+            current SCEC roster or who from Jefferson County holds an SCEC seat, email{" "}
+            <a href="mailto:info@kydemocrats.org" className="text-[var(--color-ldp-gold-tint)] underline decoration-dotted underline-offset-2">
+              info@kydemocrats.org
+            </a>{" "}
+            or ask the LDP Chair.
+          </p>
+        </div>
+      </section>
+
+      <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
         <h2 className="text-lg font-bold text-white">
           Six things every Executive Committee owes its county
         </h2>
