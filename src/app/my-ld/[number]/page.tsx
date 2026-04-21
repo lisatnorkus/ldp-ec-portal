@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
+import { ArrowLeft, ExternalLink, MapPin, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import {
@@ -12,7 +12,7 @@ import {
   type Precinct,
   type Strategy,
 } from "@/lib/db/precincts";
-import { fetchMemberByName } from "@/lib/db/committees";
+import { evaluateRules, getCurrentPhase, type UserContext } from "@/content/highest-leverage-rules";
 
 export const dynamic = "force-dynamic";
 
@@ -93,6 +93,37 @@ export default async function LdDetailPage({
   const counts = countByStrategy(precincts);
   const byStrategy = groupByStrategy(precincts);
 
+  // Evaluate the highest-leverage-move rules engine.
+  // v1 assumption: /my-ld/[n] viewer is the LD Chair (or a surrogate viewing their district).
+  // Counts derived from live precinct data; priority-MC overlap from LD row.
+  // Has-contested-primary: the LD's State House race has 2+ D primary candidates.
+  const dPrimaryCandidates = candidates.hd.filter(
+    (c) => c.party === "D" && c.on_primary_ballot
+  );
+  const PRIORITY_MCS = [7, 17, 21];
+  const priorityMcOverlap = (ld.metro_council_overlap ?? []).filter((mc) =>
+    PRIORITY_MCS.includes(mc)
+  );
+  const ruleCtx: UserContext = {
+    role: "LD_CHAIR",
+    ld_number,
+    hold_the_line_count: counts.DEFEND,
+    power_base_count: counts.PRIMARY,
+    wake_the_vote_count: counts.ACTIVATE,
+    // PC vacancy data not yet in the portal — stubbed at 0 so Rules 4 & 7 don't misfire.
+    pc_vacancy_count: 0,
+    pc_vacancy_count_in_hold_the_line: 0,
+    priority_mc_overlap: priorityMcOverlap,
+    has_contested_primary: dPrimaryCandidates.length >= 2,
+    countywide_dark_precinct_count: 0,
+    // Next event + raise progress: future wiring; stubbed so Rule 9 won't fire without real data.
+    next_event_days_until: undefined,
+    next_event_name: undefined,
+    raise_progress_dollars: 0,
+  };
+  const recommendation = evaluateRules(ruleCtx);
+  const currentPhase = getCurrentPhase();
+
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
       <header className="border-b border-[var(--color-ldp-line)] bg-white">
@@ -129,6 +160,26 @@ export default async function LdDetailPage({
             )}
           </p>
         </div>
+
+        {/* Highest-leverage move this week */}
+        {recommendation && (
+          <section className="mb-8 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-6 shadow-sm">
+            <div className="flex items-start gap-3">
+              <Target className="mt-1 size-5 shrink-0 text-[var(--color-ldp-red)]" />
+              <div className="flex-1">
+                <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
+                  Your highest-leverage move this week
+                </div>
+                <p className="mt-2 text-base leading-relaxed text-[var(--color-ldp-ink-900)]">
+                  {recommendation.text}
+                </p>
+                <div className="mt-3 text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                  Current cycle phase: {currentPhase.replace(/_/g, " ").toLowerCase()} · rule #{recommendation.rule_id}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Leadership */}
         <section className="mb-8 grid gap-3 md:grid-cols-2">
