@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, MapPin, Target, Users, Mail, Phone } from "lucide-react";
+import { ExternalLink, MapPin, Target, Users, Mail, Phone } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import {
   fetchPcsForLd,
   groupPcsByPrecinct,
@@ -185,31 +186,17 @@ export default async function LdDetailPage({
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link
-            href="/my-ld"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> All LDs
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Legislative District"
+        title={`LD${ld_number}.`}
+        backHref="/my-ld"
+        backLabel="All LDs"
+        maxWidthClass="max-w-5xl"
+      />
 
       <main className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Legislative District
-          </div>
-          <h1 className="mt-1 text-4xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            LD{ld_number}
-          </h1>
-          <p className="mt-1 text-sm text-[var(--color-ldp-ink-700)]">
+          <p className="text-sm text-[var(--color-ldp-ink-700)]">
             {precincts.length} precincts · {counts.sleeper_dems.toLocaleString()} sleeper Dems countywide
             {ld.state_senate_overlap?.length > 0 && (
               <span> · SD overlap: {ld.state_senate_overlap.join(", ")}</span>

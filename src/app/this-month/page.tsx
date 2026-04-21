@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { ArrowLeft, Calendar, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -80,32 +79,15 @@ export default async function ThisMonthPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow={`This month · ${MONTH_NAMES[currentMonth]} ${currentYear}`}
+        title="What's live right now."
+        maxWidthClass="max-w-4xl"
+      />
 
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="mb-8">
-          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            <Calendar className="size-3.5" />
-            This month · {MONTH_NAMES[currentMonth]} {currentYear}
-          </div>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            What&apos;s live right now
-          </h1>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
             {voterGuideUrl && (
               <a
                 href={voterGuideUrl}

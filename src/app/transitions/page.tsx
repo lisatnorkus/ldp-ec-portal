@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, Scale } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Scale } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -38,37 +38,14 @@ export default async function TransitionsPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded text-sm text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Transitions"
+        title="Seats that have changed hands since the June 2025 reorg."
+        subtitle={`${vacant.length} seat${vacant.length === 1 ? "" : "s"} still vacant · ${filled.length} filled. CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).`}
+        maxWidthClass="max-w-5xl"
+      />
 
       <main className="mx-auto max-w-5xl px-6 py-10">
-        <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Transitions
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            Seats that have changed hands since the June 2025 reorg.
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
-            {vacant.length} seat{vacant.length === 1 ? "" : "s"} still vacant ·{" "}
-            {filled.length} filled. CEC has 90 days from notification to fill LD vacancies per state
-            bylaws (KDP Art. III.B).
-          </p>
-        </div>
-
         <div className="mb-8 rounded-xl border border-[var(--color-ldp-navy-800)] bg-white p-5">
           <div className="flex items-start gap-3">
             <Scale aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-navy-800)]" />

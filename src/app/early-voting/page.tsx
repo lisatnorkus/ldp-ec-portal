@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, MapPin, Clock, Car, Vote } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, MapPin, Clock, Car, Vote } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -52,35 +52,14 @@ export default async function EarlyVotingPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded text-sm text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Early voting · 2026 Primary"
+        title="24 early voting locations across Jefferson County."
+        subtitle="Any Jefferson County voter can use any of these 24 locations during the early-voting window — you don't have to vote at the one in your LD. Share the location nearest to each voter's home or workplace."
+      />
 
       <main className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Early voting · 2026 Primary
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            24 early voting locations across Jefferson County.
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
-            <strong>Any Jefferson County voter can use any of these 24 locations</strong> during
-            the early-voting window — you don&apos;t have to vote at the one in your LD. Share
-            the location nearest to each voter&apos;s home or workplace.
-          </p>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <InfoTile icon={<Clock aria-hidden="true" className="size-4" />} label="Dates" value={dateWindow} sub="Thursday – Saturday" />

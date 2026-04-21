@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import {
@@ -97,29 +98,18 @@ export default async function MemberDetailPage({
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-          <Link
-            href="/people"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> Directory
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow={PRIMARY_ROLE_LABEL[member.primary_role]}
+        title={`${displayName(member)}.`}
+        backHref="/people"
+        backLabel="Directory"
+        maxWidthClass="max-w-4xl"
+      />
 
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="mb-8 rounded-xl border border-[var(--color-ldp-line)] bg-white p-6">
           <div className="flex flex-wrap items-start gap-4">
             <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-                {displayName(member)}
-              </h1>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center rounded-full bg-[var(--color-ldp-navy-900)] px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-white">
                   {PRIMARY_ROLE_LABEL[member.primary_role]}

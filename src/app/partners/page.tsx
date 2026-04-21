@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { ArrowLeft, ExternalLink, Phone, Mail, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Phone, Mail, MapPin } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -105,41 +104,21 @@ export default async function PartnersPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded text-sm text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Partners"
+        title="Organizations we work with in and around Louisville."
+        subtitle="Labor unions, advocacy groups, Democratic clubs, and training pipelines that endorse, fund, or organize alongside the Louisville Democratic Party."
+      />
 
       <main className="mx-auto max-w-6xl px-6 py-10">
-        <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Partners
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            Organizations we work with in and around Louisville.
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
-            Labor unions, advocacy groups, and training pipelines that endorse, fund, or organize
-            alongside the Louisville Democratic Party. Contact information is for official
-            coordination — not for solicitation. If a line is missing or wrong, send corrections
-            to{" "}
-            <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
-              communications@louisvilledems.com
-            </a>
-            .
-          </p>
-        </div>
+        <p className="mb-8 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
+          Contact information here is for official coordination — not for solicitation. If a line
+          is missing or wrong, send corrections to{" "}
+          <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
+            communications@louisvilledems.com
+          </a>
+          .
+        </p>
 
         {CATEGORY_ORDER.map((cat) => {
           const items = byCategory[cat];

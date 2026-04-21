@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Star, AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Star, AlertTriangle } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -85,36 +85,14 @@ export default async function CandidatesPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 rounded text-sm text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="2026 Primary Ballot"
+        title="Who's on the ballot in Louisville."
+        subtitle="Primary is Tuesday, May 19. Grouped by office, LDP-endorsed first. The party endorses in Metro Council and Mayoral primaries but traditionally does not endorse in contested partisan-primary races for state legislature."
+      />
 
       <main className="mx-auto max-w-6xl px-6 py-10">
         <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            2026 Primary Ballot
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            Who&apos;s on the ballot in Louisville.
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
-            The 2026 primary is <strong>May 19</strong>. Candidates below are grouped by office —
-            LDP-endorsed first. The party endorses in Metro Council and Mayoral primaries but
-            traditionally does not endorse in contested partisan-primary races for state
-            legislature.
-          </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
             {voterGuideUrl && (

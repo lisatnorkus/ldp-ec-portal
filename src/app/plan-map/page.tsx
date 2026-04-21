@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ExternalLink, MapPin } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getKypoliticsServer } from "@/lib/supabase/kypolitics";
 
 export const dynamic = "force-dynamic";
@@ -44,30 +45,14 @@ export default async function PlanMapPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Plan & Map"
+        title={`Jefferson County, ${counts.total} precincts, four strategies.`}
+        maxWidthClass="max-w-5xl"
+      />
 
       <main className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Plan &amp; Map
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            Jefferson County, {counts.total} precincts, four strategies.
-          </h1>
           <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
             Every precinct in the county is scored into one of four strategies. The 2026 LDP Strategy
             Map visualizes this — click below to jump in. The counts here are the countywide baseline.

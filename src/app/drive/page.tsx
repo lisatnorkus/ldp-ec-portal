@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { ArrowLeft, ExternalLink, Folder } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Folder } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { fetchCommittees } from "@/lib/db/members";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
@@ -23,29 +22,14 @@ export default async function DrivePage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Drive"
+        title="Drive shortcuts."
+        subtitle="Every committee's working folder plus the party's top-traffic forms."
+        maxWidthClass="max-w-5xl"
+      />
 
       <main className="mx-auto max-w-5xl px-6 py-10">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">Drive shortcuts</h1>
-          <p className="mt-1 text-sm text-[var(--color-ldp-ink-700)]">
-            Every committee&apos;s working folder plus the party&apos;s top-traffic forms.
-          </p>
-        </div>
 
         <section className="mb-10">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">

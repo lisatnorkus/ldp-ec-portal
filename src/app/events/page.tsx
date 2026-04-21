@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, Calendar, ExternalLink, Folder, MapPin } from "lucide-react";
+import { Calendar, ExternalLink, Folder, MapPin } from "lucide-react";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { displayName } from "@/lib/db/members";
@@ -83,36 +84,16 @@ export default async function EventsPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Signature Events"
+        title="Three events fund the party."
+        subtitle="Celebration of Democracy Dinner, Women Deliver Democracy, and Dems at the Downs together raise the vast majority of the LDP's revenue. Each has a subcommittee under the Events Committee; leadership rotates annually."
+        maxWidthClass="max-w-5xl"
+      />
 
       <main className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Signature Events
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            Three events fund the party.
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
-            Celebration of Democracy Dinner, Women Deliver Democracy, and Dems at the Downs together
-            raise the vast majority of the LDP&apos;s revenue. Each has a subcommittee under the
-            Events Committee; leadership rotates annually.
-          </p>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
+          <p className="max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
             Each board member&apos;s <strong className="text-[var(--color-ldp-navy-900)]">$500 annual raise</strong>{" "}
             is driven primarily through personalized ticket-sale links for these events — links go
             out about 30 days before each event.

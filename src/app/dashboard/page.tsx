@@ -7,6 +7,7 @@ import { CycleTimeline } from "@/components/cycle/CycleTimeline";
 import { PlanCards } from "@/components/cycle/PlanCards";
 import { WorkingSet } from "@/components/dashboard/WorkingSet";
 import { VoterGuideCallout } from "@/components/dashboard/VoterGuideCallout";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { fetchRightNowContext } from "@/lib/db/right-now";
 
 export const dynamic = "force-dynamic";
@@ -110,36 +111,13 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      {/* Navy masthead with subtle diagonal pattern + red accent strip */}
-      <header className="relative overflow-hidden bg-[var(--color-ldp-navy-900)] text-white">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(135deg, rgba(255,255,255,0.9) 0 1px, transparent 1px 14px)",
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(circle at 85% -20%, rgba(96,165,250,0.25), transparent 55%)",
-          }}
-        />
-        <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 pt-5 pb-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-1 w-10 overflow-hidden rounded-full">
-              <div className="flex-1 bg-[var(--color-ldp-navy-700)]" />
-              <div className="flex-1 bg-white/80" />
-              <div className="flex-1 bg-[var(--color-ldp-red)]" />
-            </div>
-            <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--color-ldp-red-bright)]">
-              LDPEC Portal
-            </div>
-          </div>
-          <nav className="flex items-center gap-4 text-xs">
+      <PageMasthead
+        eyebrow="Dashboard"
+        title="Dashboard."
+        subtitle={todayLabel}
+        backHref={null}
+        rightNav={
+          <>
             <Link
               href="/tour/1"
               className="rounded text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ldp-navy-900)]"
@@ -151,17 +129,10 @@ export default async function DashboardPage() {
                 Join EC Meeting
               </a>
             </Button>
-          </nav>
-        </div>
-        <div className="relative mx-auto max-w-6xl px-6 pt-6 pb-10">
-          <h1 className="text-4xl font-black tracking-[-0.03em] md:text-5xl">
-            Dashboard
-          </h1>
-          <p className="mt-2 text-sm font-medium text-white/60">{todayLabel}</p>
-        </div>
-        {/* Red bottom bar */}
-        <div className="relative h-1.5 w-full bg-[var(--color-ldp-red)]" />
-      </header>
+          </>
+        }
+      />
+
 
       <main className="mx-auto max-w-6xl px-6 py-10">
         {/* 0. Live primary callout — only renders while a voter_guide_url

@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -27,32 +26,13 @@ export default async function MyLdIndex() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="My LD"
+        title="Pick your Legislative District."
+        subtitle="Each page shows leadership, precincts by strategy, races on the ballot, precinct captains on file, early voting inside the district, and what to do this week."
+      />
 
       <main className="mx-auto max-w-5xl px-6 py-10">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            My LD
-          </h1>
-          <p className="mt-1 text-sm text-[var(--color-ldp-ink-700)]">
-            Pick your Legislative District. Each page shows leadership, precincts
-            by strategy, races on the ballot, and what to do this week.
-          </p>
-        </div>
 
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
           {lds.map((ld) => {

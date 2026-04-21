@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Folder } from "lucide-react";
+import { ExternalLink, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { fetchCommitteeByCode } from "@/lib/db/committees";
 import { fetchAllMembers, displayName } from "@/lib/db/members";
 
@@ -38,32 +39,16 @@ export default async function CommitteeDetailPage({
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <Link
-            href="/committees"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> All Committees
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow={committee.type === "AD_HOC" ? "Ad hoc committee" : "Standing committee"}
+        title={`${committee.name} Committee.`}
+        backHref="/committees"
+        backLabel="All Committees"
+        maxWidthClass="max-w-4xl"
+      />
 
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="mb-6">
-          {committee.type === "AD_HOC" && (
-            <span className="mb-2 inline-flex items-center rounded-full bg-[var(--color-ldp-gold)] px-2 py-0.5 text-[10px] font-semibold uppercase text-[var(--color-ldp-navy-900)]">
-              Ad hoc
-            </span>
-          )}
-          <h1 className="text-3xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            {committee.name} Committee
-          </h1>
           {chair && (
             <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
               <span className="font-semibold">Chair:</span>{" "}

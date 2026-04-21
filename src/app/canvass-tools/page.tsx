@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { ArrowLeft, ExternalLink, MapPin } from "lucide-react";
+import { ExternalLink, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageMasthead } from "@/components/nav/PageMasthead";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchPrecinctsForMcPriority, countByStrategy } from "@/lib/db/precincts";
 
@@ -61,35 +61,13 @@ export default async function CanvassToolsPage() {
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
-      <header className="border-b border-[var(--color-ldp-line)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[var(--color-ldp-navy-700)] hover:underline"
-          >
-            <ArrowLeft className="size-4" /> Dashboard
-          </Link>
-          <Button asChild variant="ldp" size="sm">
-            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-              Join EC Meeting
-            </a>
-          </Button>
-        </div>
-      </header>
+      <PageMasthead
+        eyebrow="Canvass Tools"
+        title="Priority districts, volunteer flow, and the guides you need."
+        subtitle="Where countywide volunteer hours move the most votes: Metro Council 17, 21, and 7. If your LD overlaps any of these, coordinate with the LDP chair before cutting turf."
+      />
 
       <main className="mx-auto max-w-6xl px-6 py-10">
-        <div className="mb-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Canvass Tools
-          </div>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            Priority districts, volunteer flow, and the guides you need.
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
-            Where countywide volunteer hours move the most votes: Metro Council 17, 21, and 7.
-            If your LD overlaps any of these, coordinate with the LDP chair before cutting turf.
-          </p>
-        </div>
 
         {/* Priority MC districts */}
         <section className="mb-10">
