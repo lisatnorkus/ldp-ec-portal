@@ -215,9 +215,14 @@ export default async function DashboardPage() {
         {/* Transitions / Vacancies */}
         {(vacancies.length > 0 || recentChanges.length > 0) && (
           <section className="mb-8">
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-              Transitions · seat changes since June 2025 reorg
-            </h2>
+            <div className="mb-3 flex items-baseline justify-between">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                Transitions · seat changes since June 2025 reorg
+              </h2>
+              <Link href="/transitions" className="text-xs font-medium text-[var(--color-ldp-navy-700)] hover:underline">
+                Full list →
+              </Link>
+            </div>
             <div className="grid gap-3 md:grid-cols-2">
               {vacancies.length > 0 && (
                 <div className="rounded-xl border border-[var(--color-ldp-red)] bg-white p-5">

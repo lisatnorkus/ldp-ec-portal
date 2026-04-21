@@ -387,6 +387,25 @@ function Step5() {
           </div>
         </Link>
         <Link
+          href="/events"
+          className="rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5 transition-colors hover:bg-white/10"
+        >
+          <div className="text-sm font-semibold text-white">Events →</div>
+          <div className="mt-1 text-xs text-white/70">
+            Celebration of Democracy Dinner, Women Deliver Democracy, Dems at the Downs — the three
+            events that fund the party. Your $500 annual raise runs through their ticket links.
+          </div>
+        </Link>
+        <Link
+          href="/canvass-tools"
+          className="rounded-lg border border-white/10 bg-white/5 p-5 transition-colors hover:border-[var(--color-ldp-gold)]"
+        >
+          <div className="text-sm font-semibold text-white">Canvass Tools →</div>
+          <div className="mt-1 text-xs text-white/70">
+            Priority MC districts (17, 7, 21), volunteer pipeline, canvass guides, VoteBuilder.
+          </div>
+        </Link>
+        <Link
           href="/committees"
           className="rounded-lg border border-white/10 bg-white/5 p-5 transition-colors hover:border-[var(--color-ldp-gold)]"
         >
@@ -403,25 +422,19 @@ function Step5() {
           <div className="text-sm font-semibold text-white">People →</div>
           <div className="mt-1 text-xs text-white/70">
             Full LDPEC directory: countywide officers at top, then LD Chairs, VCs, At-Large, affiliated
-            seats. Attendance and committees visible for each.
+            seats. Search works across name, role, LD, committee, email, phone.
           </div>
         </Link>
         <Link
-          href="/dashboard"
+          href="/transitions"
           className="rounded-lg border border-white/10 bg-white/5 p-5 transition-colors hover:border-[var(--color-ldp-gold)]"
         >
-          <div className="text-sm font-semibold text-white">Dashboard → Transitions →</div>
+          <div className="text-sm font-semibold text-white">Transitions →</div>
           <div className="mt-1 text-xs text-white/70">
-            Vacant seats (with recommended actions), recent fills, and the current structural gap
-            count. Where the LDPEC stands right now.
+            Vacant seats (with recommended actions) + recent fills. Where the LDPEC stands right now.
           </div>
         </Link>
       </div>
-      <p className="mt-6 text-xs text-white/60">
-        Signature events (Celebration of Democracy Dinner, Women Deliver Democracy, Dems at the
-        Downs), volunteer pipeline, and priority MC coordination live at their respective sections.
-        Canvass Tools gets its own deeper build next.
-      </p>
     </>
   );
 }
