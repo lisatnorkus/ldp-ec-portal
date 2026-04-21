@@ -323,6 +323,20 @@ If any of this content shows up in a work request to Claude Code, stop and kick 
 
 ---
 
+## 2028 reorg content — unresolved before production
+
+Tour Step 6 (reorg + delegate selection) and the At-Large role one-pager both touch timing / procedural specifics that require primary-source verification. The current copy is correct-as-rule but hedged on specifics. Resolve all four before the 2028 reorg cycle runs for real:
+
+1. **Advance-notice day counts** for Precinct Conventions, LD Conventions, and the joint post-LD meeting. Source: KDP bylaws. Search for "notice," "days," "advance," "call." Portal copy currently says "set by KDP bylaws" without day counts.
+2. **JeffCo PC filing window.** Source: LJCDP bylaws (louisvilledems.com/ljcdp-bylaws). KDP has a statewide baseline; LJCDP may layer on top. Portal copy stays generic until verified.
+3. **How the 2025 postponed cycle actually ran the joint post-LD election.** Ship the state-bylaws mechanism as formal process; the 2025-in-practice note comes from LDPEC Secretary (Brook Benningfield) or outgoing Chair reviewing minutes. Don't conflate "the rule" with "what happened" in copy.
+4. **2028 cycle timing.** Current copy says "expected to restore normal presidential-year alignment." Confirm via current KDP bylaws before committing to a specific 2028 date or window anywhere in the portal.
+5. **LJCDP §8 vs §9 applicability to current At-Large class.** Requires a read of LJCDP §§7–10 as a block. Flagged in v2.2 one-pager as the §4.4/§6.6 parenthetical; the specific §8/§9 applicability question is separate and not yet resolved.
+
+Claude Code: when editing Tour Step 6 or At-Large copy, do NOT add day counts, specific 2028 dates, or claims about "how 2025 ran" without Lisa's explicit sign-off on the primary source. Keep the hedged language.
+
+---
+
 ## Known open decisions (not blocking v2.0 but decide before v2.1)
 
 - **Custom domain** — stay on `ldp-ec-portal.vercel.app` or move to `ec.louisvilledems.com` (would require DNS coordination with whoever owns `louisvilledems.com`)?

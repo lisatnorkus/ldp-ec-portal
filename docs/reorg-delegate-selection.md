@@ -137,14 +137,31 @@ These are in v2.2 one-pager notes as well, listed here for completeness:
 
 ---
 
-## Open questions for Lisa's red-pen
+## Red-pen resolutions (April 21, 2026)
 
-1. Who calls and chairs a Precinct Convention? Outgoing LD Chair? The KDP? A specific precinct-level role?
-2. How much advance notice is required for Precinct Conventions, LD Conventions, and the joint post-LD meeting?
-3. What's the actual filing window for PC candidates in Jefferson County under current practice? (KDP Art. II mentions filing; JeffCo practice may layer on top.)
-4. In the 2025 postponed cycle, did the joint post-LD election actually follow the "all LD Chairs + VCs elect At-Large" model, or did it happen differently? (If it happened differently, first-term At-Large members may not have a frame of reference for how 2028 will work.)
-5. What's the role of the 1 At-Large member "selected by and for the Democratic elected officials of Jefferson County" (LJCDP §2.1) — does this member go through reorg on a different schedule?
-6. Is there a county-level convention (separate from LD Conventions) that happens in counties with fewer than 7 LDs? Jefferson County has 18, so this doesn't apply here, but first-term members reading state bylaws may get confused by references to "County Conventions" — worth one line to clarify?
+Lisa went through the ⚠️ questions. Here's what landed in the portal content and what's still unresolved.
+
+### Resolved — copy is correct-as-shipped
+
+**Q1 (who calls a Precinct Convention):** The outgoing LD Chair calls, advertises, and chairs the Precinct Conventions in their LD. KDP typically issues a countywide notice setting the window and procedural requirements; LD Chairs execute within that framework. Copy in Tour Step 6 reflects both.
+
+**Q6 (county conventions):** Jefferson County has 18 LDs, so the "county convention" alternative (for counties with <7 LDs) doesn't apply here. Not expanded in portal copy.
+
+### Deferred pending primary-source verification — copy is hedged
+
+**Q2 (advance notice — how many days):** Not hardcoded. Copy points at the KDP bylaws. The specific day counts are in the KDP bylaws PDF — grep for "notice," "days," "advance," "call" when someone verifies. No day counts shipped in portal.
+
+**Q3 (JeffCo PC filing window):** Not hardcoded. Needs a read-through of LJCDP bylaws (louisvilledems.com/ljcdp-bylaws) to see if the county adds anything on top of KDP's statewide baseline. Copy stays generic.
+
+**Q4 (how the 2025 cycle actually ran the joint post-LD election):** Tour Step 6 ships the state-bylaws mechanism as the formal process. Copy adds: "For how the 2025 postponed cycle actually ran this step, check with the LDPEC Secretary (Brook Benningfield) or the outgoing Chair — the minutes are the authoritative record." Not claiming how 2025 actually went.
+
+**Q5 (2028 back on cycle):** Tour Step 6 says the next cycle is "expected to restore the normal presidential-year alignment" rather than asserting it as fact. Timeline language uses "expected" / "to be confirmed." No specific 2028 dates shipped.
+
+**Q5b (§8 vs §9 At-Large duties):** Requires read-through of LJCDP bylaws §§7–10. Copy in Tour Step 6 doesn't invoke either section by number; the At-Large one-pager (`role_one_pagers_v2.2.md`) keeps the §4.4/§6.6 parenthetical flagged but doesn't assert §8 or §9 applies.
+
+### Known-unresolved — surface in CLAUDE.md, resolve before production
+
+All four deferred items above are tracked in CLAUDE.md under "2028 reorg content — unresolved before production." Running the 2028 reorg cycle for real requires these four resolved — not before that.
 
 ---
 

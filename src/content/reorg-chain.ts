@@ -1,5 +1,11 @@
 // Reorg & Delegate Selection — structured content for Tour Step 6.
 // Source: docs/reorg-delegate-selection.md.
+//
+// Lisa's red-pen (April 21, 2026) flagged that several specifics here require
+// verification against primary sources before production. Every statement
+// below is written to be *correct when it asserts a rule*, and *hedged when
+// it asserts timing / day counts / 2025-practice specifics*. See the
+// "UNRESOLVED — TODO before production" block in CLAUDE.md for the list.
 
 export type ReorgStep = {
   num: 1 | 2 | 3 | 4;
@@ -16,6 +22,8 @@ export const REORG_CHAIN: ReorgStep[] = [
     bodyParagraphs: [
       "Every precinct in Jefferson County holds a Precinct Convention. Registered Democrats in the precinct show up and elect three people: one Precinct Captain Man, one Precinct Captain Woman, and one Precinct Captain Youth (age 35 or under).",
       "Basis: KDP Art. III.B (Precinct Committee). These three people are \"the primary Party Officials responsible for organizing and building Democratic power within [the] precinct.\"",
+      "Who convenes it: in practice, the outgoing LD Chair calls, advertises, and chairs the Precinct Conventions in their LD. KDP typically issues a countywide notice setting the window and procedural requirements; LD Chairs execute within that framework.",
+      "Advance notice: set by KDP bylaws. (See the KDP bylaws PDF for exact days; day counts are not quoted here until verified.)",
       "In a precinct with no active organizing, Precinct Conventions frequently attract almost no one — and the seats go empty. If that happens, the LDPEC has to fill the vacancy from above within 90 days.",
     ],
   },
@@ -38,6 +46,7 @@ export const REORG_CHAIN: ReorgStep[] = [
       "At close of the Legislative District Convention, newly elected LD Chairs and Vice Chairs meet to elect eighteen (18) at-large members of the County Executive Committee and Committee officers (KDP Art. II.D).",
       "In plain terms: as soon as the last LD Convention closes, all 36 newly-elected LD officers (18 Chairs + 18 Vice Chairs) convene together as one body. Together they elect the 18 At-Large members, the County Chair, and the County Vice Chair (opposite sex of Chair, must be a newly-elected LD Chair).",
       "When: within 30 days of the Reorganization per LJCDP §4.4. State bylaws say \"at close\" of LD Convention — in practice this likely happens within a short window, not literally the same day.",
+      "This is the process the state bylaws require. LJCDP §4.4 and §6.6 still describe the older process (election by LD Chairs alone); state bylaws govern when they conflict. For how the 2025 postponed cycle actually ran this step, check with the LDPEC Secretary (Brook Benningfield) or the outgoing Chair — the minutes are the authoritative record.",
     ],
   },
   {
@@ -62,15 +71,15 @@ export const TIMELINE_2026_2028: Timeline2028[] = [
   { label: "May 19, 2026", description: "KY primary. Confirm if you're on the ballot." },
   { label: "Nov 3, 2026", description: "General election." },
   { label: "2027", description: "KY governor's race cycle. Reorg prep ramps." },
-  { label: "Spring 2028", description: "Quadrennial Reorganization. The whole chain runs — Precinct Conventions, LD Conventions, joint post-LD election, State Convention." },
+  { label: "Spring 2028", description: "Next quadrennial Reorganization, following the postponed 2025 cycle. Exact timing to be confirmed via KDP. Whenever it runs, the full chain runs — Precinct Conventions, LD Conventions, joint post-LD election, State Convention." },
   { label: "Summer 2028", description: "State Convention — DNC delegate selection + SCEC elections." },
 ];
 
 export const WHY_2028_MATTERS = {
   paragraph1:
-    "Most of the current LDPEC was elected in the 2025 reorg cycle. For almost everyone, this is their first party officer role and their first time hearing the word \"reorg.\" The next reorg is spring 2028, and it's the one this card prepares you for.",
+    "Most of the current LDPEC was elected in the 2025 reorg cycle. For almost everyone, this is their first party officer role and their first time hearing the word \"reorg.\" The next reorg — expected in 2028 — is the one this card prepares you for.",
   paragraph2:
     "If you're an LD Chair, LD Vice Chair, At-Large Member, or Precinct Captain, the things that happen during reorg are things you have to do, not things that happen to you.",
   postponementNote:
-    "Normally reorg years are 2012, 2016, 2020, 2024, 2028 — aligned with presidential elections. For the last cycle, KDP postponed reorg from 2024 to 2025. That's why most of the current LDPEC was elected in June 2025, not spring 2024. The 2028 cycle is expected to run on the normal presidential-year schedule.",
+    "Normally reorg years align with presidential elections — 2012, 2016, 2020, and would have been 2024. For the last cycle, KDP postponed reorg from 2024 to 2025. That's why most of the current LDPEC was elected in June 2025, not spring 2024. The next cycle is expected to restore the normal presidential-year alignment, which would put it in 2028 — but confirm the exact timing against current KDP bylaws before planning dates.",
 };
