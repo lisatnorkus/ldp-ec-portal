@@ -5,7 +5,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchAllMembers } from "@/lib/db/members";
 import { CycleTimeline } from "@/components/cycle/CycleTimeline";
 import { PlanCards } from "@/components/cycle/PlanCards";
-import { PersonalizedHero } from "@/components/dashboard/PersonalizedHero";
+import { WorkingSet } from "@/components/dashboard/WorkingSet";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
@@ -156,13 +156,15 @@ export default async function DashboardPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-10">
-        {/* 1. Cycle urgency at the top — the thing that sets the tone. */}
+        {/* 1. Role-first Working Set — your seat's standing duties,
+            the amplifier work that's always live, and the right-now
+            specifics. Cycle context is demoted below. */}
+        <WorkingSet />
+
+        {/* 2. Cycle timeline — demoted to a thin reference strip. */}
         <CycleTimeline />
 
-        {/* 2. Personalized hero — tells YOU what to do this week. */}
-        <PersonalizedHero />
-
-        {/* 3. The plans — primary, general + GOTV, long horizon. */}
+        {/* 3. The plans — full-arc reference material. */}
         <PlanCards />
 
         {/* 4. At-a-glance operational blocks. */}
