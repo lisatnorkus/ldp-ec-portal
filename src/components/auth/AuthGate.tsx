@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState, type ReactNode, type FormEvent } from "react";
 import { checkPassphrase, isUnlocked, markUnlocked } from "@/lib/auth/passphrase";
 import { Button } from "@/components/ui/button";
@@ -45,7 +46,15 @@ export function AuthGate({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[var(--color-ldp-navy-900)] to-[var(--color-ldp-navy-800)] flex items-center justify-center p-6">
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-2xl">
-        <div className="mb-6 border-b border-[var(--color-ldp-line)] pb-4">
+        <div className="mb-6 flex flex-col items-center border-b border-[var(--color-ldp-line)] pb-5 text-center">
+          <Image
+            src="/democratic-kicking-donkey.png"
+            alt="Democratic Party"
+            width={84}
+            height={84}
+            priority
+            className="mb-3 h-16 w-auto drop-shadow-sm"
+          />
           <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
             LDP Executive Committee
           </div>

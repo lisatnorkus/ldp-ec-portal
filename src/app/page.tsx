@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -22,6 +23,21 @@ export default function LandingPage() {
             "repeating-linear-gradient(135deg, rgba(255,255,255,0.9) 0 1px, transparent 1px 14px)",
         }}
       />
+
+      {/* Kicking donkey — faint watermark on the right side */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 top-4 hidden opacity-[0.08] md:right-10 md:top-10 md:block lg:opacity-[0.12]"
+      >
+        <Image
+          src="/democratic-kicking-donkey.png"
+          alt=""
+          width={360}
+          height={360}
+          priority
+          className="h-64 w-auto lg:h-80"
+        />
+      </div>
 
       <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-6 py-16">
         {/* Top bar — eyebrow + meta */}
