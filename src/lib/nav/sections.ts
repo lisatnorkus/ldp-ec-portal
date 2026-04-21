@@ -1,0 +1,55 @@
+import type { LucideIcon } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote } from "lucide-react";
+
+export type SectionNavItem = {
+  slug: string;
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  description: string;
+};
+
+export const SECTION_NAV: SectionNavItem[] = [
+  {
+    slug: "plan-map",
+    label: "Plan & Map",
+    href: "/plan-map",
+    icon: Map,
+    description: "Strategy map, the 2026 plan, precinct targeting countywide.",
+  },
+  {
+    slug: "my-ld",
+    label: "My LD",
+    href: "/my-ld",
+    icon: Home,
+    description: "Your district: precincts, leadership, races on the ballot.",
+  },
+  {
+    slug: "this-month",
+    label: "This Month",
+    href: "/this-month",
+    icon: Calendar,
+    description: "What's happening right now — canvasses, events, calls.",
+  },
+  {
+    slug: "canvass-tools",
+    label: "Canvass Tools",
+    href: "/canvass-tools",
+    icon: Vote,
+    description: "VoteBuilder, priority districts, volunteer pipeline, guides.",
+  },
+  {
+    slug: "people",
+    label: "People",
+    href: "/people",
+    icon: Users,
+    description: "LDPEC directory: officers, LD Chairs, committee chairs, at-large members.",
+  },
+  {
+    slug: "drive",
+    label: "Drive",
+    href: "/drive",
+    icon: FolderOpen,
+    description: "Shortcuts to the party's Google Drive working docs.",
+  },
+];
