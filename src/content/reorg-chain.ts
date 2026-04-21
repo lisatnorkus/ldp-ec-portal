@@ -1,17 +1,27 @@
 // Reorg & Delegate Selection — structured content for Tour Step 6.
 // Source: docs/reorg-delegate-selection.md.
 //
-// Lisa's red-pen (April 21, 2026) flagged that several specifics here require
-// verification against primary sources before production. Every statement
-// below is written to be *correct when it asserts a rule*, and *hedged when
-// it asserts timing / day counts / 2025-practice specifics*. See the
-// "UNRESOLVED — TODO before production" block in CLAUDE.md for the list.
+// Per Lisa's April 21, 2026 direction:
+// Specifics that require primary-source verification (day counts, 2028
+// dates, how the 2025 cycle actually ran) are rendered as VISIBLE "needs
+// verification" callouts, not hedged prose. Transparency beats cautious-
+// guess polish for a reference document first-term EC members will rely on.
+//
+// When a verifyAgainst entry is resolved against the primary source, move
+// the verified fact into a bodyParagraph and drop the callout entry.
+
+export type VerifyCallout = {
+  id: string;
+  claim: string;      // short plain-language version of what needs confirming
+  source: string;     // where someone goes to verify
+};
 
 export type ReorgStep = {
   num: 1 | 2 | 3 | 4;
   title: string;
   headline: string;
   bodyParagraphs: string[];
+  verifyAgainst?: VerifyCallout[];
 };
 
 export const REORG_CHAIN: ReorgStep[] = [
@@ -23,8 +33,14 @@ export const REORG_CHAIN: ReorgStep[] = [
       "Every precinct in Jefferson County holds a Precinct Convention. Registered Democrats in the precinct show up and elect three people: one Precinct Captain Man, one Precinct Captain Woman, and one Precinct Captain Youth (age 35 or under).",
       "Basis: KDP Art. III.B (Precinct Committee). These three people are \"the primary Party Officials responsible for organizing and building Democratic power within [the] precinct.\"",
       "Who convenes it: in practice, the outgoing LD Chair calls, advertises, and chairs the Precinct Conventions in their LD. KDP typically issues a countywide notice setting the window and procedural requirements; LD Chairs execute within that framework.",
-      "Advance notice: set by KDP bylaws. (See the KDP bylaws PDF for exact days; day counts are not quoted here until verified.)",
       "In a precinct with no active organizing, Precinct Conventions frequently attract almost no one — and the seats go empty. If that happens, the LDPEC has to fill the vacancy from above within 90 days.",
+    ],
+    verifyAgainst: [
+      {
+        id: "precinct-convention-notice",
+        claim: "Exact advance-notice requirements for Precinct Conventions (number of days, posting locations).",
+        source: "KDP Bylaws — search for \"notice,\" \"days,\" \"advance,\" \"call.\" Day counts intentionally not quoted here until verified.",
+      },
     ],
   },
   {
@@ -37,6 +53,18 @@ export const REORG_CHAIN: ReorgStep[] = [
       "What else: elects delegates from the LD to the Congressional District Convention, elects delegates from the LD to the State Convention, plus any business SCEC assigns in the Call to Convention.",
       "Who runs it: the outgoing LD Chair. If the outgoing Chair is absent, the outgoing LD Vice Chair runs it.",
     ],
+    verifyAgainst: [
+      {
+        id: "ld-convention-notice",
+        claim: "Advance-notice requirements for LD Conventions (KDP may differ from Precinct-Convention timing).",
+        source: "KDP Bylaws.",
+      },
+      {
+        id: "jeffco-pc-filing",
+        claim: "JeffCo-specific filing window for PC candidates ahead of their Precinct Convention.",
+        source: "LJCDP Bylaws at louisvilledems.com/ljcdp-bylaws — may layer requirements on top of KDP.",
+      },
+    ],
   },
   {
     num: 3,
@@ -46,7 +74,14 @@ export const REORG_CHAIN: ReorgStep[] = [
       "At close of the Legislative District Convention, newly elected LD Chairs and Vice Chairs meet to elect eighteen (18) at-large members of the County Executive Committee and Committee officers (KDP Art. II.D).",
       "In plain terms: as soon as the last LD Convention closes, all 36 newly-elected LD officers (18 Chairs + 18 Vice Chairs) convene together as one body. Together they elect the 18 At-Large members, the County Chair, and the County Vice Chair (opposite sex of Chair, must be a newly-elected LD Chair).",
       "When: within 30 days of the Reorganization per LJCDP §4.4. State bylaws say \"at close\" of LD Convention — in practice this likely happens within a short window, not literally the same day.",
-      "This is the process the state bylaws require. LJCDP §4.4 and §6.6 still describe the older process (election by LD Chairs alone); state bylaws govern when they conflict. For how the 2025 postponed cycle actually ran this step, check with the LDPEC Secretary (Brook Benningfield) or the outgoing Chair — the minutes are the authoritative record.",
+      "This is the process the state bylaws require. LJCDP §4.4 and §6.6 still describe the older process (election by LD Chairs alone); state bylaws govern when they conflict.",
+    ],
+    verifyAgainst: [
+      {
+        id: "2025-actual-sequence",
+        claim: "How the 2025 postponed cycle actually ran this step — did all 36 incoming Chairs + VCs convene as one body, or did it happen some other way?",
+        source: "LDPEC Secretary Brook Benningfield or outgoing Chair — the meeting minutes are authoritative.",
+      },
     ],
   },
   {
@@ -62,17 +97,42 @@ export const REORG_CHAIN: ReorgStep[] = [
   },
 ];
 
+// Top-level unresolved items rendered as a consolidated callout block at the
+// end of Tour Step 6. These are the items that are not tied to a single step
+// of the chain — they're general content-level TODOs.
+export const STEP_6_UNRESOLVED: VerifyCallout[] = [
+  {
+    id: "2028-cycle-confirmation",
+    claim: "Whether KDP has formally set 2028 as the next reorganization year (restoring normal presidential-year alignment after the postponed 2025 cycle).",
+    source: "Current KDP Bylaws — search for \"reorganization,\" \"four-year,\" \"cycle,\" \"2028.\" Do not quote specific 2028 dates anywhere in the portal until this is confirmed.",
+  },
+  {
+    id: "ljcdp-section-8-vs-9",
+    claim: "Whether LJCDP §8 (Legislative District At-Large) or §9 (Non-Legislative District At-Large) governs the current At-Large class elected under the 2025-reorg countywide mechanism.",
+    source: "LJCDP Bylaws §§7–10 read as a block. Likely a pre-2025 artifact that needs amendment alongside §4.4/§6.6.",
+  },
+];
+
 export type Timeline2028 = {
   label: string;
   description: string;
+  unresolved?: boolean;
 };
 
 export const TIMELINE_2026_2028: Timeline2028[] = [
   { label: "May 19, 2026", description: "KY primary. Confirm if you're on the ballot." },
   { label: "Nov 3, 2026", description: "General election." },
   { label: "2027", description: "KY governor's race cycle. Reorg prep ramps." },
-  { label: "Spring 2028", description: "Next quadrennial Reorganization, following the postponed 2025 cycle. Exact timing to be confirmed via KDP. Whenever it runs, the full chain runs — Precinct Conventions, LD Conventions, joint post-LD election, State Convention." },
-  { label: "Summer 2028", description: "State Convention — DNC delegate selection + SCEC elections." },
+  {
+    label: "Spring 2028?",
+    description: "Next quadrennial Reorganization, assumed to follow the postponed 2025 cycle on a presidential-year schedule. Full chain runs — Precinct Conventions, LD Conventions, joint post-LD election, State Convention.",
+    unresolved: true,
+  },
+  {
+    label: "Summer 2028?",
+    description: "State Convention — DNC delegate selection + SCEC elections.",
+    unresolved: true,
+  },
 ];
 
 export const WHY_2028_MATTERS = {

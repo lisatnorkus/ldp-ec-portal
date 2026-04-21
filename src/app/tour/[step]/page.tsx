@@ -7,6 +7,8 @@ import {
   REORG_CHAIN,
   TIMELINE_2026_2028,
   WHY_2028_MATTERS,
+  STEP_6_UNRESOLVED,
+  type VerifyCallout as VerifyCalloutData,
 } from "@/content/reorg-chain";
 
 export default async function TourStepPage({
@@ -452,6 +454,9 @@ function Step6() {
                   <p key={i}>{p}</p>
                 ))}
               </div>
+              {s.verifyAgainst?.map((v) => (
+                <VerifyCallout key={v.id} callout={v} />
+              ))}
             </article>
           ))}
         </div>
@@ -463,23 +468,61 @@ function Step6() {
           {TIMELINE_2026_2028.map((t, i) => (
             <li
               key={i}
-              className="flex gap-4 rounded-lg border border-white/10 bg-white/5 p-4"
+              className={`flex gap-4 rounded-lg border bg-white/5 p-4 ${
+                t.unresolved
+                  ? "border-amber-500/40"
+                  : "border-white/10"
+              }`}
             >
-              <div className="w-28 shrink-0 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+              <div
+                className={`w-28 shrink-0 text-xs font-semibold uppercase tracking-widest ${
+                  t.unresolved ? "text-amber-400" : "text-[var(--color-ldp-gold)]"
+                }`}
+              >
                 {t.label}
               </div>
-              <div className="text-sm text-white/85">{t.description}</div>
+              <div className="flex-1 text-sm text-white/85">
+                {t.description}
+                {t.unresolved && (
+                  <span className="ml-2 inline-flex items-center rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-amber-200">
+                    Unconfirmed
+                  </span>
+                )}
+              </div>
             </li>
           ))}
         </ol>
       </section>
+
+      {STEP_6_UNRESOLVED.length > 0 && (
+        <section className="mb-6 rounded-lg border-2 border-amber-500/60 bg-amber-500/10 p-5">
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-amber-300">
+            ⚠ To be verified before the 2028 cycle runs
+          </h3>
+          <p className="mb-3 text-sm text-white/85">
+            This card is drafted to be correct-as-rule where it cites state or county bylaws. These
+            specific items require primary-source confirmation before anyone plans real dates or
+            procedures off them:
+          </p>
+          <ul className="space-y-3">
+            {STEP_6_UNRESOLVED.map((v) => (
+              <li key={v.id} className="rounded border-l-2 border-amber-400 bg-white/5 p-3">
+                <div className="text-sm text-white/90">{v.claim}</div>
+                <div className="mt-1 text-xs italic text-amber-200/80">
+                  <strong>Verify against:</strong> {v.source}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="rounded-lg border-2 border-[var(--color-ldp-red)] bg-white/5 p-5">
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
           Write it down now
         </h3>
         <p className="text-sm leading-relaxed text-white/85">
-          Whatever role you hold, spring 2028 will reset it. The best thing you can do right now is{" "}
+          Whatever role you hold, the next reorg will reset it. The best thing you can do right now is{" "}
           <strong className="text-white">document what you do</strong> — your LD&apos;s canvass
           rhythms, your committee&apos;s recurring work, your contacts, your templates. If you want
           to continue, your successor (or you after re-election) needs that doc. If you don&apos;t
@@ -487,6 +530,21 @@ function Step6() {
         </p>
       </section>
     </>
+  );
+}
+
+function VerifyCallout({ callout }: { callout: VerifyCalloutData }) {
+  return (
+    <div className="mt-4 rounded border-l-4 border-amber-400 bg-amber-500/10 p-3">
+      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-widest text-amber-300">
+        <span aria-hidden="true">⚠</span>
+        To be verified
+      </div>
+      <div className="mt-1 text-sm text-white/90">{callout.claim}</div>
+      <div className="mt-1 text-xs italic text-amber-200/80">
+        <strong>Source to check:</strong> {callout.source}
+      </div>
+    </div>
   );
 }
 
