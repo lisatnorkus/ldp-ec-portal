@@ -16,6 +16,7 @@ import {
   ArrowLeftRight,
   FolderOpen,
   Compass,
+  HelpCircle,
 } from "lucide-react";
 
 export type NavItem = {
@@ -90,6 +91,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/drive", label: "Drive", icon: FolderOpen },
       { href: "/tour/1", label: "Welcome Tour", icon: Compass },
+      { href: "/help", label: "Help & FAQ", icon: HelpCircle },
     ],
   },
 ];
