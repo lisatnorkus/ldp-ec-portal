@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, MapPin, Target, Users, Mail, Phone } from "lucide-react";
+import { ExternalLink, MapPin, Target, Users, Mail, Phone, Star } from "lucide-react";
 import { PageMasthead } from "@/components/nav/PageMasthead";
 import {
   fetchPcsForLd,
@@ -273,7 +273,9 @@ export default async function LdDetailPage({
             </h2>
             {candidates.hd.length > 0 && (
               <RaceBlock
-                title={`State House District ${ld_number} · Your LD seat`}
+                title={`State House District ${ld_number}`}
+                subtitle="Your LD seat"
+                officeType="STATE_HOUSE"
                 candidates={candidates.hd}
               />
             )}
@@ -286,6 +288,8 @@ export default async function LdDetailPage({
                     <RaceBlock
                       key={mc}
                       title={`Metro Council ${mc}`}
+                      subtitle="Overlaps your LD"
+                      officeType="METRO_COUNCIL"
                       candidates={mcCandidates}
                     />
                   );
@@ -587,39 +591,122 @@ type Candidate = {
   notes: string | null;
 };
 
-function RaceBlock({ title, candidates }: { title: string; candidates: Candidate[] }) {
+function RaceBlock({
+  title,
+  subtitle,
+  officeType,
+  candidates,
+}: {
+  title: string;
+  subtitle?: string;
+  officeType: "STATE_HOUSE" | "METRO_COUNCIL";
+  candidates: Candidate[];
+}) {
   const dems = candidates.filter((c) => c.party === "D");
   const others = candidates.filter((c) => c.party !== "D");
+  const hasEndorsed = dems.some((d) => d.is_endorsed);
+  // Metro Council endorsements require a 60% LDPEC vote. When an MC
+  // race has multiple D candidates but no endorsement, call that out
+  // explicitly so the absence isn't mistaken for us forgetting.
+  const mcNoEndorsement =
+    officeType === "METRO_COUNCIL" && dems.length >= 2 && !hasEndorsed;
+
+  const accent = officeType === "STATE_HOUSE" ? "var(--color-ldp-navy-800)" : "#db2777";
+
   return (
-    <div className="mb-4 rounded-lg border border-[var(--color-ldp-line)] bg-white p-5">
-      <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">{title}</div>
-      {others.length > 0 && (
-        <div className="mt-2 text-xs text-[var(--color-ldp-ink-700)]">
-          {others.map((o) => (
-            <span key={o.id} className="mr-2">
-              {o.full_name} ({o.party}) {o.is_incumbent && "· incumbent"}
-            </span>
-          ))}
+    <article
+      className="mb-4 overflow-hidden rounded-xl border bg-white shadow-sm"
+      style={{ borderColor: hasEndorsed ? "#059669" : accent, borderWidth: hasEndorsed ? 2 : 1 }}
+    >
+      {/* Colored header strip */}
+      <div
+        className="flex items-center justify-between px-5 py-2"
+        style={{
+          background: hasEndorsed ? "#059669" : accent,
+          color: "white",
+        }}
+      >
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-90">
+            {subtitle ?? (officeType === "STATE_HOUSE" ? "State House" : "Metro Council")}
+          </div>
+          <div className="text-sm font-bold tracking-tight">{title}</div>
         </div>
-      )}
-      <ul className="mt-3 space-y-1.5">
-        {dems.map((d) => (
-          <li key={d.id} className="flex items-start gap-2 text-sm">
-            {d.is_endorsed && (
-              <span className="mt-0.5 rounded-full bg-[var(--color-ldp-gold)] px-1.5 py-0.5 text-[9px] font-bold uppercase text-[var(--color-ldp-navy-900)]">
-                LDP
-              </span>
-            )}
-            <span className={d.is_endorsed ? "font-semibold text-[var(--color-ldp-navy-900)]" : "text-[var(--color-ldp-ink-900)]"}>
-              {d.full_name}
-              {d.is_incumbent && <span className="ml-1 text-xs text-[var(--color-ldp-ink-700)]">· incumbent</span>}
-            </span>
-            {d.notes && <span className="text-xs text-[var(--color-ldp-ink-700)]">— {d.notes}</span>}
-          </li>
-        ))}
-      </ul>
-    </div>
+        {hasEndorsed && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700">
+            <Star aria-hidden="true" className="size-3 fill-emerald-700" /> LDP Endorsed
+          </span>
+        )}
+      </div>
+
+      <div className="p-5">
+        {mcNoEndorsement && (
+          <div className="mb-3 rounded-lg border border-[var(--color-ldp-gold)] bg-[#EFF6FF] p-3 text-xs text-[var(--color-ldp-ink-900)]">
+            <strong className="text-[var(--color-ldp-navy-800)]">
+              No LDP endorsement made in this race.
+            </strong>{" "}
+            All {dems.length} Democratic candidates applied for endorsement, but no one cleared
+            the LDPEC&apos;s 60% threshold at the Endorsement Process Committee vote. Candidates
+            below are listed for your awareness — no committee position.
+          </div>
+        )}
+
+        {others.length > 0 && (
+          <div className="mb-3 text-xs text-[var(--color-ldp-ink-700)]">
+            <span className="font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
+              R side:
+            </span>{" "}
+            {others
+              .map((o) => `${o.full_name}${o.is_incumbent ? " (incumbent)" : ""}`)
+              .join(", ")}
+          </div>
+        )}
+
+        <ul className="space-y-2">
+          {dems.map((d) => {
+            const cleanNotes = stripDuplicateIncumbent(d.notes, d.is_incumbent);
+            return (
+              <li key={d.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                <span
+                  className={
+                    d.is_endorsed
+                      ? "text-base font-bold text-[var(--color-ldp-navy-900)]"
+                      : "font-medium text-[var(--color-ldp-navy-900)]"
+                  }
+                >
+                  {d.full_name}
+                </span>
+                {d.is_endorsed && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white">
+                    <Star aria-hidden="true" className="size-3 fill-white" /> Endorsed
+                  </span>
+                )}
+                {d.is_incumbent && (
+                  <span className="rounded-full border border-[var(--color-ldp-line)] bg-[#FAFAFA] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                    Incumbent
+                  </span>
+                )}
+                {cleanNotes && (
+                  <span className="text-xs text-[var(--color-ldp-ink-700)]">{cleanNotes}</span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </article>
   );
+}
+
+function stripDuplicateIncumbent(notes: string | null, isIncumbent: boolean): string | null {
+  if (!notes) return null;
+  if (!isIncumbent) return notes.startsWith("— ") ? notes : `— ${notes}`;
+  // When the incumbent chip is already rendered, strip any leading
+  // "Incumbent · " / "Incumbent" from the notes so we don't read the
+  // word twice.
+  const stripped = notes.replace(/^Incumbent\s*[·:.-]?\s*/i, "").trim();
+  if (!stripped) return null;
+  return `— ${stripped}`;
 }
 
 function groupByStrategy(precincts: Precinct[]): Partial<Record<Strategy, Precinct[]>> {
