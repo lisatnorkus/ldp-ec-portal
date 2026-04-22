@@ -24,10 +24,12 @@ export default function LandingPage() {
         }}
       />
 
-      {/* Kicking donkey — faint watermark on the right side */}
+      {/* Kicking donkey — faint watermark on the right side.
+          Shown across breakpoints, sized down on mobile to feel
+          like a brand mark without crowding the hero copy. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 top-4 hidden opacity-[0.08] md:right-10 md:top-10 md:block lg:opacity-[0.12]"
+        className="pointer-events-none absolute right-3 top-3 opacity-[0.07] md:right-10 md:top-10 md:opacity-[0.08] lg:opacity-[0.12]"
       >
         <Image
           src="/democratic-kicking-donkey.png"
@@ -35,7 +37,7 @@ export default function LandingPage() {
           width={360}
           height={360}
           priority
-          className="h-64 w-auto lg:h-80"
+          className="h-28 w-auto sm:h-40 md:h-64 lg:h-80"
         />
       </div>
 

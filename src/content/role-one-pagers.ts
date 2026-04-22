@@ -9,7 +9,7 @@ export type RoleOnePager = {
   title: string;
   whoYouAre: string;
   whatTheRoleDoes: string[];
-  alsoNote?: string; // for SCEC seat reminder on LD_CHAIR / LD_VC
+  alsoNote?: string; // gold-accent callout under whatTheRoleDoes — used for SCEC election reminders (LD_CHAIR, LD_VC) and the VoteBuilder admin note (PRECINCT_CAPTAIN)
   startHere: string[];
   responsibility2028: string;
 };

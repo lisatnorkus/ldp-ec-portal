@@ -23,7 +23,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       setUnlocked(true);
       setError(null);
     } else {
-      setError("That passphrase doesn't match. Check with the committee if you need it.");
+      setError("That passphrase doesn't match. Email communications@louisvilledems.com if you need it.");
     }
   }
 

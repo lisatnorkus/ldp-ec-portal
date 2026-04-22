@@ -295,18 +295,21 @@ export default async function LdDetailPage({
           </section>
         )}
 
-        {/* Precinct playbook */}
+        {/* Precinct playbook — all buckets collapsed by default so the
+            page doesn't become a wall on LDs with 40+ precincts */}
         <section className="mb-8">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Precinct playbook
           </h2>
+          <p className="mb-3 text-xs text-[var(--color-ldp-ink-700)]">
+            Click any strategy bucket to see the precincts inside it with voter counts, D margin, and sleeper-Dem totals.
+          </p>
           {(["DEFEND", "PRIMARY", "ACTIVATE", "GROW"] as Strategy[]).map((s) => {
             const group = byStrategy[s] ?? [];
             if (group.length === 0) return null;
             return (
               <details
                 key={s}
-                open={s === "DEFEND"}
                 className="mb-3 rounded-lg border border-[var(--color-ldp-line)] bg-white p-4"
               >
                 <summary className="cursor-pointer list-none">
