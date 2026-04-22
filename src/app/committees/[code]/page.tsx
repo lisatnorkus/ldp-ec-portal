@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, Folder } from "lucide-react";
+import { ExternalLink, Folder, Mail, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchCommitteeByCode } from "@/lib/db/committees";
 import { fetchAllMembers, displayName } from "@/lib/db/members";
+import {
+  fetchCommitteeNotes,
+  fetchCommitteeTasks,
+} from "@/lib/db/committee-workspace";
+import { CommitteeNotes } from "@/components/ld-workspace/CommitteeNotes";
+import { CommitteeTasks } from "@/components/ld-workspace/CommitteeTasks";
+import type { Assignable } from "@/lib/db/ld-tasks";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +34,11 @@ export default async function CommitteeDetailPage({
   const committee = await fetchCommitteeByCode(code);
   if (!committee) notFound();
 
-  const members = await fetchAllMembers();
+  const [members, notes, tasks] = await Promise.all([
+    fetchAllMembers(),
+    fetchCommitteeNotes(committee.code),
+    fetchCommitteeTasks(committee.code),
+  ]);
   const byId = new Map(members.map((m) => [m.id, m]));
   const chair = committee.chair_id ? byId.get(committee.chair_id) : null;
 
@@ -52,12 +63,89 @@ export default async function CommitteeDetailPage({
     return { fullName, member: undefined };
   });
 
+  // Assignables for committee tasks: resolved members who have emails
+  // or known roles; plus the chair at the top with role flagged.
+  const assignables: Assignable[] = [];
+  if (chair) {
+    assignables.push({
+      name: displayName(chair),
+      role: "Committee Chair",
+    });
+  }
+  for (const { fullName, member } of memberMatches) {
+    if (chair && member?.id === chair.id) continue;
+    const label = member?.ld_number ? `Member · LD${member.ld_number}` : "Member";
+    assignables.push({ name: fullName, role: label });
+  }
+
+  // Collect member emails for the "Email all members" mailto. Fall back
+  // to unresolved names silently (some member_codes don't match an
+  // ec_members row yet).
+  const memberEmails = memberMatches
+    .map(({ member }) => member?.email)
+    .filter((e): e is string => !!e);
+  const chairEmail = chair?.email ?? null;
+  const allEmails = Array.from(
+    new Set([
+      ...(chairEmail ? [chairEmail] : []),
+      ...memberEmails,
+    ])
+  );
+  const emailAllHref =
+    allEmails.length > 0
+      ? `mailto:${allEmails.join(",")}?subject=${encodeURIComponent(`[${committee.name} Committee]`)}`
+      : null;
+
+  // Activity summary counts
+  const openTasks = tasks.filter(
+    (t) => t.status !== "DONE" && t.status !== "DEFERRED"
+  ).length;
+
   return (
     <HubShell
       eyebrow={committee.type === "AD_HOC" ? "Ad hoc committee" : "Standing committee"}
       title={`${committee.name} Committee.`}
       maxWidthClass="max-w-4xl"
+      actions={
+        emailAllHref ? (
+          <Button asChild variant="ldp" size="sm" className="border border-white/20 bg-white/10 hover:bg-white/20">
+            <a href={emailAllHref}>
+              <Mail aria-hidden="true" className="mr-1 size-3.5" />
+              Email all members
+            </a>
+          </Button>
+        ) : undefined
+      }
     >
+        {/* Activity summary — at-a-glance health of the committee */}
+        <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <SummaryTile
+            icon={<Users className="size-4" />}
+            label="Members"
+            value={String(memberMatches.length + (chair ? 1 : 0))}
+            color="var(--color-ldp-navy-800)"
+          />
+          <SummaryTile
+            icon={<Mail className="size-4" />}
+            label="Contactable"
+            value={String(allEmails.length)}
+            sub="with email on file"
+            color="#0891b2"
+          />
+          <SummaryTile
+            icon={<Folder className="size-4" />}
+            label="Open tasks"
+            value={String(openTasks)}
+            color="var(--color-ldp-red)"
+          />
+          <SummaryTile
+            icon={<ExternalLink className="size-4" />}
+            label="Notes"
+            value={String(notes.length)}
+            color="var(--color-ldp-gold)"
+          />
+        </div>
+
         <div className="mb-6">
           {chair && (
             <div className="rounded-lg border border-[var(--color-ldp-line)] bg-white p-4">
@@ -105,6 +193,9 @@ export default async function CommitteeDetailPage({
             {committee.adhoc_note}
           </div>
         )}
+
+        <CommitteeTasks committeeCode={committee.code} tasks={tasks} assignables={assignables} />
+        <CommitteeNotes committeeCode={committee.code} notes={notes} />
 
         {committee.description_md && (
           <section className="mb-8">
@@ -206,5 +297,36 @@ export default async function CommitteeDetailPage({
           </div>
         )}
     </HubShell>
+  );
+}
+
+function SummaryTile({
+  icon,
+  label,
+  value,
+  sub,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  sub?: string;
+  color: string;
+}) {
+  return (
+    <div
+      className="rounded-lg border bg-white p-3"
+      style={{ borderLeftWidth: 3, borderLeftColor: color }}
+    >
+      <div
+        className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest"
+        style={{ color }}
+      >
+        {icon}
+        {label}
+      </div>
+      <div className="mt-1 text-2xl font-bold text-[var(--color-ldp-navy-900)]">{value}</div>
+      {sub && <div className="mt-0.5 text-[11px] text-[var(--color-ldp-ink-700)]">{sub}</div>}
+    </div>
   );
 }
