@@ -3,6 +3,14 @@ import { notFound } from "next/navigation";
 import { ExternalLink, Globe, MapPin, Target, Users, Mail, Phone, Star } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 import { PrecinctPlaybookTable } from "@/components/precincts/PrecinctPlaybookTable";
+import { LdNotes } from "@/components/ld-workspace/LdNotes";
+import { LdTasks } from "@/components/ld-workspace/LdTasks";
+import { fetchNotesByLd } from "@/lib/db/ld-notes";
+import { fetchTasksByLd } from "@/lib/db/ld-tasks";
+import {
+  fetchContactsByLd,
+  countStaleContacts,
+} from "@/lib/db/ld-contacts";
 import {
   fetchPcsForLd,
   groupPcsByPrecinct,
@@ -136,14 +144,19 @@ export default async function LdDetailPage({
   const ld = await fetchLd(ld_number);
   if (!ld) notFound();
 
-  const [chair, vc, precincts, nextEvent, pcs, evLocations] = await Promise.all([
-    fetchMemberById(ld.chair_id),
-    fetchMemberById(ld.vc_id),
-    fetchPrecinctsByLd(ld_number),
-    fetchNextEvent(),
-    fetchPcsForLd(ld_number),
-    fetchEvLocationsForLd(ld_number),
-  ]);
+  const [chair, vc, precincts, nextEvent, pcs, evLocations, notes, tasks, contacts] =
+    await Promise.all([
+      fetchMemberById(ld.chair_id),
+      fetchMemberById(ld.vc_id),
+      fetchPrecinctsByLd(ld_number),
+      fetchNextEvent(),
+      fetchPcsForLd(ld_number),
+      fetchEvLocationsForLd(ld_number),
+      fetchNotesByLd(ld_number),
+      fetchTasksByLd(ld_number),
+      fetchContactsByLd(ld_number),
+    ]);
+  const staleCount = countStaleContacts(contacts, 60);
 
   const candidates = await fetchCandidates(ld_number, ld.metro_council_overlap ?? []);
   const counts = countByStrategy(precincts);
@@ -203,6 +216,9 @@ export default async function LdDetailPage({
           </p>
         </div>
 
+        {/* Tasks go at the top — this is what the chair looks at first */}
+        <LdTasks ldNumber={ld_number} tasks={tasks} />
+
         {/* Highest-leverage move this week */}
         {recommendation && (
           <section className="mb-8 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-6 shadow-sm">
@@ -228,6 +244,27 @@ export default async function LdDetailPage({
           <LeadershipCard role="Chair" member={chair} />
           <LeadershipCard role="Vice Chair" member={vc} />
         </section>
+
+        <LdNotes ldNumber={ld_number} notes={notes} />
+
+        {staleCount > 0 && (
+          <Link
+            href={`/my-ld/${ld_number}/recruiting`}
+            className="mb-8 flex items-center justify-between gap-3 rounded-xl border-2 border-amber-500 bg-amber-50 px-5 py-3 transition-colors hover:bg-amber-100"
+          >
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-amber-700">
+                Recruiting staleness
+              </div>
+              <div className="mt-0.5 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+                {staleCount} prospect{staleCount === 1 ? "" : "s"} haven&apos;t been contacted in 60+ days
+              </div>
+            </div>
+            <span className="shrink-0 text-xs font-semibold text-amber-700">
+              Open pipeline →
+            </span>
+          </Link>
+        )}
 
         {/* Early voting in this LD — time-sensitive during primary window */}
         <EvSection ld={ld_number} locations={evLocations} />
@@ -352,6 +389,18 @@ export default async function LdDetailPage({
             className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[var(--color-ldp-navy-900)] hover:text-white"
           >
             Full 2026 ballot →
+          </Link>
+          <Link
+            href={`/my-ld/${ld_number}/recruiting`}
+            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-[var(--color-ldp-navy-900)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-ldp-navy-800)]"
+          >
+            Prospect pipeline →
+          </Link>
+          <Link
+            href={`/my-ld/${ld_number}/continuity`}
+            className="inline-flex items-center gap-1.5 rounded-md border border-[#64748b] bg-white px-4 py-2 text-sm font-semibold text-[#64748b] transition-colors hover:bg-[#64748b] hover:text-white"
+          >
+            Continuity & handoff →
           </Link>
         </div>
     </HubShell>

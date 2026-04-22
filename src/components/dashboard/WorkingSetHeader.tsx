@@ -35,6 +35,7 @@ export function WorkingSetHeader() {
     profile.ld_number != null ? String(profile.ld_number) : ""
   );
   const [precinctDraft, setPrecinctDraft] = useState<string>(profile.precinct_code ?? "");
+  const [nameDraft, setNameDraft] = useState<string>(profile.display_name ?? "");
   const [precinctOptions, setPrecinctOptions] = useState<string[]>([]);
   const [loadingPrecincts, setLoadingPrecincts] = useState(false);
 
@@ -42,7 +43,8 @@ export function WorkingSetHeader() {
     setRoleDraft(profile.role ?? "");
     setLdDraft(profile.ld_number != null ? String(profile.ld_number) : "");
     setPrecinctDraft(profile.precinct_code ?? "");
-  }, [profile.role, profile.ld_number, profile.precinct_code]);
+    setNameDraft(profile.display_name ?? "");
+  }, [profile.role, profile.ld_number, profile.precinct_code, profile.display_name]);
 
   // Fetch precinct list when the LD draft changes and the role wants it
   useEffect(() => {
@@ -80,7 +82,7 @@ export function WorkingSetHeader() {
   const draftNeedsPrecinct = draftRole?.needsPrecinct ?? false;
 
   function save() {
-    if (!roleDraft) return;
+    if (!roleDraft || !nameDraft.trim()) return;
     const role = roleDraft as RoleKey;
     const selected = SELECTABLE_ROLES.find((r) => r.key === role);
     const needsLd = selected?.needsLd ?? false;
@@ -89,6 +91,7 @@ export function WorkingSetHeader() {
       role,
       ld_number: needsLd && ldDraft ? Number(ldDraft) : null,
       precinct_code: needsPrecinct && precinctDraft ? precinctDraft : null,
+      display_name: nameDraft.trim(),
     });
     setEditing(false);
   }
@@ -107,6 +110,18 @@ export function WorkingSetHeader() {
           browser.
         </p>
         <div className="mt-3 grid gap-3 md:grid-cols-3">
+          <label htmlFor="ws-name" className="flex flex-col gap-1">
+            <span className="text-xs font-semibold text-[var(--color-ldp-ink-700)]">Your name</span>
+            <input
+              id="ws-name"
+              type="text"
+              value={nameDraft}
+              onChange={(e) => setNameDraft(e.target.value)}
+              placeholder="First Last"
+              className="rounded border border-[var(--color-ldp-line)] bg-white px-3 py-2 text-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ldp-navy-700)]"
+              autoComplete="name"
+            />
+          </label>
           <label htmlFor="ws-role" className="flex flex-col gap-1">
             <span className="text-xs font-semibold text-[var(--color-ldp-ink-700)]">Your role</span>
             <select
@@ -181,6 +196,7 @@ export function WorkingSetHeader() {
             onClick={save}
             disabled={
               !roleDraft ||
+              !nameDraft.trim() ||
               (draftNeedsLd && !ldDraft) ||
               (draftNeedsPrecinct && !precinctDraft)
             }
@@ -220,6 +236,9 @@ export function WorkingSetHeader() {
             Signed in as
           </div>
           <div className="truncate text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            {profile.display_name ?? selectedRole?.label}
+          </div>
+          <div className="truncate text-[11px] text-[var(--color-ldp-ink-700)]">
             {selectedRole?.label}
             {profile.ld_number != null && <> · LD{profile.ld_number}</>}
             {profile.precinct_code && <> · {profile.precinct_code}</>}
