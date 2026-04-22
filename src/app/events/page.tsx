@@ -201,7 +201,7 @@ export default async function EventsPage() {
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button asChild variant="ldp" size="sm">
-                <Link href="/committees/events">
+                <Link href="/committees/EVENTS">
                   Events Committee page →
                 </Link>
               </Button>

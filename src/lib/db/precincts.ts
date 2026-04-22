@@ -45,36 +45,49 @@ export const STRATEGY_COLOR_VAR: Record<Strategy, string> = {
   GROW: "var(--color-strategy-plant-the-flag)",
 };
 
+const SELECT_COLS =
+  "precinct, hd, sd, cd, metro_council, total_voters, dem_total, rep_total, ind_total, dem_primary_high, dem_general_high, dem_gen_not_pri, dem_gotv_targets, ind_general_voters, d_margin_pct, strategy, priority_score";
+
+// Both fetchers below swallow ANY failure from the kypolitics project
+// (missing env vars, network error, Supabase down) and return []. The
+// pages that use them render honest empty states rather than throwing.
+
 export async function fetchPrecinctsByLd(ld_number: number): Promise<Precinct[]> {
-  const supabase = await getKypoliticsServer();
-  const { data, error } = await supabase
-    .from("jeffco_voter_targeting")
-    .select(
-      "precinct, hd, sd, cd, metro_council, total_voters, dem_total, rep_total, ind_total, dem_primary_high, dem_general_high, dem_gen_not_pri, dem_gotv_targets, ind_general_voters, d_margin_pct, strategy, priority_score"
-    )
-    .eq("hd", String(ld_number))
-    .order("priority_score", { ascending: false, nullsFirst: false });
-  if (error) {
-    console.error("fetchPrecinctsByLd error", error);
+  try {
+    const supabase = await getKypoliticsServer();
+    const { data, error } = await supabase
+      .from("jeffco_voter_targeting")
+      .select(SELECT_COLS)
+      .eq("hd", String(ld_number))
+      .order("priority_score", { ascending: false, nullsFirst: false });
+    if (error) {
+      console.error("fetchPrecinctsByLd supabase error", error);
+      return [];
+    }
+    return (data ?? []) as Precinct[];
+  } catch (err) {
+    console.error("fetchPrecinctsByLd failed", err);
     return [];
   }
-  return (data ?? []) as Precinct[];
 }
 
 export async function fetchPrecinctsForMcPriority(mc_number: number): Promise<Precinct[]> {
-  const supabase = await getKypoliticsServer();
-  const { data, error } = await supabase
-    .from("jeffco_voter_targeting")
-    .select(
-      "precinct, hd, sd, cd, metro_council, total_voters, dem_total, rep_total, ind_total, dem_primary_high, dem_general_high, dem_gen_not_pri, dem_gotv_targets, ind_general_voters, d_margin_pct, strategy, priority_score"
-    )
-    .eq("metro_council", String(mc_number))
-    .order("priority_score", { ascending: false, nullsFirst: false });
-  if (error) {
-    console.error("fetchPrecinctsForMcPriority error", error);
+  try {
+    const supabase = await getKypoliticsServer();
+    const { data, error } = await supabase
+      .from("jeffco_voter_targeting")
+      .select(SELECT_COLS)
+      .eq("metro_council", String(mc_number))
+      .order("priority_score", { ascending: false, nullsFirst: false });
+    if (error) {
+      console.error("fetchPrecinctsForMcPriority supabase error", error);
+      return [];
+    }
+    return (data ?? []) as Precinct[];
+  } catch (err) {
+    console.error("fetchPrecinctsForMcPriority failed", err);
     return [];
   }
-  return (data ?? []) as Precinct[];
 }
 
 export type StrategyCounts = {

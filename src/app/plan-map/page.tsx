@@ -17,25 +17,30 @@ type Counts = {
 };
 
 async function fetchCountywideCounts(): Promise<Counts> {
-  const supabase = await getKypoliticsServer();
-  const { data } = await supabase
-    .from("jeffco_voter_targeting")
-    .select("strategy, dem_gen_not_pri");
-  const rows = (data ?? []) as Array<{ strategy: string | null; dem_gen_not_pri: number | null }>;
   const counts: Counts = {
-    total: rows.length,
+    total: 0,
     primary_base: 0,
     defend: 0,
     activate: 0,
     grow: 0,
     sleeper_dems: 0,
   };
-  for (const r of rows) {
-    if (r.strategy === "PRIMARY") counts.primary_base++;
-    else if (r.strategy === "DEFEND") counts.defend++;
-    else if (r.strategy === "ACTIVATE") counts.activate++;
-    else if (r.strategy === "GROW") counts.grow++;
-    counts.sleeper_dems += r.dem_gen_not_pri ?? 0;
+  try {
+    const supabase = await getKypoliticsServer();
+    const { data } = await supabase
+      .from("jeffco_voter_targeting")
+      .select("strategy, dem_gen_not_pri");
+    const rows = (data ?? []) as Array<{ strategy: string | null; dem_gen_not_pri: number | null }>;
+    counts.total = rows.length;
+    for (const r of rows) {
+      if (r.strategy === "PRIMARY") counts.primary_base++;
+      else if (r.strategy === "DEFEND") counts.defend++;
+      else if (r.strategy === "ACTIVATE") counts.activate++;
+      else if (r.strategy === "GROW") counts.grow++;
+      counts.sleeper_dems += r.dem_gen_not_pri ?? 0;
+    }
+  } catch (err) {
+    console.error("plan-map fetchCountywideCounts failed", err);
   }
   return counts;
 }
