@@ -22,6 +22,8 @@ import { CycleTimeline } from "@/components/cycle/CycleTimeline";
 import { VoterGuideCallout } from "@/components/dashboard/VoterGuideCallout";
 import { WorkingSetHeader } from "@/components/dashboard/WorkingSetHeader";
 import { MyAreaWidget } from "@/components/dashboard/MyAreaWidget";
+import { YourWeekPanel } from "@/components/dashboard/YourWeekPanel";
+import { fetchAssignedTasks } from "@/lib/db/my-tasks";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchRightNowContext } from "@/lib/db/right-now";
 
@@ -103,12 +105,16 @@ const MONTH_NAMES = [
 ];
 
 export default async function DashboardPage() {
-  const [data, members, rightNow] = await Promise.all([
+  const [data, members, rightNow, assignedTasks] = await Promise.all([
     fetchDashboardData(),
     fetchAllMembers(),
     fetchRightNowContext().catch((err) => {
       console.error("fetchRightNowContext failed", err);
       return undefined;
+    }),
+    fetchAssignedTasks().catch((err) => {
+      console.error("fetchAssignedTasks failed", err);
+      return [];
     }),
   ]);
   const {
@@ -183,6 +189,8 @@ export default async function DashboardPage() {
       />
 
       <WorkingSetHeader />
+
+      <YourWeekPanel allAssignedTasks={assignedTasks} />
 
       {/* Widget grid — everything compact, every tile a door into its section. */}
       <section className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
