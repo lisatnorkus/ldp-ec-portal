@@ -97,11 +97,14 @@ export async function fetchPrecinctByCode(code: string): Promise<Precinct | null
   }
 }
 
-// Extract the canonical L-code ("L204") from a precinct string like
-// "Precinct 204 41 District - L204". Returns null if the pattern isn't
-// present — the caller decides whether to fall back to the full string.
+// Extract the canonical short code (e.g., "L204", "C101", "V167")
+// from a precinct string like "Precinct 204 41 District - L204".
+// The strategy-map's TARGETING keys use this short form with a
+// single-letter prefix followed by digits. Returns null if the
+// pattern isn't present — the caller decides whether to fall back
+// to the full string.
 export function precinctCodeFrom(precinct: string): string | null {
-  const m = precinct.match(/\b(L\d+)\s*$/i);
+  const m = precinct.match(/\b([A-Z]\d+)\s*$/i);
   return m ? m[1].toUpperCase() : null;
 }
 
