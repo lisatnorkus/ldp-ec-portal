@@ -195,6 +195,18 @@ export default async function DashboardPage() {
 
       <YourWeekPanel allAssignedTasks={assignedTasks} />
 
+      {/* Cycle phase — was buried at the bottom; chairs asked for it
+          up top as their first 'where are we' reference point. */}
+      <section className="mb-8">
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Where we are in the cycle
+          </h2>
+          <Clock aria-hidden="true" className="size-4 text-[var(--color-ldp-ink-700)]" />
+        </div>
+        <CycleTimeline />
+      </section>
+
       {/* Widget grid — everything compact, every tile a door into its section. */}
       <section className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Widget
@@ -380,16 +392,6 @@ export default async function DashboardPage() {
         </Widget>
       </section>
 
-      {/* Cycle reference — full-arc context at the bottom. */}
-      <section className="mb-8">
-        <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            Where we are in the cycle
-          </h2>
-          <Clock aria-hidden="true" className="size-4 text-[var(--color-ldp-ink-700)]" />
-        </div>
-        <CycleTimeline />
-      </section>
     </HubShell>
   );
 }
