@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, Megaphone, Mail, Camera, FolderOpen, Radio, Share2 } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { SOCIAL_PLATFORMS } from "@/content/social-platforms";
 import { SocialIcon } from "@/components/social/SocialIcon";
 
@@ -8,14 +8,11 @@ export const metadata = { title: "Communications Committee" };
 
 export default function CommsPage() {
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Communications Committee"
-        title="How the party gets heard."
-        subtitle="The Communications Committee runs the LDP's voice across owned channels (social, email, Mailchimp), earned media (press), and paid digital (Meta ads, boosted posts, candidate-aligned creative). If a board member, candidate, or LD posts anything with the LDP brand on it, the system Beth designed is what made it possible."
-      />
-
-      <main className="mx-auto max-w-6xl px-6 py-10">
+    <HubShell
+      eyebrow="Communications Committee"
+      title="How the party gets heard."
+      subtitle="The Communications Committee runs the LDP's voice across owned channels (social, email, Mailchimp), earned media (press), and paid digital (Meta ads, boosted posts, candidate-aligned creative). If a board member, candidate, or LD posts anything with the LDP brand on it, the system Beth designed is what made it possible."
+    >
         {/* Built by Beth */}
         <section className="mb-10 rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white p-5">
           <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
@@ -217,8 +214,7 @@ export default function CommsPage() {
             .
           </p>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

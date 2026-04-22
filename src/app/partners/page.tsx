@@ -1,5 +1,5 @@
 import { ExternalLink, Phone, Mail, MapPin } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -103,14 +103,11 @@ export default async function PartnersPage() {
   for (const o of orgs) byCategory[o.category].push(o);
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Partners"
-        title="Organizations we work with in and around Louisville."
-        subtitle="Labor unions, advocacy groups, Democratic clubs, and training pipelines that endorse, fund, or organize alongside the Louisville Democratic Party."
-      />
-
-      <main className="mx-auto max-w-6xl px-6 py-10">
+    <HubShell
+      eyebrow="Partners"
+      title="Organizations we work with in and around Louisville."
+      subtitle="Labor unions, advocacy groups, Democratic clubs, and training pipelines that endorse, fund, or organize alongside the Louisville Democratic Party."
+    >
         <p className="mb-8 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
           Contact information here is for official coordination — not for solicitation. If a line
           is missing or wrong, send corrections to{" "}
@@ -241,7 +238,6 @@ export default async function PartnersPage() {
             .
           </p>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }

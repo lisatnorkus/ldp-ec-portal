@@ -1,5 +1,5 @@
 import { ExternalLink, Folder } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { fetchCommittees } from "@/lib/db/members";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
@@ -21,16 +21,12 @@ export default async function DrivePage() {
   const withFolders = committees.filter((c) => c.drive_folder_url);
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Drive"
-        title="Drive shortcuts."
-        subtitle="Every committee's working folder plus the party's top-traffic forms."
-        maxWidthClass="max-w-5xl"
-      />
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
-
+    <HubShell
+      eyebrow="Drive"
+      title="Drive shortcuts."
+      subtitle="Every committee's working folder plus the party's top-traffic forms."
+      maxWidthClass="max-w-5xl"
+    >
         <section className="mb-10">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Committee folders · {withFolders.length}
@@ -88,8 +84,7 @@ export default async function DrivePage() {
             ))}
           </div>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

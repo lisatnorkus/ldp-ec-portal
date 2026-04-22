@@ -1,13 +1,28 @@
 import Link from "next/link";
-import { SectionNav } from "@/components/nav/SectionNav";
+import {
+  ArrowRight,
+  Calendar,
+  ClipboardList,
+  Clock,
+  Handshake,
+  Home,
+  Map as MapIcon,
+  Megaphone,
+  ScrollText,
+  Ticket,
+  Users,
+  Vote,
+  Folder,
+  ArrowLeftRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchAllMembers } from "@/lib/db/members";
 import { CycleTimeline } from "@/components/cycle/CycleTimeline";
-import { PlanCards } from "@/components/cycle/PlanCards";
-import { WorkingSet } from "@/components/dashboard/WorkingSet";
 import { VoterGuideCallout } from "@/components/dashboard/VoterGuideCallout";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { WorkingSetHeader } from "@/components/dashboard/WorkingSetHeader";
+import { MyAreaWidget } from "@/components/dashboard/MyAreaWidget";
+import { HubShell } from "@/components/hub/HubShell";
 import { fetchRightNowContext } from "@/lib/db/right-now";
 
 export const dynamic = "force-dynamic";
@@ -15,58 +30,55 @@ export const metadata = { title: "Dashboard" };
 
 type Transition = {
   seat_code: string;
-  previous_holder_name: string | null;
-  successor_name: string | null;
   status: "VACANT" | "FILLED";
-  departed_date: string | null;
-  recommended_action: string | null;
-};
-
-type StructuralRow = {
-  level: string;
-  seat: string;
-  structural_count: number | null;
-  currently_filled: number | null;
-  gap: number | null;
-  display_order: number;
 };
 
 async function fetchDashboardData() {
   const supabase = await getSupabaseServer();
   const today = new Date().toISOString().slice(0, 10);
-  const [transitions, structural, monthCard, contentCards, nextEvent, voterSettings] = await Promise.all([
-    supabase.from("transitions").select("*").order("departed_date", { ascending: false, nullsFirst: false }),
-    supabase.from("structural_template").select("*").order("display_order"),
-    supabase
-      .from("month_cards")
-      .select("*")
-      .eq("year", new Date().getFullYear())
-      .eq("month", new Date().getMonth() + 1)
-      .eq("published", true)
-      .maybeSingle(),
-    supabase.from("content_cards").select("*").eq("slug", "120-club").maybeSingle(),
-    supabase
-      .from("events")
-      .select("id, name, event_date, event_window_description")
-      .eq("active", true)
-      .gte("event_date", today)
-      .order("event_date", { ascending: true })
-      .limit(1)
-      .maybeSingle(),
-    supabase
-      .from("settings")
-      .select("key, value")
-      .in("key", ["voter_guide_url", "general_voter_guide_url", "post_primary_callout_mode"]),
-  ]);
+  const [transitions, monthCard, candidates, committees, nextEvent, voterSettings] =
+    await Promise.all([
+      supabase.from("transitions").select("seat_code, status"),
+      supabase
+        .from("month_cards")
+        .select("month, content_md, theme_tag")
+        .eq("year", new Date().getFullYear())
+        .eq("month", new Date().getMonth() + 1)
+        .eq("published", true)
+        .maybeSingle(),
+      supabase
+        .from("candidates")
+        .select("id, is_endorsed")
+        .eq("cycle_year", 2026),
+      supabase.from("committees").select("code").eq("active", true),
+      supabase
+        .from("events")
+        .select("id, name, event_date, event_window_description, date_is_approximate")
+        .eq("active", true)
+        .gte("event_date", today)
+        .order("event_date", { ascending: true })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from("settings")
+        .select("key, value")
+        .in("key", ["voter_guide_url", "general_voter_guide_url", "post_primary_callout_mode"]),
+    ]);
   const settingsMap = new Map<string, string>(
     ((voterSettings.data ?? []) as Array<{ key: string; value: string }>).map((s) => [s.key, s.value])
   );
   return {
     transitions: (transitions.data ?? []) as Transition[],
-    structural: (structural.data ?? []) as StructuralRow[],
     monthCard: monthCard.data as { month: number; content_md: string; theme_tag: string | null } | null,
-    club120: contentCards.data as { title: string; body_md: string } | null,
-    nextEvent: nextEvent.data as { id: string; name: string; event_date: string; event_window_description: string | null } | null,
+    candidates: (candidates.data ?? []) as Array<{ id: string; is_endorsed: boolean }>,
+    committeeCount: (committees.data ?? []).length,
+    nextEvent: nextEvent.data as {
+      id: string;
+      name: string;
+      event_date: string;
+      event_window_description: string | null;
+      date_is_approximate: boolean;
+    } | null,
     voterGuidePrimaryUrl: settingsMap.get("voter_guide_url") || null,
     voterGuideGeneralUrl: settingsMap.get("general_voter_guide_url") || null,
     voterGuideMode: settingsMap.get("post_primary_callout_mode") || "AUTO",
@@ -93,18 +105,16 @@ export default async function DashboardPage() {
   const [data, members, rightNow] = await Promise.all([
     fetchDashboardData(),
     fetchAllMembers(),
-    // fetchRightNowContext touches both supabase projects; any
-    // failure there should NOT bring the whole dashboard down.
     fetchRightNowContext().catch((err) => {
-      console.error("fetchRightNowContext failed — dashboard will render without right-now panel", err);
+      console.error("fetchRightNowContext failed", err);
       return undefined;
     }),
   ]);
   const {
     transitions,
-    structural,
     monthCard,
-    club120,
+    candidates,
+    committeeCount,
     nextEvent,
     voterGuidePrimaryUrl,
     voterGuideGeneralUrl,
@@ -112,7 +122,7 @@ export default async function DashboardPage() {
   } = data;
 
   const vacancies = transitions.filter((t) => t.status === "VACANT");
-  const recentChanges = transitions.filter((t) => t.status === "FILLED").slice(0, 3);
+  const endorsedCount = candidates.filter((c) => c.is_endorsed).length;
   const currentMonth = new Date().getMonth() + 1;
   const eventDaysUntil = nextEvent?.event_date
     ? Math.max(
@@ -131,279 +141,293 @@ export default async function DashboardPage() {
     day: "numeric",
   });
 
+  const daysToPrimary = rightNow?.days_to_primary ?? null;
+
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Dashboard"
-        title="Dashboard."
-        subtitle={todayLabel}
-        backHref={null}
-        rightNav={
-          <>
-            <Link
-              href="/tour/1"
-              className="rounded text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ldp-navy-900)]"
-            >
-              Revisit the tour
-            </Link>
-            <Button asChild variant="ldp" size="sm" className="border border-white/20 bg-white/10 hover:bg-white/20">
-              <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
-                Join EC Meeting
-              </a>
-            </Button>
-          </>
-        }
+    <HubShell
+      eyebrow="Dashboard"
+      title="Dashboard."
+      subtitle={todayLabel}
+      actions={
+        <>
+          <Link
+            href="/tour/1"
+            className="rounded text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ldp-navy-900)]"
+          >
+            Revisit the tour
+          </Link>
+          <Button asChild variant="ldp" size="sm" className="border border-white/20 bg-white/10 hover:bg-white/20">
+            <a href="https://us02web.zoom.us/j/89692618777" target="_blank" rel="noopener noreferrer">
+              Join EC Meeting
+            </a>
+          </Button>
+        </>
+      }
+    >
+      <VoterGuideCallout
+        primaryUrl={voterGuidePrimaryUrl}
+        generalUrl={voterGuideGeneralUrl}
+        mode={voterGuideMode}
       />
 
+      <WorkingSetHeader />
 
-      <main className="mx-auto max-w-6xl px-6 py-10">
-        {/* 0. Phase-aware voter-guide callout. Renders primary copy pre-
-            May 19, general copy after if general_voter_guide_url is set.
-            Hides itself automatically when there's no URL for the phase. */}
-        <VoterGuideCallout
-          primaryUrl={voterGuidePrimaryUrl}
-          generalUrl={voterGuideGeneralUrl}
-          mode={voterGuideMode}
-        />
+      {/* Widget grid — everything compact, every tile a door into its section. */}
+      <section className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Widget
+          href="/this-month"
+          accent="#F59E0B"
+          eyebrow={`This month · ${MONTH_NAMES[currentMonth]}`}
+          title={monthCard?.theme_tag ? titleCase(monthCard.theme_tag.replace(/_/g, " ")) : "Live playbook"}
+          icon={Calendar}
+        >
+          <p className="line-clamp-3 text-sm text-[var(--color-ldp-ink-900)]">
+            {monthCard?.content_md ?? "No card this month yet."}
+          </p>
+        </Widget>
 
-        {/* 1. Role-first Working Set — your seat's standing duties,
-            the amplifier work that's always live, and the right-now
-            specifics. This is the operational center of the dashboard. */}
-        <WorkingSet rightNow={rightNow} />
-
-        {/* 2. At-a-glance operational blocks. */}
-        <section className="mb-8 grid gap-4 lg:grid-cols-3">
-          <Link
-            href="/this-month"
-            className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5 transition-colors hover:border-[var(--color-ldp-navy-700)]"
+        {nextEvent && eventDaysUntil != null ? (
+          <Widget
+            href="/events"
+            accent="#059669"
+            eyebrow="Next signature event"
+            title={nextEvent.name}
+            icon={Ticket}
+            urgent={eventDaysUntil <= 30}
           >
-            <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-              This month · {MONTH_NAMES[currentMonth]}
-            </div>
-            <p className="mt-2 line-clamp-5 text-sm text-[var(--color-ldp-ink-900)]">
-              {monthCard?.content_md ?? "No card this month."}
-            </p>
-            <div className="mt-3 text-xs font-medium text-[var(--color-ldp-navy-700)]">Full playbook →</div>
-          </Link>
-
-          {nextEvent && eventDaysUntil != null ? (
-            <Link
-              href="/events"
-              className={`rounded-xl border p-5 transition-colors hover:shadow-sm ${
-                eventDaysUntil <= 30
-                  ? "border-[var(--color-ldp-red)] bg-white"
-                  : "border-[var(--color-ldp-line)] bg-white hover:border-[var(--color-ldp-navy-700)]"
-              }`}
-            >
-              <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
-                Next signature event
-              </div>
-              <div className="mt-1 text-base font-bold text-[var(--color-ldp-navy-900)]">
-                {nextEvent.name}
-              </div>
-              <div className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
+            {nextEvent.event_window_description && (
+              <div className="mb-1 text-[11px] font-medium text-[var(--color-ldp-navy-700)]">
                 {nextEvent.event_window_description}
               </div>
-              <div className="mt-3 flex items-baseline gap-2">
-                <div
-                  className={`text-3xl font-bold ${
-                    eventDaysUntil <= 30 ? "text-[var(--color-ldp-red)]" : "text-[var(--color-ldp-navy-900)]"
-                  }`}
-                >
-                  {eventDaysUntil}
-                </div>
-                <div className="text-xs text-[var(--color-ldp-ink-700)]">
-                  day{eventDaysUntil === 1 ? "" : "s"} out
-                </div>
-              </div>
-              {eventDaysUntil <= 30 && (
-                <div className="mt-2 text-xs font-semibold text-[var(--color-ldp-red)]">
-                  Your ticket link is live → push it.
-                </div>
-              )}
-            </Link>
-          ) : (
-            <div className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
-              <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
-                Next signature event
-              </div>
-              <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-                No upcoming event on the calendar. See the{" "}
-                <Link href="/events" className="text-[var(--color-ldp-navy-700)] hover:underline">
-                  events page
-                </Link>
-                .
+            )}
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-black text-[var(--color-ldp-navy-900)]">
+                {nextEvent.date_is_approximate ? "~" : ""}
+                {eventDaysUntil}
+              </span>
+              <span className="text-xs text-[var(--color-ldp-ink-700)]">
+                day{eventDaysUntil === 1 ? "" : "s"} out
+                {nextEvent.date_is_approximate && " (approx)"}
+              </span>
+            </div>
+            {eventDaysUntil <= 30 && (
+              <p className="mt-1 text-xs font-semibold text-[var(--color-ldp-red)]">
+                Ticket links live — push yours.
               </p>
+            )}
+          </Widget>
+        ) : (
+          <Widget
+            href="/events"
+            accent="#059669"
+            eyebrow="Signature events"
+            title="Three events fund the party"
+            icon={Ticket}
+          >
+            <p className="text-xs text-[var(--color-ldp-ink-700)]">
+              No event on the immediate calendar.
+            </p>
+          </Widget>
+        )}
+
+        <Widget
+          href="/candidates"
+          accent="#C8102E"
+          eyebrow="2026 Primary Ballot"
+          title={`${candidates.length} candidates · ${endorsedCount} endorsed`}
+          icon={ClipboardList}
+          urgent={daysToPrimary != null && daysToPrimary <= 45}
+        >
+          {daysToPrimary != null && daysToPrimary > 0 ? (
+            <div className="text-xs text-[var(--color-ldp-ink-700)]">
+              Primary is <strong className="text-[var(--color-ldp-navy-900)]">{daysToPrimary} days</strong> out.
+              Tuesday, May 19.
+            </div>
+          ) : (
+            <div className="text-xs text-[var(--color-ldp-ink-700)]">
+              Full 2026 ballot, LDP-endorsed first.
             </div>
           )}
+        </Widget>
 
-          <div className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
-            <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
-              Board commitments
-            </div>
-            <h2 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">
-              {club120?.title ?? "The $120 Club"}
-            </h2>
-            <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-              $120/year personal give + $500/year raised via ticket links = $620 per member.
-            </p>
-            <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-[#FAFAFA] p-2 text-center">
-              <div>
-                <div className="text-[10px] text-[var(--color-ldp-ink-700)]">Members</div>
-                <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">{members.length}</div>
-              </div>
-              <div>
-                <div className="text-[10px] text-[var(--color-ldp-ink-700)]">Per member</div>
-                <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">$620</div>
-              </div>
-              <div>
-                <div className="text-[10px] text-[var(--color-ldp-ink-700)]">Floor/yr</div>
-                <div className="text-base font-bold text-emerald-700">
-                  ${(members.length * 620).toLocaleString()}
-                </div>
-              </div>
-            </div>
-            <Link
-              href="/events#money-rules"
-              className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-[var(--color-ldp-navy-700)] hover:underline"
-            >
-              Money rules — what the party can and can&apos;t take →
-            </Link>
-          </div>
-        </section>
+        <MyAreaWidget />
 
-        {/* 5. Transitions + structural gaps — "where the board stands" below the fold. */}
-        {(vacancies.length > 0 || recentChanges.length > 0) && (
-          <section className="mb-8">
-            <div className="mb-3 flex items-baseline justify-between">
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-                Transitions · seat changes since June 2025 reorg
-              </h2>
-              <Link href="/transitions" className="text-xs font-medium text-[var(--color-ldp-navy-700)] hover:underline">
-                Full list →
-              </Link>
-            </div>
-            <div className="grid gap-3 md:grid-cols-2">
-              {vacancies.length > 0 && (
-                <div className="rounded-xl border border-[var(--color-ldp-red)] bg-white p-5">
-                  <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-                    Vacant · {vacancies.length}
-                  </div>
-                  <ul className="space-y-3">
-                    {vacancies.slice(0, 5).map((v) => (
-                      <li key={v.seat_code} className="border-l-2 border-[var(--color-ldp-red)] pl-3 text-sm">
-                        <div className="font-medium text-[var(--color-ldp-navy-900)]">
-                          {formatSeat(v.seat_code)}
-                        </div>
-                        {v.previous_holder_name && (
-                          <div className="text-xs text-[var(--color-ldp-ink-700)]">
-                            Previously: {v.previous_holder_name}
-                          </div>
-                        )}
-                        {v.recommended_action && (
-                          <div className="mt-1 text-xs italic text-[var(--color-ldp-ink-700)]">
-                            → {v.recommended_action}
-                          </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {recentChanges.length > 0 && (
-                <div className="rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
-                  <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-emerald-700">
-                    Recently filled
-                  </div>
-                  <ul className="space-y-3">
-                    {recentChanges.map((t) => (
-                      <li key={t.seat_code} className="border-l-2 border-emerald-500 pl-3 text-sm">
-                        <div className="font-medium text-[var(--color-ldp-navy-900)]">
-                          {formatSeat(t.seat_code)}
-                        </div>
-                        <div className="text-xs text-[var(--color-ldp-ink-700)]">
-                          {t.previous_holder_name} → <strong>{t.successor_name}</strong>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
+        <Widget
+          href="/plan-map"
+          accent="#C8102E"
+          eyebrow="Plan & Map"
+          title="Countywide strategy"
+          icon={MapIcon}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            Jefferson County precincts scored into four strategies. Jump to the interactive map.
+          </p>
+        </Widget>
 
-        {structural.length > 0 && (
-          <section className="mb-8">
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-              Seat coverage · structural vs filled
-            </h2>
-            <div className="overflow-hidden rounded-lg border border-[var(--color-ldp-line)] bg-white">
-              <table className="w-full text-sm">
-                <thead className="bg-[#FAFAFA] text-xs font-semibold uppercase tracking-wider text-[var(--color-ldp-ink-700)]">
-                  <tr>
-                    <th className="px-4 py-2.5 text-left">Level / seat</th>
-                    <th className="px-4 py-2.5 text-right">Ideal</th>
-                    <th className="px-4 py-2.5 text-right">Filled</th>
-                    <th className="px-4 py-2.5 text-right">Gap</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--color-ldp-line)]">
-                  {structural.map((r) => (
-                    <tr key={`${r.level}-${r.seat}`}>
-                      <td className="px-4 py-2 text-[var(--color-ldp-ink-900)]">
-                        <span className="text-xs text-[var(--color-ldp-ink-700)]">{r.level} · </span>
-                        {r.seat}
-                      </td>
-                      <td className="px-4 py-2 text-right text-[var(--color-ldp-ink-700)]">
-                        {r.structural_count ?? "—"}
-                      </td>
-                      <td className="px-4 py-2 text-right font-semibold text-[var(--color-ldp-navy-900)]">
-                        {r.currently_filled ?? "—"}
-                      </td>
-                      <td
-                        className={`px-4 py-2 text-right font-semibold ${
-                          (r.gap ?? 0) > 0 ? "text-[var(--color-ldp-red)]" : "text-emerald-700"
-                        }`}
-                      >
-                        {r.gap ?? "—"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        )}
+        <Widget
+          href="/canvass-tools"
+          accent="#C8102E"
+          eyebrow="Canvass Tools"
+          title="MC 17 · 21 · 7"
+          icon={Vote}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            Priority Metro Council districts, volunteer pipeline, VoteBuilder, and canvass guides.
+          </p>
+        </Widget>
 
-        {/* 6. Cycle reference material — full-arc context after the
-            tactical blocks above. Doesn't need to lead. */}
-        <section className="mb-8">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            2026 – 2028 cycle reference
+        <Widget
+          href="/tour/2"
+          accent="#0E4C9E"
+          eyebrow="Standing duties"
+          title="What your seat always asks"
+          icon={ScrollText}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            The 7 standing duties every EC seat carries — every one cited to bylaws. Role one-pagers
+            inside.
+          </p>
+        </Widget>
+
+        <Widget
+          href="/comms"
+          accent="#0891b2"
+          eyebrow="Amplify"
+          title="Follow · Share · Repost"
+          icon={Megaphone}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            One reshare = free reach. Seven official LDP handles — follow, share, repost.
+          </p>
+        </Widget>
+
+        <Widget
+          href="/people"
+          accent="#7c3aed"
+          eyebrow="Directory"
+          title={`${members.length} members · ${committeeCount} committees`}
+          icon={Users}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            Search by name, LD, or committee. Attendance tracked since the June 2025 reorg.
+          </p>
+        </Widget>
+
+        <Widget
+          href="/transitions"
+          accent="#64748b"
+          eyebrow="Transitions"
+          title={`${vacancies.length} vacant`}
+          icon={ArrowLeftRight}
+          urgent={vacancies.length >= 3}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            Seats changed hands since the June 2025 reorg. CEC has 90 days to fill.
+          </p>
+        </Widget>
+
+        <Widget
+          href="/partners"
+          accent="#7c3aed"
+          eyebrow="Partners"
+          title="Labor · Advocacy · Clubs"
+          icon={Handshake}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            Organizations that endorse, fund, or organize with the Louisville Democratic Party.
+          </p>
+        </Widget>
+
+        <Widget
+          href="/drive"
+          accent="#b45309"
+          eyebrow="Drive"
+          title="Committee folders & forms"
+          icon={Folder}
+        >
+          <p className="text-xs text-[var(--color-ldp-ink-700)]">
+            Every committee&apos;s working folder plus the party&apos;s top-traffic forms.
+          </p>
+        </Widget>
+      </section>
+
+      {/* Cycle reference — full-arc context at the bottom. */}
+      <section className="mb-8">
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Where we are in the cycle
           </h2>
-          <CycleTimeline />
-          <PlanCards />
-        </section>
-
-        {/* 7. Section nav at the bottom — still accessible, not dominant. */}
-        <section className="mb-10">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            All sections
-          </h2>
-          <SectionNav />
-        </section>
-      </main>
-    </div>
+          <Clock aria-hidden="true" className="size-4 text-[var(--color-ldp-ink-700)]" />
+        </div>
+        <CycleTimeline />
+      </section>
+    </HubShell>
   );
 }
 
-function formatSeat(code: string): string {
-  return code
-    .replace(/_GAP$/, "")
-    .replace(/_/g, " ")
-    .replace(/\bVC\b/, "Vice Chair")
-    .replace(/\bLD(\d+)\b/, "LD$1")
-    .replace(/\bCHAIR\b/i, "Chair")
-    .replace(/\bPRES\b/i, "President");
+function titleCase(s: string): string {
+  return s.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function Widget({
+  href,
+  accent,
+  eyebrow,
+  title,
+  icon: Icon,
+  children,
+  urgent = false,
+}: {
+  href: string;
+  accent: string;
+  eyebrow: string;
+  title: string;
+  icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+  children: React.ReactNode;
+  urgent?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group relative flex flex-col overflow-hidden rounded-xl border bg-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      style={{
+        borderColor: urgent ? accent : "var(--color-ldp-line)",
+        borderWidth: urgent ? 2 : 1,
+      }}
+    >
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-1"
+        style={{ backgroundColor: accent }}
+      />
+      <div className="flex items-center gap-2">
+        <span
+          className="flex size-7 shrink-0 items-center justify-center rounded-md text-white"
+          style={{ backgroundColor: accent }}
+        >
+          <Icon aria-hidden="true" className="size-4" />
+        </span>
+        <div
+          className="text-[10px] font-bold uppercase tracking-[0.2em]"
+          style={{ color: accent }}
+        >
+          {eyebrow}
+        </div>
+      </div>
+      <h3 className="mt-2 text-base font-bold leading-tight text-[var(--color-ldp-navy-900)]">
+        {title}
+      </h3>
+      <div className="mt-2 flex-1">{children}</div>
+      <div
+        className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-widest"
+        style={{ color: accent }}
+      >
+        Open
+        <ArrowRight
+          aria-hidden="true"
+          className="size-3 transition-transform group-hover:translate-x-0.5"
+        />
+      </div>
+    </Link>
+  );
 }

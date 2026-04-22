@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Folder } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { fetchCommittees, fetchAllMembers, displayName } from "@/lib/db/members";
 
 export const dynamic = "force-dynamic";
@@ -14,15 +14,11 @@ export default async function CommitteesIndexPage() {
   const adhoc = committees.filter((c) => c.type === "AD_HOC");
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Committees"
-        title="LDP Committees."
-        subtitle={`${standing.length} standing · ${adhoc.length} ad hoc · each chaired by an EC member.`}
-      />
-
-      <main className="mx-auto max-w-6xl px-6 py-10">
-
+    <HubShell
+      eyebrow="Committees"
+      title="LDP Committees."
+      subtitle={`${standing.length} standing · ${adhoc.length} ad hoc · each chaired by an EC member.`}
+    >
         <section className="mb-10">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Standing Committees
@@ -49,8 +45,7 @@ export default async function CommitteesIndexPage() {
             ))}
           </div>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

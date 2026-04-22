@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { fetchCommitteeByCode } from "@/lib/db/committees";
 import { fetchAllMembers, displayName } from "@/lib/db/members";
 
@@ -31,23 +31,33 @@ export default async function CommitteeDetailPage({
   const byId = new Map(members.map((m) => [m.id, m]));
   const chair = committee.chair_id ? byId.get(committee.chair_id) : null;
 
-  // Resolve member_codes (names) against ec_members by full name.
+  // Resolve member_codes (names) against ec_members. Try exact display-name
+  // match first, then fall back to first-token + last-token so casual names
+  // in member_codes ("Lisa Norkus") still resolve to formal records
+  // ("Lisa Tanner Norkus") — avoids losing LD chips on fuzzy matches.
   const memberMatches = committee.member_codes.map((fullName) => {
-    const match = members.find((m) => displayName(m) === fullName);
-    return { fullName, member: match };
+    const exact = members.find((m) => displayName(m) === fullName);
+    if (exact) return { fullName, member: exact };
+    const tokens = fullName.trim().split(/\s+/);
+    if (tokens.length >= 2) {
+      const first = tokens[0].toLowerCase();
+      const last = tokens[tokens.length - 1].toLowerCase();
+      const fuzzy = members.find((m) => {
+        const mFirst = (m.preferred_name || m.first_name).toLowerCase();
+        const mLast = m.last_name.toLowerCase();
+        return mFirst === first && (mLast === last || mLast.endsWith(" " + last) || mLast.startsWith(last + " "));
+      });
+      if (fuzzy) return { fullName, member: fuzzy };
+    }
+    return { fullName, member: undefined };
   });
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow={committee.type === "AD_HOC" ? "Ad hoc committee" : "Standing committee"}
-        title={`${committee.name} Committee.`}
-        backHref="/committees"
-        backLabel="All Committees"
-        maxWidthClass="max-w-4xl"
-      />
-
-      <main className="mx-auto max-w-4xl px-6 py-10">
+    <HubShell
+      eyebrow={committee.type === "AD_HOC" ? "Ad hoc committee" : "Standing committee"}
+      title={`${committee.name} Committee.`}
+      maxWidthClass="max-w-4xl"
+    >
         <div className="mb-6">
           {chair && (
             <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
@@ -171,7 +181,6 @@ export default async function CommitteeDetailPage({
             </Button>
           </div>
         )}
-      </main>
-    </div>
+    </HubShell>
   );
 }

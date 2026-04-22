@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ExternalLink, Star, AlertTriangle } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { ExternalLink, Globe, Mail, Star, AlertTriangle } from "lucide-react";
+import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +24,8 @@ type Candidate = {
   is_incumbent: boolean;
   is_endorsed: boolean;
   notes: string | null;
+  website_url: string | null;
+  email: string | null;
 };
 
 const OFFICE_META: Record<OfficeType, { label: string; blurb: string }> = {
@@ -118,14 +120,11 @@ export default async function CandidatesPage() {
   const endorsedCount = candidates.filter((c) => c.is_endorsed).length;
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="2026 Primary Ballot"
-        title="Who's on the ballot in Louisville."
-        subtitle="Primary is Tuesday, May 19. Grouped by office, LDP-endorsed first. The party endorses in Metro Council and Mayoral primaries but traditionally does not endorse in contested partisan-primary races for state legislature."
-      />
-
-      <main className="mx-auto max-w-6xl px-6 py-10">
+    <HubShell
+      eyebrow="2026 Primary Ballot"
+      title="Who's on the ballot in Louisville."
+      subtitle="Primary is Tuesday, May 19. Grouped by office, LDP-endorsed first. The party endorses in Metro Council and Mayoral primaries but traditionally does not endorse in contested partisan-primary races for state legislature."
+    >
         <div className="mb-8">
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -203,8 +202,7 @@ export default async function CandidatesPage() {
             Endorsement Process Committee votes.
           </p>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 
@@ -317,6 +315,30 @@ function DistrictBlock({
             </div>
             {c.notes && !c.notes.toLowerCase().includes("barred") && (
               <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">{c.notes}</div>
+            )}
+            {(c.website_url || c.email) && (
+              <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
+                {c.website_url && (
+                  <a
+                    href={c.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--color-ldp-line)] bg-white px-2 py-0.5 text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
+                  >
+                    <Globe aria-hidden="true" className="size-3" />
+                    Website
+                  </a>
+                )}
+                {c.email && (
+                  <a
+                    href={`mailto:${c.email}`}
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--color-ldp-line)] bg-white px-2 py-0.5 text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
+                  >
+                    <Mail aria-hidden="true" className="size-3" />
+                    {c.email}
+                  </a>
+                )}
+              </div>
             )}
           </li>
         ))}

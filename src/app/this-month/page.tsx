@@ -1,6 +1,15 @@
-import { ExternalLink } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { ExternalLink, MapPin, Clock } from "lucide-react";
+import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { MarkdownBody, markdownToPlain } from "@/lib/markdown";
+import {
+  fetchLdpCalendarEvents,
+  eventsInRange,
+  groupEventsByMonth,
+  cleanDescription,
+  extractSignupUrl,
+  type LdpEvent,
+} from "@/lib/calendar/ldp-calendar";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "This Month" };
@@ -60,15 +69,29 @@ const MONTH_NAMES = [
   "December",
 ];
 
+function titleCaseTag(tag: string): string {
+  return tag
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export default async function ThisMonthPage() {
   const now = new Date();
   const currentMonth = now.getMonth() + 1;
   const currentYear = now.getFullYear();
+  const monthStart = new Date(currentYear, currentMonth - 1, 1);
+  const monthEnd = new Date(currentYear, currentMonth, 1);
+  const yearStart = new Date(currentYear, 0, 1);
 
-  const [cards, calendarUrl, voterGuideUrl] = await Promise.all([
+  const [cards, calendarUrl, voterGuideUrl, calendarEvents] = await Promise.all([
     fetchMonthCards(),
     fetchCalendarUrl(),
     fetchVoterGuideUrl(),
+    fetchLdpCalendarEvents().catch((err) => {
+      console.error("LDP calendar fetch failed", err);
+      return [] as LdpEvent[];
+    }),
   ]);
   const current = cards.find((c) => c.month === currentMonth && c.year === currentYear);
   const next = cards.find(
@@ -77,136 +100,325 @@ export default async function ThisMonthPage() {
       (currentMonth === 12 && c.year === currentYear + 1 && c.month === 1)
   );
 
-  return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow={`This month · ${MONTH_NAMES[currentMonth]} ${currentYear}`}
-        title="What's live right now."
-        maxWidthClass="max-w-4xl"
-      />
+  // Upcoming events in the current month (today forward).
+  const upcomingThisMonth = eventsInRange(calendarEvents, now, monthEnd);
 
-      <main className="mx-auto max-w-4xl px-6 py-10">
-        <div className="mb-8">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
-            {voterGuideUrl && (
-              <a
-                href={voterGuideUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-red)] px-3 py-1.5 text-white transition-colors hover:bg-[var(--color-ldp-red)]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-red)] focus-visible:ring-offset-2"
-              >
-                2026 Voter Guide <ExternalLink aria-hidden="true" className="size-3.5" />
-              </a>
-            )}
+  // Past events this year, grouped by month (Jan through last month).
+  const pastThisYear = groupEventsByMonth(
+    eventsInRange(calendarEvents, yearStart, monthStart),
+    currentYear
+  );
+
+  return (
+    <HubShell
+      eyebrow={`This month · ${MONTH_NAMES[currentMonth]} ${currentYear}`}
+      title="What's live right now."
+      maxWidthClass="max-w-4xl"
+    >
+      <div className="mb-8">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
+          {voterGuideUrl && (
+            <a
+              href={voterGuideUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-red)] px-3 py-1.5 text-white transition-colors hover:bg-[var(--color-ldp-red)]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-red)] focus-visible:ring-offset-2"
+            >
+              2026 Voter Guide <ExternalLink aria-hidden="true" className="size-3.5" />
+            </a>
+          )}
+          {calendarUrl && (
+            <a
+              href={calendarUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+            >
+              Public party calendar <ExternalLink aria-hidden="true" className="size-3.5" />
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Month playbook card — evergreen asks for the current month. */}
+      {current ? (
+        <article className="mb-8 rounded-xl border-2 border-[var(--color-ldp-navy-900)] bg-white p-6">
+          {current.theme_tag && (
+            <span className="mb-3 inline-flex items-center rounded-full bg-[var(--color-ldp-gold)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-900)]">
+              {titleCaseTag(current.theme_tag)}
+            </span>
+          )}
+          <MarkdownBody
+            text={current.content_md}
+            className="space-y-3 text-base leading-relaxed text-[var(--color-ldp-ink-900)]"
+            paragraphClass="first:text-lg first:font-semibold first:text-[var(--color-ldp-navy-900)]"
+            listClass="ml-5 list-disc space-y-1.5 text-sm text-[var(--color-ldp-ink-900)] marker:text-[var(--color-ldp-navy-700)]"
+          />
+        </article>
+      ) : (
+        <div className="mb-8 rounded-xl border border-[var(--color-ldp-line)] bg-white p-6 text-sm text-[var(--color-ldp-ink-700)]">
+          No month card for {MONTH_NAMES[currentMonth]} {currentYear} yet.
+        </div>
+      )}
+
+      {/* Live upcoming events from the public LDP Google Calendar. */}
+      <section className="mb-10">
+        <div className="mb-3 flex items-baseline justify-between gap-3">
+          <h2 className="text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+            Upcoming this month · {MONTH_NAMES[currentMonth]}
+          </h2>
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Live from louisvilledems.com
+          </span>
+        </div>
+        {upcomingThisMonth.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-[var(--color-ldp-line)] bg-white p-5 text-sm text-[var(--color-ldp-ink-700)]">
+            No upcoming events left this month on the public calendar.{" "}
             {calendarUrl && (
               <a
                 href={calendarUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded text-[var(--color-ldp-navy-700)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-navy-700)] focus-visible:ring-offset-2"
+                className="text-[var(--color-ldp-navy-700)] underline"
               >
-                Public party calendar <ExternalLink aria-hidden="true" className="size-3.5" />
+                Open the full calendar →
               </a>
             )}
           </div>
-        </div>
-
-        {current ? (
-          <article className="mb-8 rounded-xl border-2 border-[var(--color-ldp-navy-900)] bg-white p-6">
-            {current.theme_tag && (
-              <span className="mb-3 inline-flex items-center rounded-full bg-[var(--color-ldp-gold)] px-2 py-0.5 text-[10px] font-semibold uppercase text-[var(--color-ldp-navy-900)]">
-                {current.theme_tag.replace(/_/g, " ").toLowerCase()}
-              </span>
-            )}
-            <p className="text-base leading-relaxed text-[var(--color-ldp-ink-900)] whitespace-pre-wrap">
-              {current.content_md}
-            </p>
-          </article>
         ) : (
-          <div className="mb-8 rounded-xl border border-[var(--color-ldp-line)] bg-white p-6 text-sm text-[var(--color-ldp-ink-700)]">
-            No month card for {MONTH_NAMES[currentMonth]} {currentYear} yet.
-          </div>
+          <ul className="space-y-2">
+            {upcomingThisMonth.slice(0, 25).map((e) => (
+              <EventRow key={e.uid} event={e} highlight />
+            ))}
+          </ul>
         )}
+      </section>
 
-        {next && (
-          <div className="mb-10 rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
-            <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-              Teed up next · {MONTH_NAMES[next.month]} {next.year}
-            </div>
-            <p className="text-sm text-[var(--color-ldp-ink-900)] whitespace-pre-wrap">{next.content_md}</p>
+      {/* Teed-up next-month playbook card. */}
+      {next && (
+        <div className="mb-10 rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Teed up next · {MONTH_NAMES[next.month]} {next.year}
           </div>
-        )}
+          <MarkdownBody
+            text={next.content_md}
+            className="space-y-2 text-sm text-[var(--color-ldp-ink-900)]"
+            paragraphClass="first:font-semibold first:text-[var(--color-ldp-navy-900)]"
+            listClass="ml-5 list-disc space-y-1 text-sm text-[var(--color-ldp-ink-900)] marker:text-[var(--color-ldp-navy-700)]"
+          />
+        </div>
+      )}
 
-        <section>
-          <h2 className="mb-1 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            The full {currentYear} Rock Star Playbook
-          </h2>
-          <p className="mb-4 text-xs text-[var(--color-ldp-ink-700)]">
-            Every month of the year, live and historical. Click any month to expand the full playbook for that window. Past months stay here so you can look back at what was live.
-          </p>
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {cards
-              .filter((c) => c.year === currentYear)
-              .map((c) => {
-                const isPast = c.month < currentMonth;
-                const isCurrent = c.month === currentMonth;
-                const preview = c.content_md
-                  .replace(/^\*\*[^*]+\*\*\s*/, "") // strip the leading "**Month — headline.**" bold
-                  .replace(/\s+/g, " ")
-                  .slice(0, 140);
-                return (
-                  <details
-                    key={`${c.year}-${c.month}`}
-                    open={isCurrent}
-                    className={`group overflow-hidden rounded-lg border bg-white transition-colors ${
-                      isCurrent
-                        ? "border-[var(--color-ldp-red)] shadow-sm"
-                        : isPast
-                          ? "border-[var(--color-ldp-line)] opacity-75"
-                          : "border-[var(--color-ldp-line)]"
-                    }`}
-                  >
-                    <summary className="cursor-pointer list-none p-4">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">
-                          {MONTH_NAMES[c.month]}
-                        </div>
-                        {isCurrent ? (
-                          <span className="rounded-full bg-[var(--color-ldp-red)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white">
-                            Now
-                          </span>
-                        ) : isPast ? (
-                          <span className="rounded-full bg-[#FAFAFA] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-                            Past
-                          </span>
-                        ) : (
-                          <span className="rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
-                            Teed up
-                          </span>
-                        )}
+      {/* Rock Star Playbook — evergreen year grid. */}
+      <section className="mb-10">
+        <h2 className="mb-1 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+          The full {currentYear} Rock Star Playbook
+        </h2>
+        <p className="mb-4 text-xs text-[var(--color-ldp-ink-700)]">
+          Every month of the year, live and historical. Click any month to expand the full
+          playbook for that window. Past months stay here so you can look back at what was live.
+        </p>
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {cards
+            .filter((c) => c.year === currentYear)
+            .map((c) => {
+              const isPast = c.month < currentMonth;
+              const isCurrent = c.month === currentMonth;
+              const preview = markdownToPlain(c.content_md)
+                .replace(/^[^—.]*[—.]\s*/, "")
+                .slice(0, 140);
+              return (
+                <details
+                  key={`${c.year}-${c.month}`}
+                  open={isCurrent}
+                  className={`group overflow-hidden rounded-lg border bg-white transition-colors ${
+                    isCurrent
+                      ? "border-[var(--color-ldp-red)] shadow-sm"
+                      : isPast
+                        ? "border-[var(--color-ldp-line)] opacity-75"
+                        : "border-[var(--color-ldp-line)]"
+                  }`}
+                >
+                  <summary className="cursor-pointer list-none p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">
+                        {MONTH_NAMES[c.month]}
                       </div>
-                      {c.theme_tag && (
-                        <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
-                          {c.theme_tag.replace(/_/g, " ").toLowerCase()}
-                        </div>
+                      {isCurrent ? (
+                        <span className="rounded-full bg-[var(--color-ldp-red)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white">
+                          Now
+                        </span>
+                      ) : isPast ? (
+                        <span className="rounded-full bg-[#FAFAFA] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                          Past
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+                          Teed up
+                        </span>
                       )}
-                      <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[var(--color-ldp-ink-700)]">
-                        {preview}
-                        {c.content_md.length > 140 && "…"}
-                      </p>
-                      <div className="mt-2 text-[10px] font-medium uppercase tracking-widest text-[var(--color-ldp-navy-700)] group-open:hidden">
-                        Open full playbook →
-                      </div>
-                    </summary>
-                    <div className="border-t border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 text-sm leading-relaxed text-[var(--color-ldp-ink-900)] whitespace-pre-wrap">
-                      {c.content_md}
                     </div>
-                  </details>
-                );
-              })}
+                    {c.theme_tag && (
+                      <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+                        {titleCaseTag(c.theme_tag)}
+                      </div>
+                    )}
+                    <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[var(--color-ldp-ink-700)]">
+                      {preview}
+                      {c.content_md.length > 140 && "…"}
+                    </p>
+                    <div className="mt-2 text-[10px] font-medium uppercase tracking-widest text-[var(--color-ldp-navy-700)] group-open:hidden">
+                      Open full playbook →
+                    </div>
+                  </summary>
+                  <div className="border-t border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4">
+                    <MarkdownBody
+                      text={c.content_md}
+                      className="space-y-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]"
+                      paragraphClass="first:font-semibold first:text-[var(--color-ldp-navy-900)]"
+                      listClass="ml-5 list-disc space-y-1 text-sm text-[var(--color-ldp-ink-900)] marker:text-[var(--color-ldp-navy-700)]"
+                    />
+                  </div>
+                </details>
+              );
+            })}
+        </div>
+      </section>
+
+      {/* What's happened this year — past months grouped. */}
+      {pastThisYear.length > 0 && (
+        <section className="mb-10">
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <h2 className="text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+              What&apos;s happened this year
+            </h2>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+              {pastThisYear.reduce((n, g) => n + g.events.length, 0)} events
+            </span>
+          </div>
+          <div className="space-y-3">
+            {pastThisYear.map((g) => (
+              <details
+                key={`${g.year}-${g.month}`}
+                className="rounded-lg border border-[var(--color-ldp-line)] bg-white"
+              >
+                <summary className="flex cursor-pointer items-center justify-between gap-2 p-4 text-sm">
+                  <span className="font-semibold text-[var(--color-ldp-navy-900)]">
+                    {MONTH_NAMES[g.month]} {g.year}
+                  </span>
+                  <span className="text-xs text-[var(--color-ldp-ink-700)]">
+                    {g.events.length} event{g.events.length === 1 ? "" : "s"}
+                  </span>
+                </summary>
+                <ul className="divide-y divide-[var(--color-ldp-line)] border-t border-[var(--color-ldp-line)] bg-[#FAFBFC] px-4">
+                  {g.events.map((e) => (
+                    <EventRow key={e.uid} event={e} compact />
+                  ))}
+                </ul>
+              </details>
+            ))}
           </div>
         </section>
-      </main>
-    </div>
+      )}
+    </HubShell>
   );
 }
+
+function EventRow({
+  event,
+  highlight = false,
+  compact = false,
+}: {
+  event: LdpEvent;
+  highlight?: boolean;
+  compact?: boolean;
+}) {
+  const startDate = event.start.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+  const startTime = event.allDay
+    ? "All day"
+    : event.start.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        timeZone: "America/New_York",
+      });
+
+  const signupUrl = extractSignupUrl(event.description);
+  const cleanDesc = cleanDescription(event.description);
+
+  if (compact) {
+    return (
+      <li className="py-2.5 text-sm">
+        <div className="flex items-baseline gap-2">
+          <span className="min-w-[64px] text-[11px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            {startDate}
+          </span>
+          <span className="flex-1 text-[var(--color-ldp-ink-900)]">{event.summary}</span>
+          {!event.allDay && (
+            <span className="text-[11px] text-[var(--color-ldp-ink-700)]">{startTime}</span>
+          )}
+        </div>
+      </li>
+    );
+  }
+
+  return (
+    <li
+      className={`rounded-lg border bg-white p-4 transition-colors ${
+        highlight
+          ? "border-[var(--color-ldp-line)] hover:border-[var(--color-ldp-red)]"
+          : "border-[var(--color-ldp-line)]"
+      }`}
+    >
+      <div className="flex flex-wrap items-start gap-3">
+        <div className="shrink-0 text-center">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
+            {event.start.toLocaleDateString("en-US", { weekday: "short" })}
+          </div>
+          <div className="text-2xl font-black text-[var(--color-ldp-navy-900)]">
+            {event.start.getDate()}
+          </div>
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            {event.start.toLocaleDateString("en-US", { month: "short" })}
+          </div>
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="text-sm font-bold text-[var(--color-ldp-navy-900)]">
+            {event.summary}
+          </div>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-[var(--color-ldp-ink-700)]">
+            <span className="inline-flex items-center gap-1">
+              <Clock aria-hidden="true" className="size-3" />
+              {startTime}
+            </span>
+            {event.location && (
+              <span className="inline-flex items-center gap-1">
+                <MapPin aria-hidden="true" className="size-3" />
+                {event.location}
+              </span>
+            )}
+          </div>
+          {cleanDesc && (
+            <p className="mt-2 line-clamp-2 text-xs text-[var(--color-ldp-ink-900)]">
+              {cleanDesc}
+            </p>
+          )}
+          {signupUrl && (
+            <a
+              href={signupUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
+            >
+              Sign up on Mobilize <ExternalLink aria-hidden="true" className="size-3" />
+            </a>
+          )}
+        </div>
+      </div>
+    </li>
+  );
+}
+

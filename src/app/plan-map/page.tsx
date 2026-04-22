@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, MapPin } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { getKypoliticsServer } from "@/lib/supabase/kypolitics";
 
 export const dynamic = "force-dynamic";
@@ -49,14 +49,11 @@ export default async function PlanMapPage() {
   const counts = await fetchCountywideCounts();
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Plan & Map"
-        title={`Jefferson County, ${counts.total} precincts, four strategies.`}
-        maxWidthClass="max-w-5xl"
-      />
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
+    <HubShell
+      eyebrow="Plan & Map"
+      title={`Jefferson County, ${counts.total} precincts, four strategies.`}
+      maxWidthClass="max-w-5xl"
+    >
         <div className="mb-8">
           <p className="mt-2 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
             Every precinct in the county is scored into one of four strategies. The 2026 LDP Strategy
@@ -176,8 +173,7 @@ export default async function PlanMapPage() {
             there don&apos;t turn out.
           </p>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

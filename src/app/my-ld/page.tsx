@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -25,15 +25,12 @@ export default async function MyLdIndex() {
   const gaps = lds.filter((l) => !l.chair_id || !l.vc_id);
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="My LD"
-        title="Pick your Legislative District."
-        subtitle="Each page shows leadership, precincts by strategy, races on the ballot, precinct captains on file, early voting inside the district, and what to do this week."
-      />
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
-
+    <HubShell
+      eyebrow="My LD"
+      title="Pick your Legislative District."
+      subtitle="Each page shows leadership, precincts by strategy, races on the ballot, precinct captains on file, early voting inside the district, and what to do this week."
+      maxWidthClass="max-w-5xl"
+    >
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
           {lds.map((ld) => {
             const hasGap = !ld.chair_id || !ld.vc_id;
@@ -67,7 +64,6 @@ export default async function MyLdIndex() {
             or vice-chair vacancy (red border).
           </p>
         )}
-      </main>
-    </div>
+    </HubShell>
   );
 }

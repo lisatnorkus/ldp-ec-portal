@@ -1,6 +1,6 @@
 import { ExternalLink, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchPrecinctsForMcPriority, countByStrategy } from "@/lib/db/precincts";
 
@@ -60,15 +60,11 @@ export default async function CanvassToolsPage() {
   for (const c of data.endorsedMc) endorsedByMc.set(c.district_number, c);
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Canvass Tools"
-        title="Priority districts, volunteer flow, and the guides you need."
-        subtitle="Where countywide volunteer hours move the most votes: Metro Council 17, 21, and 7. If your LD overlaps any of these, coordinate with the LDP chair before cutting turf."
-      />
-
-      <main className="mx-auto max-w-6xl px-6 py-10">
-
+    <HubShell
+      eyebrow="Canvass Tools"
+      title="Priority districts, volunteer flow, and the guides you need."
+      subtitle="Where countywide volunteer hours move the most votes: Metro Council 17, 21, and 7. If your LD overlaps any of these, coordinate with the LDP chair before cutting turf."
+    >
         {/* Priority MC districts */}
         <section className="mb-10">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -234,8 +230,7 @@ export default async function CanvassToolsPage() {
             />
           </div>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

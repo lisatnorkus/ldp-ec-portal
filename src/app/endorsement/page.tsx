@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Calendar, CheckCircle2, XCircle, AlertTriangle, Vote } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 
 export const metadata = { title: "Endorsement Process" };
 
@@ -37,15 +37,12 @@ const KIND_META: Record<TimelineStep["kind"], { color: string; Icon: React.Compo
 
 export default function EndorsementProcessPage() {
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Endorsement Process"
-        title="How the LDP endorses."
-        subtitle="The party endorses in Mayoral and Metro Council primaries. State-legislature primaries are traditionally left open. Endorsement cycles have a structured timeline, a formal interview process, and a high bar (60%) to prevent narrow-majority endorsements that don't represent the committee's consensus."
-        maxWidthClass="max-w-5xl"
-      />
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
+    <HubShell
+      eyebrow="Endorsement Process"
+      title="How the LDP endorses."
+      subtitle="The party endorses in Mayoral and Metro Council primaries. State-legislature primaries are traditionally left open. Endorsement cycles have a structured timeline, a formal interview process, and a high bar (60%) to prevent narrow-majority endorsements that don't represent the committee's consensus."
+      maxWidthClass="max-w-5xl"
+    >
         {/* Who does this */}
         <section className="mb-10 rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white p-5">
           <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
@@ -184,8 +181,7 @@ export default function EndorsementProcessPage() {
             Endorsement Process Committee page →
           </Link>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ExternalLink, MapPin, Clock, Car, Vote } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -51,14 +51,11 @@ export default async function EarlyVotingPage() {
   const hours = locations[0]?.hours_note ?? "8:00 am – 6:00 pm";
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Early voting · 2026 Primary"
-        title="24 early voting locations across Jefferson County."
-        subtitle="Any Jefferson County voter can use any of these 24 locations during the early-voting window — you don't have to vote at the one in your LD. Share the location nearest to each voter's home or workplace."
-      />
-
-      <main className="mx-auto max-w-6xl px-6 py-10">
+    <HubShell
+      eyebrow="Early voting · 2026 Primary"
+      title="24 early voting locations across Jefferson County."
+      subtitle="Any Jefferson County voter can use any of these 24 locations during the early-voting window — you don't have to vote at the one in your LD. Share the location nearest to each voter's home or workplace."
+    >
         <div className="mb-8">
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -141,8 +138,7 @@ export default async function EarlyVotingPage() {
             once the Clerk publishes the list for October 29 – 31, 2026.
           </p>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

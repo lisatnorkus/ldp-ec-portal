@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import {
@@ -97,16 +97,11 @@ export default async function MemberDetailPage({
   const attPct = attendancePct(member);
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow={PRIMARY_ROLE_LABEL[member.primary_role]}
-        title={`${displayName(member)}.`}
-        backHref="/people"
-        backLabel="Directory"
-        maxWidthClass="max-w-4xl"
-      />
-
-      <main className="mx-auto max-w-4xl px-6 py-10">
+    <HubShell
+      eyebrow={PRIMARY_ROLE_LABEL[member.primary_role]}
+      title={`${displayName(member)}.`}
+      maxWidthClass="max-w-4xl"
+    >
         <div className="mb-8 rounded-xl border border-[var(--color-ldp-line)] bg-white p-6">
           <div className="flex flex-wrap items-start gap-4">
             <div className="flex-1 min-w-0">
@@ -265,8 +260,7 @@ export default async function MemberDetailPage({
             </ul>
           </section>
         )}
-      </main>
-    </div>
+    </HubShell>
   );
 }
 

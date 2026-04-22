@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, MapPin, Target, Users, Mail, Phone, Star } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { ExternalLink, Globe, MapPin, Target, Users, Mail, Phone, Star } from "lucide-react";
+import { HubShell } from "@/components/hub/HubShell";
+import { PrecinctPlaybookTable } from "@/components/precincts/PrecinctPlaybookTable";
 import {
   fetchPcsForLd,
   groupPcsByPrecinct,
@@ -185,16 +186,11 @@ export default async function LdDetailPage({
   const currentPhase = getCurrentPhase();
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Legislative District"
-        title={`LD${ld_number}.`}
-        backHref="/my-ld"
-        backLabel="All LDs"
-        maxWidthClass="max-w-5xl"
-      />
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
+    <HubShell
+      eyebrow="Legislative District"
+      title={`LD${ld_number}.`}
+      maxWidthClass="max-w-5xl"
+    >
         <div className="mb-8">
           <p className="text-sm text-[var(--color-ldp-ink-700)]">
             {precincts.length} precincts · {counts.sleeper_dems.toLocaleString()} sleeper Dems countywide
@@ -327,108 +323,7 @@ export default async function LdDetailPage({
                     </span>
                   </div>
                 </summary>
-                {/* Desktop table */}
-                <div className="mt-3 hidden overflow-x-auto md:block">
-                  <table className="w-full text-xs">
-                    <thead className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ldp-ink-700)]">
-                      <tr>
-                        <th className="px-2 py-1.5 text-left">Precinct</th>
-                        <th className="px-2 py-1.5 text-left">MC</th>
-                        <th className="px-2 py-1.5 text-right">Voters</th>
-                        <th className="px-2 py-1.5 text-right">D</th>
-                        <th className="px-2 py-1.5 text-right">R</th>
-                        <th className="px-2 py-1.5 text-right">Ind</th>
-                        <th className="px-2 py-1.5 text-right">Sleeper D</th>
-                        <th className="px-2 py-1.5 text-right">D margin</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--color-ldp-line)]">
-                      {group.map((p) => (
-                        <tr key={p.precinct} className="hover:bg-[#FAFBFC]">
-                          <td className="px-2 py-1.5 font-medium text-[var(--color-ldp-navy-900)]">
-                            <a
-                              href={`https://26ldp-strategy-map.vercel.app/?precinct=${encodeURIComponent(p.precinct)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 hover:underline"
-                            >
-                              {p.precinct} <ExternalLink className="size-3" />
-                            </a>
-                          </td>
-                          <td className="px-2 py-1.5 text-[var(--color-ldp-ink-700)]">{p.metro_council ?? "—"}</td>
-                          <td className="px-2 py-1.5 text-right">{p.total_voters?.toLocaleString() ?? "—"}</td>
-                          <td className="px-2 py-1.5 text-right text-emerald-700">{p.dem_total?.toLocaleString() ?? "—"}</td>
-                          <td className="px-2 py-1.5 text-right text-[var(--color-ldp-red)]">{p.rep_total?.toLocaleString() ?? "—"}</td>
-                          <td className="px-2 py-1.5 text-right text-[var(--color-ldp-ink-700)]">{p.ind_total?.toLocaleString() ?? "—"}</td>
-                          <td className="px-2 py-1.5 text-right font-semibold">{p.dem_gen_not_pri?.toLocaleString() ?? "—"}</td>
-                          <td className="px-2 py-1.5 text-right font-semibold" style={{ color: (p.d_margin_pct ?? 0) >= 0 ? "var(--color-strategy-power-base)" : "#7a5a1f" }}>
-                            {p.d_margin_pct != null ? `${p.d_margin_pct > 0 ? "+" : ""}${p.d_margin_pct}%` : "—"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Mobile cards */}
-                <div className="mt-3 space-y-2 md:hidden">
-                  {group.map((p) => (
-                    <a
-                      key={p.precinct}
-                      href={`https://26ldp-strategy-map.vercel.app/?precinct=${encodeURIComponent(p.precinct)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block rounded border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-3"
-                    >
-                      <div className="flex items-baseline justify-between gap-2">
-                        <div className="font-semibold text-[var(--color-ldp-navy-900)]">
-                          Precinct {p.precinct}
-                          {p.metro_council && (
-                            <span className="ml-1 text-[10px] text-[var(--color-ldp-ink-700)]">
-                              · MC{p.metro_council}
-                            </span>
-                          )}
-                        </div>
-                        <div
-                          className="text-xs font-semibold"
-                          style={{
-                            color: (p.d_margin_pct ?? 0) >= 0 ? "var(--color-strategy-power-base)" : "#7a5a1f",
-                          }}
-                        >
-                          {p.d_margin_pct != null
-                            ? `${p.d_margin_pct > 0 ? "+" : ""}${p.d_margin_pct}%`
-                            : "—"}
-                        </div>
-                      </div>
-                      <div className="mt-1 grid grid-cols-4 gap-1 text-[10px] text-[var(--color-ldp-ink-700)]">
-                        <div>
-                          <div>Voters</div>
-                          <div className="font-semibold text-[var(--color-ldp-ink-900)]">
-                            {p.total_voters?.toLocaleString() ?? "—"}
-                          </div>
-                        </div>
-                        <div>
-                          <div>D</div>
-                          <div className="font-semibold text-emerald-700">
-                            {p.dem_total?.toLocaleString() ?? "—"}
-                          </div>
-                        </div>
-                        <div>
-                          <div>R</div>
-                          <div className="font-semibold text-[var(--color-ldp-red)]">
-                            {p.rep_total?.toLocaleString() ?? "—"}
-                          </div>
-                        </div>
-                        <div>
-                          <div>Sleeper D</div>
-                          <div className="font-semibold text-[var(--color-ldp-ink-900)]">
-                            {p.dem_gen_not_pri?.toLocaleString() ?? "—"}
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
+                <PrecinctPlaybookTable precincts={group} />
               </details>
             );
           })}
@@ -459,8 +354,7 @@ export default async function LdDetailPage({
             Full 2026 ballot →
           </Link>
         </div>
-      </main>
-    </div>
+    </HubShell>
   );
 }
 
@@ -589,6 +483,8 @@ type Candidate = {
   is_endorsed: boolean;
   on_primary_ballot: boolean;
   notes: string | null;
+  website_url: string | null;
+  email: string | null;
 };
 
 function RaceBlock({
@@ -688,6 +584,26 @@ function RaceBlock({
                 )}
                 {cleanNotes && (
                   <span className="text-xs text-[var(--color-ldp-ink-700)]">{cleanNotes}</span>
+                )}
+                {d.website_url && (
+                  <a
+                    href={d.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--color-ldp-line)] bg-white px-2 py-0.5 text-[10px] text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
+                  >
+                    <Globe aria-hidden="true" className="size-3" />
+                    Website
+                  </a>
+                )}
+                {d.email && (
+                  <a
+                    href={`mailto:${d.email}`}
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--color-ldp-line)] bg-white px-2 py-0.5 text-[10px] text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
+                  >
+                    <Mail aria-hidden="true" className="size-3" />
+                    {d.email}
+                  </a>
                 )}
               </li>
             );

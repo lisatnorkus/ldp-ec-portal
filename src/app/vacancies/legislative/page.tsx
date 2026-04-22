@@ -1,22 +1,17 @@
 import Link from "next/link";
 import { AlertTriangle, ExternalLink, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 
 export const metadata = { title: "Filling Legislative Vacancies" };
 
 export default function LegislativeVacanciesPage() {
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Filling Legislative Vacancies"
-        title="When a State House or State Senate Democrat vacates mid-term."
-        backHref="/transitions"
-        backLabel="Transitions"
-        maxWidthClass="max-w-4xl"
-      />
-
-      <main className="mx-auto max-w-4xl px-6 py-10">
+    <HubShell
+      eyebrow="Filling Legislative Vacancies"
+      title="When a State House or State Senate Democrat vacates mid-term."
+      maxWidthClass="max-w-4xl"
+    >
         <div className="mb-8">
           <p className="max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
             If a Kentucky General Assembly Democrat resigns, dies, moves up to higher office, or
@@ -265,7 +260,6 @@ export default function LegislativeVacanciesPage() {
             </Button>
           </div>
         </section>
-      </main>
-    </div>
+    </HubShell>
   );
 }

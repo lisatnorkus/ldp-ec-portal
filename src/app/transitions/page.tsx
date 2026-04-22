@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Scale } from "lucide-react";
-import { PageMasthead } from "@/components/nav/PageMasthead";
+import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -37,15 +37,12 @@ export default async function TransitionsPage() {
   const filled = all.filter((t) => t.status === "FILLED");
 
   return (
-    <div className="min-h-screen bg-[#F7F8FA]">
-      <PageMasthead
-        eyebrow="Transitions"
-        title="Seats that have changed hands since the June 2025 reorg."
-        subtitle={`${vacant.length} seat${vacant.length === 1 ? "" : "s"} still vacant · ${filled.length} filled. CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).`}
-        maxWidthClass="max-w-5xl"
-      />
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
+    <HubShell
+      eyebrow="Transitions"
+      title="Seats that have changed hands since the June 2025 reorg."
+      subtitle={`${vacant.length} seat${vacant.length === 1 ? "" : "s"} still vacant · ${filled.length} filled. CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).`}
+      maxWidthClass="max-w-5xl"
+    >
         <div className="mb-8 rounded-xl border border-[var(--color-ldp-navy-800)] bg-white p-5">
           <div className="flex items-start gap-3">
             <Scale aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-navy-800)]" />
@@ -181,8 +178,7 @@ export default async function TransitionsPage() {
             </div>
           </section>
         )}
-      </main>
-    </div>
+    </HubShell>
   );
 }
 
