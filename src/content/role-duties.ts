@@ -71,6 +71,6 @@ export const ALWAYS_DUTIES: Duty[] = [
     label: "Amplify the party's voice",
     shortBody:
       "One reshare = free reach. When 50 board members reshare a post, organic reach 5–10x overnight.",
-    cite: "Communications Committee · Beth Thorpe",
+    cite: "Communications Committee",
   },
 ];

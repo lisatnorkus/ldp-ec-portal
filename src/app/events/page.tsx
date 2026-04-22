@@ -259,8 +259,8 @@ export default async function EventsPage() {
           <FlywheelStep
             n={1}
             icon={<Send aria-hidden="true" className="size-4" />}
-            title="Beth sends your link"
-            body="~30 days before each event, you get a unique URL by email. One link per event, per member."
+            title="Your link arrives"
+            body="~30 days before each event, Comms emails you a unique URL. One link per event, per member."
           />
           <FlywheelStep
             n={2}
@@ -287,7 +287,7 @@ export default async function EventsPage() {
             <AlertCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-red)]" />
             <div className="flex-1">
               <div className="text-sm font-bold text-[var(--color-ldp-red)]">
-                Don&apos;t have your link? Get it today — not three days before the event.
+                Don&apos;t have your link? Request it early — not three days before the event.
               </div>
               <p className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
                 The earlier you have your link, the longer you have to share it. A link that goes
@@ -296,7 +296,7 @@ export default async function EventsPage() {
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button asChild variant="ldp" size="sm">
                   <a href="mailto:communications@louisvilledems.com?subject=Need%20my%20ticket%20links%20for%202026%20events">
-                    Email Beth now
+                    Email Communications
                     <ExternalLink aria-hidden="true" className="ml-1 size-3.5" />
                   </a>
                 </Button>
@@ -700,7 +700,7 @@ function EventCard({ event, chair }: { event: Event; chair: Chair | null | undef
                   href="mailto:communications@louisvilledems.com"
                   className="text-[var(--color-ldp-navy-700)] underline"
                 >
-                  Email Beth
+                  Email Communications
                 </a>
                 .
               </div>

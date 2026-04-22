@@ -11,23 +11,21 @@ export default function CommsPage() {
     <HubShell
       eyebrow="Communications Committee"
       title="How the party gets heard."
-      subtitle="The Communications Committee runs the LDP's voice across owned channels (social, email, Mailchimp), earned media (press), and paid digital (Meta ads, boosted posts, candidate-aligned creative). If a board member, candidate, or LD posts anything with the LDP brand on it, the system Beth designed is what made it possible."
+      subtitle="The Communications Committee runs the LDP's voice across owned channels (social, email, Mailchimp), earned media (press), and paid digital (Meta ads, boosted posts, candidate-aligned creative). Anything with the LDP brand on it runs through the Comms system."
     >
-        {/* Built by Beth */}
+        {/* Shared infrastructure */}
         <section className="mb-10 rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white p-5">
           <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
-            Built by Beth · Infrastructure credit
+            Shared infrastructure
           </div>
           <h2 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">
-            The Drive backend that every committee runs on.
+            The Drive backend every committee runs on.
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
             The committee folders, document tree, brand kit, event collateral library, ad assets,
-            and form-based intake that every committee uses didn&apos;t appear by accident.{" "}
-            <strong>Beth Thorpe (Communications Director)</strong> designed and built the Drive
-            structure on the backend of the website so that every committee, LD, and candidate
-            can find what they need without asking. Every &ldquo;Open folder →&rdquo; link in this
-            tool touches her work.
+            and form-based intake that every committee uses live in a shared Drive maintained by
+            the Communications Committee. Every &ldquo;Open folder →&rdquo; link in this portal
+            points there.
           </p>
           <div className="mt-4">
             <Link
@@ -40,29 +38,29 @@ export default function CommsPage() {
           </div>
         </section>
 
-        {/* Three asks */}
+        {/* Three ways the board can help Comms */}
         <section className="mb-10">
           <h2 className="mb-3 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
-            Three asks of the board this year
+            Three ways the board can help Comms
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             <AskCard
               icon={<Share2 aria-hidden="true" className="size-4" />}
               tag="Amplify on social"
               title="One reshare = free reach."
-              body="The cheapest amplification we have is the board itself. When 50 board members reshare a post, organic reach 5-10× overnight. This is the easiest unpaid lift you can do for the party — and the one Beth most consistently asks for and most consistently gets ignored on. Fix that this cycle."
+              body="The cheapest amplification the party has is the board itself. When 50 members reshare a post, organic reach 5–10× overnight. The easiest unpaid lift anyone on this board can give."
             />
             <AskCard
               icon={<Megaphone aria-hidden="true" className="size-4" />}
               tag="Fund the ad program"
               title="$100 = sponsored post. $500 = targeted week."
-              body="Paid digital scales when there's fuel. Earmark &ldquo;Ad Fund&rdquo; via ActBlue or tell Beth directly. Separate line from your $120 Club dues and $500 annual raise target."
+              body="Paid digital scales when there's fuel. Earmark &ldquo;Ad Fund&rdquo; via ActBlue or flag it through Comms. Separate line from $120 Club dues and the $500 annual raise target."
             />
             <AskCard
               icon={<Mail aria-hidden="true" className="size-4" />}
               tag="Route through intake"
-              title="Use the form. Not a 9pm text."
-              body="All comms asks — graphics, social posts, ad content, calendar listings, printed materials, volunteer leads — go through the Event Request form. It's one place, it's tracked, and it protects Beth's time."
+              title="Use the form."
+              body="All comms asks — graphics, social posts, ad content, calendar listings, printed materials, volunteer leads — go through the Event Request form. One place, tracked, assignable."
               cta={{ label: "Event Request form", href: "https://loukydemparty.fillout.com/eventrequest" }}
             />
           </div>
@@ -140,10 +138,10 @@ export default function CommsPage() {
         {/* Comms protocol */}
         <section className="mb-10 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-5">
           <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-            Comms protocol — read this
+            Working with Comms
           </div>
           <h2 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">
-            Don&apos;t text Beth at 9pm.
+            Use the intake form.
           </h2>
           <ul className="mt-3 space-y-2 text-sm text-[var(--color-ldp-ink-900)]">
             <li className="flex items-start gap-2">
@@ -176,8 +174,8 @@ export default function CommsPage() {
                 >
                   communications@louisvilledems.com
                 </a>
-                . Beth drafts a response for officer sign-off; individual board members don&apos;t
-                reply directly to press on behalf of the party.
+                . The Comms team drafts a response for officer sign-off; individual board
+                members don&apos;t reply directly to press on behalf of the party.
               </span>
             </li>
             <li className="flex items-start gap-2">
@@ -185,8 +183,8 @@ export default function CommsPage() {
                 Speed
               </span>
               <span>
-                Time-sensitive? Flag it in the form. Beth and team aim for 24-hour turnaround on
-                most requests during the primary and general windows.
+                Time-sensitive? Flag it in the form. The Comms team aims for 24-hour turnaround
+                on most requests during the primary and general windows.
               </span>
             </li>
           </ul>
@@ -194,11 +192,20 @@ export default function CommsPage() {
 
         {/* What's next */}
         <section className="rounded-xl border border-dashed border-[var(--color-ldp-line)] bg-white p-5 text-sm">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            What&apos;s on Comms&apos; wish list
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+              Ideas being discussed
+            </span>
+            <span className="rounded-full bg-[#FAFAFA] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+              Draft · pending committee input
+            </span>
           </div>
+          <p className="mt-2 text-xs text-[var(--color-ldp-ink-700)]">
+            Projects that have come up around Comms. Not a committee-decided list — the Comms
+            committee shapes what actually ships.
+          </p>
           <ul className="mt-2 space-y-1 text-[var(--color-ldp-ink-900)]">
-            <li>• Social media amplifier team (project for people who don&apos;t knock — <em>&ldquo;better than postcards,&rdquo;</em> per Beth)</li>
+            <li>• Social media amplifier team (project for people who don&apos;t knock — <em>&ldquo;better than postcards&rdquo;</em>)</li>
             <li>• Social media moderators for rapid response during Frankfort session</li>
             <li>• Writers for deep-dive series (running for office, working on campaigns, elected-official interviews, aligned-org profiles)</li>
             <li>• Tool kits on the website: running for office, filing for office, filing with KREF, shareable graphics, voting info, ballot lookup</li>

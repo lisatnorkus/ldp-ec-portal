@@ -39,7 +39,7 @@ export const SECTION_NAV: SectionNavItem[] = [
     description: "How the LDP endorses — 60% threshold, secret ballot, Jan-Feb timeline per cycle.",
     accent: "#b45309" },
   { slug: "comms", label: "Communications", href: "/comms", icon: Megaphone,
-    description: "How the party gets heard — social, email, ads, printed, photography. Beth's scope.",
+    description: "How the party gets heard — social, email, ads, printed, photography.",
     accent: "#0E4C9E" },
   { slug: "events", label: "Events", href: "/events", icon: Ticket,
     description: "Signature events + your $500 annual raise via ticket-sale links.",
