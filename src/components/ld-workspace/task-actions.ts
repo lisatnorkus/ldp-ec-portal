@@ -90,14 +90,15 @@ const NEW_CHAIR_TEMPLATE: Array<{
   due_in_days: number | null;
   priority: TaskPriority;
 }> = [
+  { title: "Log into the LDPEC Portal and set your profile (name + role + LD)", due_in_days: 3, priority: "HIGH" },
+  { title: "Pick 1–2 committees to serve on — browse /committees, email the chair to introduce yourself", due_in_days: 14, priority: "HIGH" },
   { title: "Confirm your LD's precinct captain list is current", due_in_days: 14, priority: "HIGH" },
   { title: "Schedule your first LD meeting", due_in_days: 30, priority: "HIGH" },
   { title: "Review past LD notes from prior chair", due_in_days: null, priority: "MEDIUM" },
   { title: "Contact your top 3 recruiting prospects", due_in_days: 21, priority: "HIGH" },
   { title: "Connect with your assigned Metro Council candidate", due_in_days: 30, priority: "MEDIUM" },
   { title: "Register on Mobilize for upcoming canvasses", due_in_days: 7, priority: "HIGH" },
-  { title: "Review your LD's strategy mix and dark precincts", due_in_days: 14, priority: "MEDIUM" },
-  { title: "Introduce yourself to LDP Volunteer Coordinator", due_in_days: 14, priority: "MEDIUM" },
+  { title: "Introduce yourself to the LDP Volunteer Coordinator", due_in_days: 14, priority: "MEDIUM" },
 ];
 
 export async function insertNewChairTemplate(

@@ -60,19 +60,43 @@ export default async function CommitteeDetailPage({
     >
         <div className="mb-6">
           {chair && (
-            <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-              <span className="font-semibold">Chair:</span>{" "}
-              <Link
-                href={`/people/${chair.id}`}
-                className="text-[var(--color-ldp-navy-700)] hover:underline"
-              >
-                {displayName(chair)}
-              </Link>
-              {committee.chair_title_override && (
-                <span className="ml-1">({committee.chair_title_override})</span>
+            <div className="rounded-lg border border-[var(--color-ldp-line)] bg-white p-4">
+              <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                Chair
+              </div>
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <Link
+                  href={`/people/${chair.id}`}
+                  className="text-base font-bold text-[var(--color-ldp-navy-900)] hover:underline"
+                >
+                  {displayName(chair)}
+                </Link>
+                {committee.chair_title_override && (
+                  <span className="text-xs text-[var(--color-ldp-ink-700)]">
+                    ({committee.chair_title_override})
+                  </span>
+                )}
+                {chair.email && (
+                  <a
+                    href={`mailto:${chair.email}?subject=${encodeURIComponent(`Interested in ${committee.name} Committee`)}`}
+                    className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-navy-800)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
+                  >
+                    <svg aria-hidden="true" className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="20" height="16" x="2" y="4" rx="2" />
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                    </svg>
+                    Email chair
+                  </a>
+                )}
+              </div>
+              {chair.email && (
+                <div className="mt-2 text-xs text-[var(--color-ldp-ink-700)]">
+                  <a href={`mailto:${chair.email}`} className="hover:underline">
+                    {chair.email}
+                  </a>
+                </div>
               )}
-              {chair.email && <span className="ml-2">· <a href={`mailto:${chair.email}`} className="text-[var(--color-ldp-navy-700)] hover:underline">{chair.email}</a></span>}
-            </p>
+            </div>
           )}
         </div>
 

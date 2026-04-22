@@ -219,7 +219,7 @@ function EmptyTasksHero({
               Start your task list
             </div>
             <h3 className="mt-1 text-xl font-black tracking-tight text-[var(--color-ldp-navy-900)]">
-              {canWrite ? "Drop in the 8 onboarding tasks or add your own." : "Set your name first — then start tracking."}
+              {canWrite ? "Drop in the 10 onboarding tasks or add your own." : "Set your name first — then start tracking."}
             </h3>
             <p className="mt-2 text-sm text-[var(--color-ldp-ink-900)]">
               Tasks live with the LD, not with you. Anything you track here carries forward to
@@ -235,7 +235,7 @@ function EmptyTasksHero({
                   className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-gold)] px-4 py-2 text-sm font-bold text-[var(--color-ldp-navy-900)] shadow hover:bg-[var(--color-ldp-gold)]/90 disabled:opacity-50"
                 >
                   <Sparkles aria-hidden="true" className="size-4" />
-                  Insert new-chair template · 8 tasks
+                  Insert new-chair template · 10 tasks
                 </button>
                 <button
                   type="button"
