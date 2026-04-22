@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
 import type { RoleKey } from "@/content/highest-leverage-rules";
-import { ALWAYS_DUTIES } from "@/content/role-duties";
+import { ALWAYS_DUTIES, type Duty } from "@/content/role-duties";
 import { SOCIAL_PLATFORMS } from "@/content/social-platforms";
 import { SocialIcon } from "@/components/social/SocialIcon";
 
@@ -259,7 +259,10 @@ export function WorkingSet({ rightNow }: { rightNow?: RightNowContextClient }) {
           <ol className="mt-4 space-y-3">
             {ALWAYS_DUTIES.map((d, i) => (
               <li key={d.id} className="flex gap-3">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-ldp-navy-800)] text-[10px] font-bold text-white">
+                <span
+                  className="flex size-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white shadow-sm"
+                  style={{ backgroundColor: dutyColor(d.id) }}
+                >
                   {i + 1}
                 </span>
                 <div className="flex-1">
@@ -269,7 +272,7 @@ export function WorkingSet({ rightNow }: { rightNow?: RightNowContextClient }) {
                   <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
                     {d.shortBody}
                   </div>
-                  <div className="mt-0.5 text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)]/70">
+                  <div className="mt-0.5 text-[10px] uppercase tracking-widest" style={{ color: dutyColor(d.id) }}>
                     {d.cite}
                   </div>
                 </div>
@@ -461,7 +464,6 @@ function RightNowPanel({
 
   // PC coverage for the user's LD — LD Chair / VC / PC roles.
   if (ldSnap && (role === "LD_CHAIR" || role === "LD_VC" || role === "PRECINCT_CAPTAIN")) {
-    const totalSeats = ldSnap.precinct_count * 3;
     items.push({
       id: "pc-coverage",
       icon: <Users aria-hidden="true" className="size-4" />,
@@ -469,12 +471,14 @@ function RightNowPanel({
       body: (
         <div>
           <div className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
-            {ldSnap.pc_count} of {totalSeats} seats filled · {ldSnap.dark_precinct_count} dark
-            precincts
+            {ldSnap.pc_precinct_count} of {ldSnap.precinct_count} precincts have a PC on file
+            {ldSnap.dark_precinct_count > 0 && (
+              <> · {ldSnap.dark_precinct_count} dark</>
+            )}
           </div>
           <div className="mt-0.5 text-xs text-[var(--color-ldp-ink-700)]">
-            PC recruitment is a 90-day CEC obligation (KDP Art. III.B). Your LD page lists every
-            named PC with contact info where known.
+            {ldSnap.pc_count} people named total. PC recruitment is a 90-day CEC obligation
+            (KDP Art. III.B). Your LD page lists every named PC with contact info where known.
           </div>
           <Link
             href={`/my-ld/${ldSnap.ld_number}`}
@@ -607,4 +611,20 @@ function RightNowPanel({
       </div>
     </div>
   );
+}
+
+// Per-duty accent color so the standing-duties list is visually scannable
+// instead of a gray ladder. Colors chosen so the list reads as a branded
+// spectrum, not a rainbow.
+function dutyColor(id: Duty["id"]): string {
+  switch (id) {
+    case "organize-precincts": return "var(--color-ldp-navy-700)";
+    case "recruit-candidates": return "var(--color-ldp-red)";
+    case "voter-contact": return "#059669"; // emerald
+    case "fundraise": return "var(--color-ldp-gold)";
+    case "train": return "#7c3aed"; // violet
+    case "board-of-elections": return "#0891b2"; // cyan
+    case "amplify": return "var(--color-ldp-navy-800)";
+    default: return "var(--color-ldp-navy-800)";
+  }
 }

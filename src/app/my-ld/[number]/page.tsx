@@ -641,133 +641,186 @@ function PcSection({
   precinctCount: number;
   pcs: PrecinctCaptain[];
 }) {
-  const totalSeats = precinctCount * 3;
-  const filled = pcs.length;
-  const covered = Math.min(filled, totalSeats);
-  const pct = totalSeats > 0 ? Math.round((covered / totalSeats) * 100) : 0;
   const precinctsWithAnyPc = new Set(pcs.map((p) => p.precinct_code)).size;
   const darkPrecincts = Math.max(0, precinctCount - precinctsWithAnyPc);
+  const pcsWithRole = pcs.filter((p) => p.role != null).length;
+  const pcsWithoutRole = pcs.length - pcsWithRole;
+  const coveragePct = precinctCount > 0 ? Math.round((precinctsWithAnyPc / precinctCount) * 100) : 0;
   const grouped = groupPcsByPrecinct(pcs);
   const sortedPrecincts = Array.from(grouped.keys()).sort();
 
   return (
-    <section className="mb-8 rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white p-5">
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <Users aria-hidden="true" className="size-4 text-[var(--color-ldp-navy-800)]" />
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
-              Precinct Captains · LD{ld}
-            </h2>
-          </div>
-          <p className="mt-1 text-sm text-[var(--color-ldp-ink-700)]">
-            Credentialed at the May 17, 2025 County Convention. Three seats per precinct
-            (Man / Woman / Youth). PCs not yet on this list may still exist — send corrections to{" "}
-            <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
-              communications@louisvilledems.com
-            </a>
-            .
-          </p>
-        </div>
+    <section className="mb-8 overflow-hidden rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white">
+      <div className="flex items-center gap-2 bg-[var(--color-ldp-navy-800)] px-5 py-2">
+        <Users aria-hidden="true" className="size-4 text-white" />
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+          Precinct Captains · LD{ld}
+        </h2>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-3 rounded-lg bg-[#FAFAFA] p-3 text-center">
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            PCs on file
-          </div>
-          <div className="mt-0.5 text-2xl font-bold text-[var(--color-ldp-navy-900)]">
-            {filled}
-            <span className="text-sm font-medium text-[var(--color-ldp-ink-700)]">
-              {" "}/ {totalSeats}
-            </span>
-          </div>
-          <div className="mt-0.5 text-[11px] text-[var(--color-ldp-ink-700)]">{pct}% of seats</div>
-        </div>
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            Precincts with any PC
-          </div>
-          <div className="mt-0.5 text-2xl font-bold text-emerald-700">
-            {precinctsWithAnyPc}
-            <span className="text-sm font-medium text-[var(--color-ldp-ink-700)]">
-              {" "}/ {precinctCount}
-            </span>
-          </div>
-          <div className="mt-0.5 text-[11px] text-[var(--color-ldp-ink-700)]">Any role</div>
-        </div>
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            Dark precincts
-          </div>
-          <div className="mt-0.5 text-2xl font-bold text-[var(--color-ldp-red)]">
-            {darkPrecincts}
-          </div>
-          <div className="mt-0.5 text-[11px] text-[var(--color-ldp-ink-700)]">No PC on file</div>
-        </div>
-      </div>
-
-      {pcs.length === 0 ? (
-        <div className="mt-4 rounded-lg border border-dashed border-[var(--color-ldp-red)] bg-[#FFF5F6] p-4 text-sm text-[var(--color-ldp-ink-900)]">
-          <strong className="text-[var(--color-ldp-red)]">No PCs on file for LD{ld}.</strong>{" "}
-          If your LD elected Precinct Captains at the 2025 Convention, send the roster (names,
-          precincts, roles, emails, phones) to{" "}
+      <div className="p-5">
+        <p className="text-sm text-[var(--color-ldp-ink-700)]">
+          Credentialed at the May 17, 2025 County Convention. Each precinct has three PC seats
+          (Man / Woman / Youth). Many PCs on this list don&apos;t have a specific role recorded
+          yet — they&apos;re counted as &ldquo;on file&rdquo; without being pinned to a seat. Send
+          corrections to{" "}
           <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
             communications@louisvilledems.com
           </a>
           .
+        </p>
+
+        <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <StatTile
+            label="Precincts with a PC"
+            value={`${precinctsWithAnyPc}`}
+            suffix={`/ ${precinctCount}`}
+            sub={`${coveragePct}% coverage`}
+            tone="emerald"
+          />
+          <StatTile
+            label="Dark precincts"
+            value={`${darkPrecincts}`}
+            sub="No PC on file"
+            tone="red"
+          />
+          <StatTile
+            label="People named"
+            value={`${pcs.length}`}
+            sub={`${pcsWithRole} with role · ${pcsWithoutRole} without`}
+            tone="navy"
+          />
+          <StatTile
+            label="Total PC seats possible"
+            value={`${precinctCount * 3}`}
+            sub={`${precinctCount} precincts × 3`}
+            tone="muted"
+          />
         </div>
-      ) : (
-        <details className="mt-4 rounded-lg border border-[var(--color-ldp-line)] bg-white">
-          <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-[var(--color-ldp-navy-900)]">
-            Show all {filled} PCs by precinct →
-          </summary>
-          <div className="divide-y divide-[var(--color-ldp-line)]">
-            {sortedPrecincts.map((precinct) => {
-              const list = grouped.get(precinct) ?? [];
-              return (
-                <div key={precinct} className="px-4 py-3">
-                  <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
-                    Precinct {precinct} · {list.length} PC{list.length === 1 ? "" : "s"}
-                  </div>
-                  <ul className="mt-2 space-y-1.5">
-                    {list.map((pc) => (
-                      <li key={pc.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                        <span className="font-medium text-[var(--color-ldp-navy-900)]">
-                          {pcDisplayName(pc)}
-                        </span>
-                        {pc.role && (
-                          <span className="rounded bg-[var(--color-ldp-navy-900)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-white">
-                            {pc.role}
-                          </span>
-                        )}
-                        {pc.email && (
-                          <a
-                            href={`mailto:${pc.email}`}
-                            className="inline-flex items-center gap-1 text-xs text-[var(--color-ldp-navy-700)] hover:underline"
-                          >
-                            <Mail aria-hidden="true" className="size-3" />
-                            {pc.email}
-                          </a>
-                        )}
-                        {pc.phone && (
-                          <a
-                            href={`tel:${pc.phone.replace(/\D/g, "")}`}
-                            className="inline-flex items-center gap-1 text-xs text-[var(--color-ldp-ink-700)] hover:underline"
-                          >
-                            <Phone aria-hidden="true" className="size-3" />
-                            {pc.phone}
-                          </a>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
+
+        {pcs.length === 0 ? (
+          <div className="mt-4 rounded-lg border border-dashed border-[var(--color-ldp-red)] bg-[#FFF5F6] p-4 text-sm text-[var(--color-ldp-ink-900)]">
+            <strong className="text-[var(--color-ldp-red)]">No PCs on file for LD{ld}.</strong>{" "}
+            If your LD elected Precinct Captains at the 2025 Convention, send the roster (names,
+            precincts, roles, emails, phones) to{" "}
+            <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
+              communications@louisvilledems.com
+            </a>
+            .
           </div>
-        </details>
-      )}
+        ) : (
+          <details className="mt-4 rounded-lg border border-[var(--color-ldp-line)] bg-white">
+            <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-[var(--color-ldp-navy-900)]">
+              Show all {pcs.length} PCs by precinct →
+            </summary>
+            <div className="divide-y divide-[var(--color-ldp-line)]">
+              {sortedPrecincts.map((precinct) => {
+                const list = grouped.get(precinct) ?? [];
+                return (
+                  <div key={precinct} className="px-4 py-3">
+                    <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+                      Precinct {precinct} · {list.length} PC{list.length === 1 ? "" : "s"}
+                    </div>
+                    <ul className="mt-2 space-y-1.5">
+                      {list.map((pc) => (
+                        <li key={pc.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                          <span className="font-medium text-[var(--color-ldp-navy-900)]">
+                            {pcDisplayName(pc)}
+                          </span>
+                          {pc.role && <PcRolePill role={pc.role} />}
+                          {pc.email && (
+                            <a
+                              href={`mailto:${pc.email}`}
+                              className="inline-flex items-center gap-1 text-xs text-[var(--color-ldp-navy-700)] hover:underline"
+                            >
+                              <Mail aria-hidden="true" className="size-3" />
+                              {pc.email}
+                            </a>
+                          )}
+                          {pc.phone && (
+                            <a
+                              href={`tel:${pc.phone.replace(/\D/g, "")}`}
+                              className="inline-flex items-center gap-1 text-xs text-[var(--color-ldp-ink-700)] hover:underline"
+                            >
+                              <Phone aria-hidden="true" className="size-3" />
+                              {pc.phone}
+                            </a>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
+          </details>
+        )}
+      </div>
     </section>
+  );
+}
+
+function StatTile({
+  label,
+  value,
+  suffix,
+  sub,
+  tone,
+}: {
+  label: string;
+  value: string;
+  suffix?: string;
+  sub: string;
+  tone: "emerald" | "red" | "navy" | "muted";
+}) {
+  const toneClasses: Record<typeof tone, { bg: string; border: string; valueColor: string }> = {
+    emerald: {
+      bg: "bg-emerald-50",
+      border: "border-emerald-200",
+      valueColor: "text-emerald-700",
+    },
+    red: {
+      bg: "bg-[#FFF5F6]",
+      border: "border-[var(--color-ldp-red)]/30",
+      valueColor: "text-[var(--color-ldp-red)]",
+    },
+    navy: {
+      bg: "bg-[#EFF6FF]",
+      border: "border-[var(--color-ldp-navy-700)]/30",
+      valueColor: "text-[var(--color-ldp-navy-900)]",
+    },
+    muted: {
+      bg: "bg-[#FAFAFA]",
+      border: "border-[var(--color-ldp-line)]",
+      valueColor: "text-[var(--color-ldp-ink-900)]",
+    },
+  };
+  const c = toneClasses[tone];
+  return (
+    <div className={`rounded-lg border ${c.border} ${c.bg} p-3`}>
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+        {label}
+      </div>
+      <div className="mt-1 flex items-baseline gap-1">
+        <span className={`text-2xl font-bold ${c.valueColor}`}>{value}</span>
+        {suffix && (
+          <span className="text-sm font-medium text-[var(--color-ldp-ink-700)]">{suffix}</span>
+        )}
+      </div>
+      <div className="mt-0.5 text-[11px] text-[var(--color-ldp-ink-700)]">{sub}</div>
+    </div>
+  );
+}
+
+function PcRolePill({ role }: { role: "MAN" | "WOMAN" | "YOUTH" }) {
+  const styles: Record<typeof role, string> = {
+    MAN: "bg-[var(--color-ldp-navy-800)] text-white",
+    WOMAN: "bg-[var(--color-ldp-red)] text-white",
+    YOUTH: "bg-[var(--color-ldp-gold)] text-[var(--color-ldp-navy-900)]",
+  };
+  return (
+    <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${styles[role]}`}>
+      {role}
+    </span>
   );
 }
