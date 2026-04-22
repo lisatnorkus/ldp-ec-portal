@@ -272,15 +272,16 @@ function DistrictBlock({
   return (
     <article
       className={`rounded-lg border bg-white p-4 ${
-        hasEndorsed ? "border-[var(--color-ldp-gold)]" : "border-[var(--color-ldp-line)]"
+        hasEndorsed
+          ? "border-emerald-500 shadow-[0_0_0_1px_rgba(16,185,129,0.15)]"
+          : "border-[var(--color-ldp-line)]"
       }`}
     >
       <div className="flex flex-wrap items-center gap-2">
         <div className="text-sm font-bold text-[var(--color-ldp-navy-900)]">{slug}</div>
         {hasEndorsed && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-ldp-gold)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-900)]">
-            <Star aria-hidden="true" className="size-3 fill-[var(--color-ldp-navy-900)]" /> LDP
-            Endorsed
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
+            <Star aria-hidden="true" className="size-3 fill-white" /> LDP Endorsed
           </span>
         )}
       </div>
@@ -291,7 +292,7 @@ function DistrictBlock({
               {c.is_endorsed && (
                 <Star
                   aria-hidden="true"
-                  className="size-4 fill-[var(--color-ldp-gold)] text-[var(--color-ldp-gold)]"
+                  className="size-4 fill-emerald-600 text-emerald-600"
                 />
               )}
               <span className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
@@ -304,7 +305,7 @@ function DistrictBlock({
                 </span>
               )}
               {c.is_endorsed && (
-                <span className="rounded-full bg-[var(--color-ldp-gold)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-900)]">
+                <span className="rounded-full bg-emerald-600 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
                   LDP Endorsed
                 </span>
               )}
