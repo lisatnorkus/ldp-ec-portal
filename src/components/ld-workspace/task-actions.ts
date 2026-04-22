@@ -17,12 +17,17 @@ export async function createTask(
     description?: string | null;
     priority?: TaskPriority;
     due_date?: string | null;
+    assigned_to_name?: string | null;
   },
   author: Author
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const title = input.title.trim();
   if (!title) return { ok: false, error: "Title is required." };
   if (!author.name.trim()) return { ok: false, error: "Tell the portal who you are first." };
+  const assignee = input.assigned_to_name?.trim() || null;
+  // Self-assignment is auto-accepted — no point in requiring yourself
+  // to accept a task you just created.
+  const isSelfAssign = assignee != null && assignee === author.name.trim();
   const supabase = await getSupabaseServer();
   const { error } = await supabase.from("ld_tasks").insert({
     ld_number,
@@ -34,7 +39,82 @@ export async function createTask(
     author_name: author.name.trim(),
     author_role: author.role,
     author_ld: author.ld,
+    assigned_to_name: assignee,
+    assigned_by_name: assignee ? author.name.trim() : null,
+    accepted_at: isSelfAssign ? new Date().toISOString() : null,
   });
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/my-ld/${ld_number}`);
+  return { ok: true };
+}
+
+export async function acceptTask(
+  task_id: string,
+  ld_number: number,
+  accepter_name: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!accepter_name.trim()) return { ok: false, error: "Set your name first." };
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("ld_tasks")
+    .update({
+      accepted_at: new Date().toISOString(),
+      declined_at: null,
+      decline_note: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", task_id)
+    .eq("assigned_to_name", accepter_name.trim());
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/my-ld/${ld_number}`);
+  return { ok: true };
+}
+
+export async function declineTask(
+  task_id: string,
+  ld_number: number,
+  decliner_name: string,
+  note: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!decliner_name.trim()) return { ok: false, error: "Set your name first." };
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("ld_tasks")
+    .update({
+      declined_at: new Date().toISOString(),
+      decline_note: note.trim() || null,
+      // Clear assignment so the task goes back to the open pool
+      assigned_to_name: null,
+      accepted_at: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", task_id)
+    .eq("assigned_to_name", decliner_name.trim());
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/my-ld/${ld_number}`);
+  return { ok: true };
+}
+
+export async function reassignTask(
+  task_id: string,
+  ld_number: number,
+  new_assignee: string | null,
+  reassigner: Author
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = await getSupabaseServer();
+  const trimmed = new_assignee?.trim() || null;
+  const isSelfAssign = trimmed != null && trimmed === reassigner.name.trim();
+  const { error } = await supabase
+    .from("ld_tasks")
+    .update({
+      assigned_to_name: trimmed,
+      assigned_by_name: trimmed ? reassigner.name.trim() : null,
+      accepted_at: isSelfAssign ? new Date().toISOString() : null,
+      declined_at: null,
+      decline_note: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", task_id);
   if (error) return { ok: false, error: error.message };
   revalidatePath(`/my-ld/${ld_number}`);
   return { ok: true };

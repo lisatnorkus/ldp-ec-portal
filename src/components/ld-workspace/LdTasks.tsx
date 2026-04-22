@@ -2,11 +2,13 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Check, CheckSquare, ChevronRight, ListTodo, Plus, Sparkles, Square, SquareCheck } from "lucide-react";
+import { Check, CheckSquare, ChevronRight, ListTodo, Plus, Sparkles, Square, SquareCheck, User, UserCheck, X } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
-import type { LdTask, TaskPriority } from "@/lib/db/ld-tasks";
+import type { Assignable, LdTask, TaskPriority } from "@/lib/db/ld-tasks";
 import {
+  acceptTask,
   createTask,
+  declineTask,
   insertNewChairTemplate,
   setTaskStatus,
 } from "./task-actions";
@@ -44,7 +46,15 @@ function formatDue(due: string | null): string {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[] }) {
+export function LdTasks({
+  ldNumber,
+  tasks,
+  assignables,
+}: {
+  ldNumber: number;
+  tasks: LdTask[];
+  assignables: Assignable[];
+}) {
   const { profile, hydrated } = useUserProfile();
   const [composing, setComposing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,9 +67,16 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
     ld: profile.ld_number,
   };
 
-  const open = tasks.filter((t) => t.status !== "DONE" && t.status !== "DEFERRED");
-  const done = tasks.filter((t) => t.status === "DONE");
-  const deferred = tasks.filter((t) => t.status === "DEFERRED");
+  const [justMine, setJustMine] = useState(false);
+  const myName = profile.display_name ?? "";
+
+  const scoped = justMine && myName
+    ? tasks.filter((t) => t.assigned_to_name === myName)
+    : tasks;
+
+  const open = scoped.filter((t) => t.status !== "DONE" && t.status !== "DEFERRED");
+  const done = scoped.filter((t) => t.status === "DONE");
+  const deferred = scoped.filter((t) => t.status === "DEFERRED");
 
   const overdue = open.filter((t) => isOverdue(t.due_date));
   const thisWeek = open.filter((t) => !isOverdue(t.due_date) && isThisWeek(t.due_date));
@@ -67,10 +84,28 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
     (t) => !isOverdue(t.due_date) && !isThisWeek(t.due_date) && t.due_date != null
   );
   const noDate = open.filter((t) => t.due_date == null);
+  const pendingForMe = myName
+    ? tasks.filter(
+        (t) => t.assigned_to_name === myName && t.accepted_at == null && t.status !== "DONE"
+      ).length
+    : 0;
 
   function handleStatus(task: LdTask, status: LdTask["status"]) {
     startTransition(async () => {
       await setTaskStatus(task.id, ldNumber, status);
+    });
+  }
+
+  function handleAccept(task: LdTask) {
+    startTransition(async () => {
+      await acceptTask(task.id, ldNumber, myName);
+    });
+  }
+
+  function handleDecline(task: LdTask) {
+    const note = prompt("Optional — tell the assigner why you're declining:") ?? "";
+    startTransition(async () => {
+      await declineTask(task.id, ldNumber, myName, note);
     });
   }
 
@@ -101,6 +136,24 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
               {overdue.length} overdue
             </span>
           )}
+          {pendingForMe > 0 && (
+            <span className="rounded-full bg-[var(--color-ldp-gold)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-[var(--color-ldp-navy-900)]">
+              {pendingForMe} to accept
+            </span>
+          )}
+          {myName && (
+            <button
+              type="button"
+              onClick={() => setJustMine((v) => !v)}
+              className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                justMine
+                  ? "border-[var(--color-ldp-navy-800)] bg-[var(--color-ldp-navy-800)] text-white"
+                  : "border-[var(--color-ldp-line)] text-[var(--color-ldp-ink-700)] hover:border-[var(--color-ldp-navy-700)]"
+              }`}
+            >
+              {justMine ? "✓ just mine" : "just mine"}
+            </button>
+          )}
         </div>
         {/* Add-task button is always rendered when there are tasks
             and a profile — keeping it present makes the section's
@@ -122,6 +175,7 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
         <TaskComposer
           ldNumber={ldNumber}
           author={author}
+          assignables={assignables}
           onClose={() => {
             setComposing(false);
             setError(null);
@@ -155,16 +209,16 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
       ) : open.length === 0 ? null : (
         <div className="space-y-4">
           {overdue.length > 0 && (
-            <TaskGroup title="Overdue" tone="red" tasks={overdue} onStatus={handleStatus} disabled={isPending} />
+            <TaskGroup title="Overdue" tone="red" tasks={overdue} onStatus={handleStatus} onAccept={handleAccept} onDecline={handleDecline} myName={myName} disabled={isPending} />
           )}
           {thisWeek.length > 0 && (
-            <TaskGroup title="Due this week" tone="navy" tasks={thisWeek} onStatus={handleStatus} disabled={isPending} />
+            <TaskGroup title="Due this week" tone="navy" tasks={thisWeek} onStatus={handleStatus} onAccept={handleAccept} onDecline={handleDecline} myName={myName} disabled={isPending} />
           )}
           {later.length > 0 && (
-            <TaskGroup title="Due later" tone="muted" tasks={later} onStatus={handleStatus} disabled={isPending} />
+            <TaskGroup title="Due later" tone="muted" tasks={later} onStatus={handleStatus} onAccept={handleAccept} onDecline={handleDecline} myName={myName} disabled={isPending} />
           )}
           {noDate.length > 0 && (
-            <TaskGroup title="No due date" tone="muted" tasks={noDate} onStatus={handleStatus} disabled={isPending} />
+            <TaskGroup title="No due date" tone="muted" tasks={noDate} onStatus={handleStatus} onAccept={handleAccept} onDecline={handleDecline} myName={myName} disabled={isPending} />
           )}
         </div>
       )}
@@ -176,10 +230,10 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
           </summary>
           <ul className="divide-y divide-[var(--color-ldp-line)]">
             {done.map((t) => (
-              <TaskRow key={t.id} task={t} onStatus={handleStatus} disabled={isPending} />
+              <TaskRow key={t.id} task={t} onStatus={handleStatus} onAccept={handleAccept} onDecline={handleDecline} myName={myName} disabled={isPending} />
             ))}
             {deferred.map((t) => (
-              <TaskRow key={t.id} task={t} onStatus={handleStatus} disabled={isPending} />
+              <TaskRow key={t.id} task={t} onStatus={handleStatus} onAccept={handleAccept} onDecline={handleDecline} myName={myName} disabled={isPending} />
             ))}
           </ul>
         </details>
@@ -273,12 +327,18 @@ function TaskGroup({
   tone,
   tasks,
   onStatus,
+  onAccept,
+  onDecline,
+  myName,
   disabled,
 }: {
   title: string;
   tone: "red" | "navy" | "muted";
   tasks: LdTask[];
   onStatus: (t: LdTask, s: LdTask["status"]) => void;
+  onAccept: (t: LdTask) => void;
+  onDecline: (t: LdTask) => void;
+  myName: string;
   disabled: boolean;
 }) {
   const toneColor =
@@ -300,7 +360,15 @@ function TaskGroup({
       </div>
       <ul className="divide-y divide-[var(--color-ldp-line)] bg-white">
         {tasks.map((t) => (
-          <TaskRow key={t.id} task={t} onStatus={onStatus} disabled={disabled} />
+          <TaskRow
+            key={t.id}
+            task={t}
+            onStatus={onStatus}
+            onAccept={onAccept}
+            onDecline={onDecline}
+            myName={myName}
+            disabled={disabled}
+          />
         ))}
       </ul>
     </div>
@@ -310,16 +378,63 @@ function TaskGroup({
 function TaskRow({
   task,
   onStatus,
+  onAccept,
+  onDecline,
+  myName,
   disabled,
 }: {
   task: LdTask;
   onStatus: (t: LdTask, s: LdTask["status"]) => void;
+  onAccept: (t: LdTask) => void;
+  onDecline: (t: LdTask) => void;
+  myName: string;
   disabled: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const done = task.status === "DONE";
+  const isAssignedToMe = !!myName && task.assigned_to_name === myName;
+  const needsAcceptance = isAssignedToMe && !task.accepted_at && !done;
+  const isAccepted = isAssignedToMe && !!task.accepted_at;
   return (
-    <li className="p-3 hover:bg-[#FAFBFC]">
+    <li
+      className={`p-3 hover:bg-[#FAFBFC] ${
+        needsAcceptance ? "bg-[#FEF9E7]" : ""
+      }`}
+    >
+      {needsAcceptance && (
+        <div className="mb-2 flex flex-wrap items-center gap-2 rounded border border-[var(--color-ldp-gold)] bg-white px-2 py-1.5 text-xs">
+          <User aria-hidden="true" className="size-3.5 text-[var(--color-ldp-gold)]" />
+          <span className="font-semibold text-[var(--color-ldp-navy-900)]">
+            {task.assigned_by_name ?? "Someone"} assigned this to you.
+          </span>
+          <div className="ml-auto flex gap-1">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAccept(task);
+              }}
+              disabled={disabled}
+              className="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-2 py-1 text-[11px] font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+            >
+              <Check aria-hidden="true" className="size-3" />
+              Accept
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDecline(task);
+              }}
+              disabled={disabled}
+              className="inline-flex items-center gap-1 rounded-md border border-[var(--color-ldp-line)] bg-white px-2 py-1 text-[11px] text-[var(--color-ldp-ink-900)] hover:border-[var(--color-ldp-red)] hover:text-[var(--color-ldp-red)] disabled:opacity-50"
+            >
+              <X aria-hidden="true" className="size-3" />
+              Decline
+            </button>
+          </div>
+        </div>
+      )}
       <div className="flex items-start gap-3">
         <button
           type="button"
@@ -364,6 +479,25 @@ function TaskRow({
                     }`}
                   >
                     {formatDue(task.due_date)}
+                  </span>
+                )}
+                {task.assigned_to_name && (
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
+                      isAccepted
+                        ? "bg-emerald-100 text-emerald-800"
+                        : task.assigned_to_name
+                          ? "bg-[var(--color-ldp-gold)]/30 text-[var(--color-ldp-navy-900)]"
+                          : "bg-[#FAFAFA] text-[var(--color-ldp-ink-700)]"
+                    }`}
+                  >
+                    {isAccepted ? (
+                      <UserCheck aria-hidden="true" className="size-3" />
+                    ) : (
+                      <User aria-hidden="true" className="size-3" />
+                    )}
+                    {task.assigned_to_name}
+                    {!task.accepted_at && !done && " · pending"}
                   </span>
                 )}
               </div>
@@ -422,11 +556,13 @@ function TaskRow({
 function TaskComposer({
   ldNumber,
   author,
+  assignables,
   onClose,
   onError,
 }: {
   ldNumber: number;
   author: { name: string; role: string | null; ld: number | null };
+  assignables: Assignable[];
   onClose: () => void;
   onError: (msg: string | null) => void;
 }) {
@@ -434,6 +570,7 @@ function TaskComposer({
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("MEDIUM");
   const [dueDate, setDueDate] = useState("");
+  const [assignee, setAssignee] = useState(""); // "" = unassigned, "__self" = self, else name
   const [isPending, startTransition] = useTransition();
 
   function submit() {
@@ -442,10 +579,18 @@ function TaskComposer({
       return;
     }
     onError(null);
+    const resolvedAssignee =
+      assignee === "" ? null : assignee === "__self" ? author.name : assignee;
     startTransition(async () => {
       const res = await createTask(
         ldNumber,
-        { title, description, priority, due_date: dueDate || null },
+        {
+          title,
+          description,
+          priority,
+          due_date: dueDate || null,
+          assigned_to_name: resolvedAssignee,
+        },
         author
       );
       if (!res.ok) {
@@ -456,6 +601,7 @@ function TaskComposer({
       setDescription("");
       setPriority("MEDIUM");
       setDueDate("");
+      setAssignee("");
       onClose();
     });
   }
@@ -486,6 +632,30 @@ function TaskComposer({
           onChange={(e) => setDueDate(e.target.value)}
           className="rounded border border-[var(--color-ldp-line)] bg-white px-3 py-2 text-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ldp-navy-700)]"
         />
+      </div>
+      <div className="mt-2">
+        <label className="flex flex-col gap-1">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Assign to (optional)
+          </span>
+          <select
+            value={assignee}
+            onChange={(e) => setAssignee(e.target.value)}
+            className="rounded border border-[var(--color-ldp-line)] bg-white px-3 py-2 text-sm focus:border-[var(--color-ldp-navy-700)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ldp-navy-700)]"
+          >
+            <option value="">— unassigned —</option>
+            {author.name && <option value="__self">Me ({author.name})</option>}
+            {assignables.length > 0 && (
+              <optgroup label="This LD">
+                {assignables.map((a) => (
+                  <option key={a.name + a.role} value={a.name}>
+                    {a.name} — {a.role}
+                  </option>
+                ))}
+              </optgroup>
+            )}
+          </select>
+        </label>
       </div>
       <textarea
         value={description}

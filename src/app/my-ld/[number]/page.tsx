@@ -6,7 +6,7 @@ import { PrecinctPlaybookTable } from "@/components/precincts/PrecinctPlaybookTa
 import { LdNotes } from "@/components/ld-workspace/LdNotes";
 import { LdTasks } from "@/components/ld-workspace/LdTasks";
 import { fetchNotesByLd } from "@/lib/db/ld-notes";
-import { fetchTasksByLd } from "@/lib/db/ld-tasks";
+import { fetchTasksByLd, fetchAssignablesForLd } from "@/lib/db/ld-tasks";
 import {
   fetchContactsByLd,
   countStaleContacts,
@@ -144,7 +144,7 @@ export default async function LdDetailPage({
   const ld = await fetchLd(ld_number);
   if (!ld) notFound();
 
-  const [chair, vc, precincts, nextEvent, pcs, evLocations, notes, tasks, contacts] =
+  const [chair, vc, precincts, nextEvent, pcs, evLocations, notes, tasks, contacts, assignables] =
     await Promise.all([
       fetchMemberById(ld.chair_id),
       fetchMemberById(ld.vc_id),
@@ -155,6 +155,7 @@ export default async function LdDetailPage({
       fetchNotesByLd(ld_number),
       fetchTasksByLd(ld_number),
       fetchContactsByLd(ld_number),
+      fetchAssignablesForLd(ld_number),
     ]);
   const staleCount = countStaleContacts(contacts, 60);
 
@@ -217,7 +218,7 @@ export default async function LdDetailPage({
         </div>
 
         {/* Tasks go at the top — this is what the chair looks at first */}
-        <LdTasks ldNumber={ld_number} tasks={tasks} />
+        <LdTasks ldNumber={ld_number} tasks={tasks} assignables={assignables} />
 
         {/* Highest-leverage move this week */}
         {recommendation && (
