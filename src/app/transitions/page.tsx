@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Scale } from "lucide-react";
+import { CalendarClock, Scale } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 
@@ -31,16 +31,54 @@ async function fetchTransitions(): Promise<Transition[]> {
   return (data ?? []) as Transition[];
 }
 
+// A transition with status=VACANT but a future departed_date is a
+// planned/announced departure — the seat isn't actually open yet.
+// Split those out so they don't read as currently-vacant.
+function isAnnounced(t: Transition, today: string): boolean {
+  return t.status === "VACANT" && t.departed_date != null && t.departed_date > today;
+}
+
+function formatDate(iso: string | null): string {
+  if (!iso) return "—";
+  return new Date(iso + "T00:00:00").toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function daysUntil(iso: string | null, today: string): number | null {
+  if (!iso) return null;
+  const d = new Date(iso + "T00:00:00").getTime();
+  const t = new Date(today + "T00:00:00").getTime();
+  return Math.round((d - t) / (1000 * 60 * 60 * 24));
+}
+
 export default async function TransitionsPage() {
   const all = await fetchTransitions();
-  const vacant = all.filter((t) => t.status === "VACANT");
+  const today = new Date().toISOString().slice(0, 10);
+  const announced = all.filter((t) => isAnnounced(t, today));
+  const vacant = all.filter((t) => t.status === "VACANT" && !isAnnounced(t, today));
   const filled = all.filter((t) => t.status === "FILLED");
+
+  const subtitleParts: string[] = [];
+  if (vacant.length > 0)
+    subtitleParts.push(`${vacant.length} seat${vacant.length === 1 ? "" : "s"} vacant now`);
+  if (announced.length > 0)
+    subtitleParts.push(
+      `${announced.length} announced departure${announced.length === 1 ? "" : "s"}`
+    );
+  if (filled.length > 0) subtitleParts.push(`${filled.length} filled`);
+  const subtitle =
+    subtitleParts.length > 0
+      ? `${subtitleParts.join(" · ")}. CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).`
+      : "CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).";
 
   return (
     <HubShell
       eyebrow="Transitions"
       title="Seats that have changed hands since the June 2025 reorg."
-      subtitle={`${vacant.length} seat${vacant.length === 1 ? "" : "s"} still vacant · ${filled.length} filled. CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).`}
+      subtitle={subtitle}
       maxWidthClass="max-w-5xl"
     >
         <div className="mb-8 rounded-xl border border-[var(--color-ldp-navy-800)] bg-white p-5">
@@ -67,10 +105,30 @@ export default async function TransitionsPage() {
           </div>
         </div>
 
+        {announced.length > 0 && (
+          <section className="mb-10">
+            <div className="mb-3 flex items-center gap-2">
+              <CalendarClock aria-hidden="true" className="size-4 text-amber-700" />
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-amber-700">
+                Announced · {announced.length}
+              </h2>
+            </div>
+            <p className="mb-3 text-xs text-[var(--color-ldp-ink-700)]">
+              Transitions that have been announced but haven&apos;t taken effect yet. The seat is
+              still held by the current person until the effective date.
+            </p>
+            <div className="space-y-3">
+              {announced.map((t) => (
+                <AnnouncedCard key={t.id} t={t} today={today} />
+              ))}
+            </div>
+          </section>
+        )}
+
         {vacant.length > 0 && (
           <section className="mb-10">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-              Vacant · {vacant.length}
+              Vacant now · {vacant.length}
             </h2>
             <div className="space-y-3">
               {vacant.map((t) => (
@@ -213,6 +271,85 @@ function VacantCard({ t }: { t: Transition }) {
           <div className="mt-1 text-[var(--color-ldp-ink-900)]">{t.recommended_action}</div>
         </div>
       )}
+    </article>
+  );
+}
+
+function AnnouncedCard({ t, today }: { t: Transition; today: string }) {
+  const days = daysUntil(t.departed_date, today);
+  return (
+    <article className="overflow-hidden rounded-xl border-2 border-amber-500 bg-white shadow-sm">
+      <div aria-hidden="true" className="h-1.5 w-full bg-amber-500" />
+      <div className="p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white">
+                Announced
+              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-amber-700">
+                Effective {formatDate(t.departed_date)}
+              </span>
+            </div>
+            <h3 className="mt-2 text-lg font-bold text-[var(--color-ldp-navy-900)]">
+              {formatSeat(t.seat_code)}
+            </h3>
+            <div className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
+              <span className="text-[var(--color-ldp-ink-700)]">Currently held by:</span>{" "}
+              {t.previous_holder_id ? (
+                <Link
+                  href={`/people/${t.previous_holder_id}`}
+                  className="font-semibold hover:underline"
+                >
+                  {t.previous_holder_name}
+                </Link>
+              ) : (
+                <span className="font-semibold">{t.previous_holder_name ?? "—"}</span>
+              )}
+              {t.departure_reason && <> · {t.departure_reason.toLowerCase()}</>}
+            </div>
+            {t.successor_name && (
+              <div className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
+                <span className="text-[var(--color-ldp-ink-700)]">Successor:</span>{" "}
+                {t.successor_id ? (
+                  <Link
+                    href={`/people/${t.successor_id}`}
+                    className="font-semibold hover:underline"
+                  >
+                    {t.successor_name}
+                  </Link>
+                ) : (
+                  <span className="font-semibold">{t.successor_name}</span>
+                )}
+              </div>
+            )}
+          </div>
+          {days != null && days >= 0 && (
+            <div className="shrink-0 rounded-lg border-2 border-amber-500 bg-white px-3 py-1.5 text-center">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-amber-700">
+                In
+              </div>
+              <div className="text-2xl font-black text-amber-700">{days}</div>
+              <div className="text-[10px] font-semibold uppercase tracking-widest text-amber-700">
+                day{days === 1 ? "" : "s"}
+              </div>
+            </div>
+          )}
+        </div>
+        {t.recommended_action && (
+          <div className="mt-4 rounded-lg border border-dashed border-amber-400 bg-amber-50 p-3 text-sm">
+            <div className="text-[10px] font-semibold uppercase tracking-widest text-amber-700">
+              Transition plan
+            </div>
+            <div className="mt-1 text-[var(--color-ldp-ink-900)]">{t.recommended_action}</div>
+          </div>
+        )}
+        {t.notes && (
+          <div className="mt-2 text-[11px] italic text-[var(--color-ldp-ink-700)]">
+            {t.notes}
+          </div>
+        )}
+      </div>
     </article>
   );
 }

@@ -31,6 +31,7 @@ export const metadata = { title: "Dashboard" };
 type Transition = {
   seat_code: string;
   status: "VACANT" | "FILLED";
+  departed_date: string | null;
 };
 
 async function fetchDashboardData() {
@@ -38,7 +39,7 @@ async function fetchDashboardData() {
   const today = new Date().toISOString().slice(0, 10);
   const [transitions, monthCard, candidates, committees, nextEvent, voterSettings] =
     await Promise.all([
-      supabase.from("transitions").select("seat_code, status"),
+      supabase.from("transitions").select("seat_code, status, departed_date"),
       supabase
         .from("month_cards")
         .select("month, content_md, theme_tag")
@@ -121,7 +122,18 @@ export default async function DashboardPage() {
     voterGuideMode,
   } = data;
 
-  const vacancies = transitions.filter((t) => t.status === "VACANT");
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const vacancies = transitions.filter(
+    (t) =>
+      t.status === "VACANT" &&
+      (t.departed_date == null || t.departed_date <= todayIso)
+  );
+  const announcedTransitions = transitions.filter(
+    (t) =>
+      t.status === "VACANT" &&
+      t.departed_date != null &&
+      t.departed_date > todayIso
+  );
   const endorsedCount = candidates.filter((c) => c.is_endorsed).length;
   const currentMonth = new Date().getMonth() + 1;
   const eventDaysUntil = nextEvent?.event_date
@@ -315,14 +327,20 @@ export default async function DashboardPage() {
 
         <Widget
           href="/transitions"
-          accent="#64748b"
+          accent={announcedTransitions.length > 0 ? "#F59E0B" : "#64748b"}
           eyebrow="Transitions"
-          title={`${vacancies.length} vacant`}
+          title={
+            announcedTransitions.length > 0
+              ? `${announcedTransitions.length} announced · ${vacancies.length} vacant`
+              : `${vacancies.length} vacant`
+          }
           icon={ArrowLeftRight}
-          urgent={vacancies.length >= 3}
+          urgent={announcedTransitions.length > 0 || vacancies.length >= 3}
         >
           <p className="text-xs text-[var(--color-ldp-ink-700)]">
-            Seats changed hands since the June 2025 reorg. CEC has 90 days to fill.
+            {announcedTransitions.length > 0
+              ? "Chair transition announced — see schedule on Transitions."
+              : "Seats changed hands since the June 2025 reorg. CEC has 90 days to fill."}
           </p>
         </Widget>
 
