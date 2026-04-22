@@ -6,7 +6,14 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "2026 Candidates" };
 
-type OfficeType = "STATE_HOUSE" | "STATE_SENATE" | "METRO_COUNCIL" | "US_HOUSE";
+type OfficeType =
+  | "MAYOR"
+  | "US_SENATE"
+  | "US_HOUSE"
+  | "STATE_SENATE"
+  | "STATE_HOUSE"
+  | "METRO_COUNCIL"
+  | "COUNTY_OFFICE";
 
 type Candidate = {
   id: string;
@@ -20,28 +27,52 @@ type Candidate = {
 };
 
 const OFFICE_META: Record<OfficeType, { label: string; blurb: string }> = {
-  METRO_COUNCIL: {
-    label: "Metro Council · 2026 Primary",
+  MAYOR: {
+    label: "Louisville Metro Mayor · 2026 Primary",
     blurb:
-      "LDPEC endorsed candidates in ten open Metro Council races (nonpartisan general ballot). Endorsed candidates cleared a 60% secret-ballot vote at an LDPEC meeting (see how that process works). Your personal share, donation, and doorknock moves the needle.",
+      "The LDPEC endorses in the Mayoral primary — the endorsed candidate below cleared a 60% secret-ballot vote at an LDPEC meeting. The Mayor race appears on a nonpartisan general ballot in November.",
   },
-  STATE_HOUSE: {
-    label: "Kentucky State House · 2026 Primary",
+  US_SENATE: {
+    label: "U.S. Senate · 2026 Democratic Primary",
     blurb:
-      "Your 18 Louisville-area State House races. Most Democratic incumbents are unopposed in the primary; contested primaries happen where seats are flipping or where incumbents aren't seeking re-election.",
+      "The Kentucky Democratic primary for the U.S. Senate seat currently held by a Republican. Louisville voters weigh in alongside the rest of the state.",
+  },
+  US_HOUSE: {
+    label: "U.S. House · 2026 Primary",
+    blurb:
+      "Federal House races. Kentucky's 3rd Congressional District is Louisville-anchored; the 2nd crosses a small part of Jefferson County.",
   },
   STATE_SENATE: {
     label: "Kentucky State Senate · 2026 Primary",
     blurb:
       "State Senate races on the 2026 primary ballot. Senate seats are 4-year staggered, so only a subset of Louisville-area districts show up each cycle.",
   },
-  US_HOUSE: {
-    label: "U.S. House · 2026 Primary",
-    blurb: "Federal House races in Kentucky's 3rd Congressional District (Louisville-anchored).",
+  STATE_HOUSE: {
+    label: "Kentucky State House · 2026 Primary",
+    blurb:
+      "Your 18 Louisville-area State House races. Most Democratic incumbents are unopposed in the primary; contested primaries happen where seats are flipping or where incumbents aren't seeking re-election.",
+  },
+  METRO_COUNCIL: {
+    label: "Metro Council · 2026 Primary",
+    blurb:
+      "LDPEC endorsed candidates in ten open Metro Council races (nonpartisan general ballot). Endorsed candidates cleared a 60% secret-ballot vote at an LDPEC meeting. Your personal share, donation, and doorknock moves the needle.",
+  },
+  COUNTY_OFFICE: {
+    label: "Jefferson County Offices · 2026 Primary",
+    blurb:
+      "Countywide offices: PVA (Property Valuation Administrator), Judge Executive, County Attorney, County Clerk, Sheriff. Democratic primary results below.",
   },
 };
 
-const OFFICE_ORDER: OfficeType[] = ["METRO_COUNCIL", "STATE_HOUSE", "STATE_SENATE", "US_HOUSE"];
+const OFFICE_ORDER: OfficeType[] = [
+  "MAYOR",
+  "METRO_COUNCIL",
+  "US_SENATE",
+  "US_HOUSE",
+  "STATE_HOUSE",
+  "STATE_SENATE",
+  "COUNTY_OFFICE",
+];
 
 async function fetchCandidates(): Promise<Candidate[]> {
   const supabase = await getSupabaseServer();
@@ -74,10 +105,13 @@ export default async function CandidatesPage() {
   ]);
 
   const byOffice: Record<OfficeType, Candidate[]> = {
-    METRO_COUNCIL: [],
-    STATE_HOUSE: [],
-    STATE_SENATE: [],
+    MAYOR: [],
+    US_SENATE: [],
     US_HOUSE: [],
+    STATE_SENATE: [],
+    STATE_HOUSE: [],
+    METRO_COUNCIL: [],
+    COUNTY_OFFICE: [],
   };
   for (const c of candidates) byOffice[c.office_type].push(c);
 
@@ -213,7 +247,13 @@ function officeSlug(office: OfficeType, district: number): string {
     case "STATE_SENATE":
       return `SD${district}`;
     case "US_HOUSE":
-      return `US-${district}`;
+      return `US House ${district}`;
+    case "US_SENATE":
+      return "U.S. Senate (KY)";
+    case "MAYOR":
+      return "Louisville Mayor";
+    case "COUNTY_OFFICE":
+      return "Jefferson County";
   }
 }
 
