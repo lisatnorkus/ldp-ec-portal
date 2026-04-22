@@ -202,9 +202,11 @@ function Step1() {
         </ol>
       </section>
 
-      <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
-        <h2 className="text-lg font-bold text-white">A short history of three names</h2>
-        <p className="mt-2 text-sm leading-relaxed text-white/85">
+      <details className="mb-6 rounded-lg border border-white/10 bg-white/5 p-4">
+        <summary className="cursor-pointer list-none text-sm font-semibold text-white/80 hover:text-white">
+          Why you&apos;ll see three names — LDP, LJCDP, JCDP →
+        </summary>
+        <p className="mt-3 text-sm leading-relaxed text-white/80">
           Before 2003, Jefferson County and the City of Louisville had separate governments, and the
           local Democratic Party was the <strong className="text-white">Jefferson County Democratic Party (JCDP)</strong>.
           In 2003 the governments merged into Louisville Metro, and the party&apos;s formal name
@@ -213,7 +215,7 @@ function Step1() {
           the public brand. You&apos;ll see all three in older docs. They all mean the same party.
           Bylaws citations keep the formal name; day-to-day copy uses LDP.
         </p>
-      </section>
+      </details>
 
       <section className="rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5">
         <h2 className="text-lg font-bold text-white">What this portal is (and isn&apos;t)</h2>

@@ -178,7 +178,7 @@ export default function EndorsementProcessPage() {
             See who&apos;s endorsed this cycle →
           </Link>
           <Link
-            href="/committees/endorsement-process"
+            href="/committees/ENDORSEMENT_PROCESS"
             className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[var(--color-ldp-navy-900)] hover:text-white"
           >
             Endorsement Process Committee page →

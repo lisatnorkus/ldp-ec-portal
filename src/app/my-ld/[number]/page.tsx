@@ -233,6 +233,12 @@ export default async function LdDetailPage({
           <LeadershipCard role="Vice Chair" member={vc} />
         </section>
 
+        {/* Early voting in this LD — time-sensitive during primary window */}
+        <EvSection ld={ld_number} locations={evLocations} />
+
+        {/* Precinct captains on file */}
+        <PcSection ld={ld_number} precinctCount={precincts.length} pcs={pcs} />
+
         {/* Strategy mix summary */}
         <section className="mb-8">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -421,28 +427,31 @@ export default async function LdDetailPage({
           })}
         </section>
 
-        <PcSection ld={ld_number} precinctCount={precincts.length} pcs={pcs} />
-
-        <Button asChild variant="ldp" size="lg">
-          <a
-            href={`https://26ldp-strategy-map.vercel.app/?ld=${ld_number}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2"
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button asChild variant="ldp" size="lg">
+            <a
+              href={`https://26ldp-strategy-map.vercel.app/?ld=${ld_number}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2"
+            >
+              <MapPin className="size-4" /> Open LD{ld_number} on the Strategy Map
+            </a>
+          </Button>
+          <Link
+            href="/early-voting"
+            className="inline-flex items-center gap-1.5 rounded-md border-2 border-[var(--color-ldp-red)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[#FFF5F6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-red)] focus-visible:ring-offset-2"
           >
-            <MapPin className="size-4" /> Open LD{ld_number} on the Strategy Map
-          </a>
-        </Button>
-
-        <EvSection ld={ld_number} locations={evLocations} />
-
-        <Link
-          href="/early-voting"
-          className="mt-4 inline-flex items-center gap-1.5 rounded border border-[var(--color-ldp-red)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[#FFF5F6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ldp-red)] focus-visible:ring-offset-2"
-        >
-          <MapPin aria-hidden="true" className="size-4 text-[var(--color-ldp-red)]" />
-          All 24 early voting locations · May 14 – 16 →
-        </Link>
+            <MapPin aria-hidden="true" className="size-4 text-[var(--color-ldp-red)]" />
+            All 24 early voting locations →
+          </Link>
+          <Link
+            href="/candidates"
+            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[var(--color-ldp-navy-900)] hover:text-white"
+          >
+            Full 2026 ballot →
+          </Link>
+        </div>
       </main>
     </div>
   );

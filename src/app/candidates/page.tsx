@@ -23,7 +23,7 @@ const OFFICE_META: Record<OfficeType, { label: string; blurb: string }> = {
   METRO_COUNCIL: {
     label: "Metro Council · 2026 Primary",
     blurb:
-      "LDPEC endorsed candidates in ten open Metro Council races (nonpartisan general ballot). Endorsed candidates cleared a 60% secret-ballot vote at an LDPEC meeting — your personal share, donation, and doorknock moves the needle.",
+      "LDPEC endorsed candidates in ten open Metro Council races (nonpartisan general ballot). Endorsed candidates cleared a 60% secret-ballot vote at an LDPEC meeting (see how that process works). Your personal share, donation, and doorknock moves the needle.",
   },
   STATE_HOUSE: {
     label: "Kentucky State House · 2026 Primary",
@@ -110,6 +110,12 @@ export default async function CandidatesPage() {
               className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[var(--color-ldp-navy-900)] hover:text-white"
             >
               24 early voting locations →
+            </Link>
+            <Link
+              href="/endorsement"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[var(--color-ldp-navy-900)] hover:text-white"
+            >
+              How endorsements work →
             </Link>
           </div>
 
