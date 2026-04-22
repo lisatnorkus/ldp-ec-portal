@@ -206,7 +206,7 @@ export default async function LdDetailPage({
     >
         <div className="mb-8">
           <p className="text-sm text-[var(--color-ldp-ink-700)]">
-            {precincts.length} precincts · {counts.sleeper_dems.toLocaleString()} sleeper Dems countywide
+            {precincts.length} precincts · {counts.sleeper_dems.toLocaleString()} sleeper Dems in LD{ld_number}
             {ld.state_senate_overlap?.length > 0 && (
               <span> · SD overlap: {ld.state_senate_overlap.join(", ")}</span>
             )}
