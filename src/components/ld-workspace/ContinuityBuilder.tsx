@@ -10,7 +10,7 @@ import type {
   TaskDisposition,
 } from "@/lib/db/ld-continuity";
 import type { LdTask } from "@/lib/db/ld-tasks";
-import type { LdContact } from "@/lib/db/ld-contacts";
+import type { LdContact } from "@/lib/db/ld-contacts-types";
 import {
   lockPackage,
   reopenToDraft,

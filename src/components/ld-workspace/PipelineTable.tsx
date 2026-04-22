@@ -20,7 +20,7 @@ import {
   type ContactMethod,
   type ContactSource,
   type InteractionOutcome,
-} from "@/lib/db/ld-contacts";
+} from "@/lib/db/ld-contacts-types";
 import {
   createContact,
   logInteraction,
