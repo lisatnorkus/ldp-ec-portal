@@ -165,7 +165,7 @@ export default async function TransitionsPage() {
                         {t.departure_reason && <div className="italic">{t.departure_reason}</div>}
                       </td>
                       <td className="px-4 py-2.5 text-xs text-[var(--color-ldp-ink-700)]">
-                        {t.departed_date ?? "—"}
+                        {formatDate(t.departed_date)}
                       </td>
                       <td className="px-4 py-2.5 text-xs">
                         {t.successor_id ? (
@@ -185,7 +185,7 @@ export default async function TransitionsPage() {
                         </span>
                         {t.elected_date && (
                           <div className="mt-0.5 text-[var(--color-ldp-ink-700)]">
-                            Elected {t.elected_date}
+                            Elected {formatDate(t.elected_date)}
                           </div>
                         )}
                       </td>
@@ -203,7 +203,7 @@ export default async function TransitionsPage() {
                     </div>
                     <div className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
                       {t.previous_holder_name ?? "—"}
-                      {t.departed_date && <> · departed {t.departed_date}</>}
+                      {t.departed_date && <> · departed {formatDate(t.departed_date)}</>}
                       {t.departure_reason && (
                         <div className="italic">{t.departure_reason}</div>
                       )}
