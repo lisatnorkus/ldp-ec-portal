@@ -498,66 +498,157 @@ function Step5() {
       <p className="mb-6 text-sm text-white/85">
         What&apos;s live in the portal right now:
       </p>
-      <div className="grid gap-3 md:grid-cols-2">
-        <Link
-          href="/this-month"
-          className="rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5 transition-colors hover:bg-white/10"
-        >
-          <div className="text-sm font-semibold text-white">This Month →</div>
-          <div className="mt-1 text-xs text-white/70">
-            The current month from the Rock Star Playbook plus what&apos;s teed up next. Updated monthly.
-          </div>
-        </Link>
-        <Link
-          href="/events"
-          className="rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5 transition-colors hover:bg-white/10"
-        >
-          <div className="text-sm font-semibold text-white">Events →</div>
-          <div className="mt-1 text-xs text-white/70">
-            Celebration of Democracy Dinner, Women Deliver Democracy, Dems at the Downs — the three
-            events that fund the party. Your $500 annual raise runs through their ticket links.
-          </div>
-        </Link>
-        <Link
+
+      {/* Workspace callout — new and load-bearing, so lead with it */}
+      <section className="mb-6 rounded-lg border-2 border-[var(--color-ldp-gold)] bg-white/5 p-5">
+        <div className="text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+          Your workspace — new
+        </div>
+        <h3 className="mt-1 text-lg font-bold text-white">
+          Every LD and every committee has a workspace.
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-white/85">
+          Notes, tasks (with assignment + accept/decline), a recruiting pipeline, and a handoff
+          continuity package. Data belongs to the LD or committee — not the chair — so when
+          leadership rotates, the new chair walks in on day one with everything the outgoing
+          chair left behind. No more starting from scratch.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            href="/my-ld"
+            className="inline-flex items-center gap-1 rounded-md bg-[var(--color-ldp-gold)] px-3 py-1.5 text-xs font-bold text-[var(--color-ldp-navy-900)] hover:bg-[var(--color-ldp-gold)]/90"
+          >
+            LD workspaces →
+          </Link>
+          <Link
+            href="/committees"
+            className="inline-flex items-center gap-1 rounded-md border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20"
+          >
+            Committee workspaces →
+          </Link>
+        </div>
+      </section>
+
+      <div className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+        Plan & campaign
+      </div>
+      <div className="mb-6 grid gap-3 md:grid-cols-2">
+        <TourTile
+          href="/my-ld"
+          title="My LD"
+          body="Your district's precincts, PCs on file, races on the ballot, and the highest-leverage move this week."
+          primary
+        />
+        <TourTile
+          href="/plan-map"
+          title="Plan & Map"
+          body="Jefferson County's 600+ precincts scored into four strategies with a countywide interactive map."
+          primary
+        />
+        <TourTile
           href="/canvass-tools"
-          className="rounded-lg border border-white/10 bg-white/5 p-5 transition-colors hover:border-[var(--color-ldp-gold)]"
-        >
-          <div className="text-sm font-semibold text-white">Canvass Tools →</div>
-          <div className="mt-1 text-xs text-white/70">
-            Priority MC districts (17, 7, 21), volunteer pipeline, canvass guides, VoteBuilder.
-          </div>
-        </Link>
-        <Link
-          href="/committees"
-          className="rounded-lg border border-white/10 bg-white/5 p-5 transition-colors hover:border-[var(--color-ldp-gold)]"
-        >
-          <div className="text-sm font-semibold text-white">Committees →</div>
-          <div className="mt-1 text-xs text-white/70">
-            All 11 committees (8 standing + 3 ad hoc) with responsibilities, workflow, members, and
-            Drive folders. Pick one and ask the chair what you can take on.
-          </div>
-        </Link>
-        <Link
+          title="Canvass Tools"
+          body="Priority MC districts (17, 21, 7), volunteer pipeline, canvass guides, VoteBuilder."
+        />
+        <TourTile
+          href="/candidates"
+          title="2026 Primary Ballot"
+          body="86 candidates across mayor, council, state house, state senate, US senate, and county offices."
+        />
+        <TourTile
+          href="/early-voting"
+          title="Early Voting"
+          body="24 countywide early-voting locations for the 2026 primary, mapped by LD."
+        />
+        <TourTile
+          href="/this-month"
+          title="This Month"
+          body="The current month's Rock Star Playbook plus live events from the louisvilledems.com calendar."
+        />
+      </div>
+
+      <div className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+        People & governance
+      </div>
+      <div className="mb-6 grid gap-3 md:grid-cols-2">
+        <TourTile
           href="/people"
-          className="rounded-lg border border-white/10 bg-white/5 p-5 transition-colors hover:border-[var(--color-ldp-gold)]"
-        >
-          <div className="text-sm font-semibold text-white">People →</div>
-          <div className="mt-1 text-xs text-white/70">
-            Full LDPEC directory: countywide officers at top, then LD Chairs, VCs, At-Large, affiliated
-            seats. Search works across name, role, LD, committee, email, phone.
-          </div>
-        </Link>
-        <Link
+          title="Directory"
+          body="Countywide officers, LD Chairs, VCs, At-Large, affiliated seats. Searchable by name, role, LD, committee, email, phone."
+        />
+        <TourTile
+          href="/committees"
+          title="Committees"
+          body="Standing + ad hoc committees with responsibilities, workflow, members, Drive folders, and an Email-chair button."
+        />
+        <TourTile
+          href="/partners"
+          title="Partners"
+          body="Labor, advocacy orgs, Democratic clubs, faith partners, training programs — everyone we work alongside."
+        />
+        <TourTile
           href="/transitions"
-          className="rounded-lg border border-white/10 bg-white/5 p-5 transition-colors hover:border-[var(--color-ldp-gold)]"
-        >
-          <div className="text-sm font-semibold text-white">Transitions →</div>
-          <div className="mt-1 text-xs text-white/70">
-            Vacant seats (with recommended actions) + recent fills. Where the LDPEC stands right now.
-          </div>
-        </Link>
+          title="Transitions"
+          body="Announced changes (Logan → Roz June 10), currently-vacant seats with recommended actions, and recent fills."
+        />
+        <TourTile
+          href="/endorsement"
+          title="Endorsement Process"
+          body="How the LDPEC endorses — 60% threshold, secret ballot, Jan–Feb timelines, who votes."
+        />
+        <TourTile
+          href="/comms"
+          title="Communications"
+          body="How the party gets heard — social handles, intake form, ad program."
+        />
+      </div>
+
+      <div className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+        Money & resources
+      </div>
+      <div className="grid gap-3 md:grid-cols-2">
+        <TourTile
+          href="/events"
+          title="Signature Events & Fundraising"
+          body="Celebration of Democracy Dinner, Women Deliver Democracy, Dems at the Downs — the three events that fund the party. Your $500 annual raise runs through their ticket links."
+          primary
+        />
+        <TourTile
+          href="/drive"
+          title="Drive shortcuts"
+          body="Every committee's working folder plus the party's top-traffic forms."
+        />
+        <TourTile
+          href="/help"
+          title="Help & FAQ"
+          body="How the portal works, section by section. Troubleshooting for the common snags."
+        />
       </div>
     </>
+  );
+}
+
+function TourTile({
+  href,
+  title,
+  body,
+  primary = false,
+}: {
+  href: string;
+  title: string;
+  body: string;
+  primary?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`rounded-lg border bg-white/5 p-5 transition-colors hover:bg-white/10 ${
+        primary ? "border-[var(--color-ldp-gold)]" : "border-white/10 hover:border-[var(--color-ldp-gold)]"
+      }`}
+    >
+      <div className="text-sm font-semibold text-white">{title} →</div>
+      <div className="mt-1 text-xs text-white/70">{body}</div>
+    </Link>
   );
 }
 
@@ -701,6 +792,28 @@ function Step6() {
           to continue, your successor (or you after re-election) needs that doc. If you don&apos;t
           continue, it&apos;s what keeps the work alive.
         </p>
+        <p className="mt-3 text-sm leading-relaxed text-white/85">
+          The portal&apos;s <strong className="text-white">continuity package</strong> is built for
+          exactly this. Every LD page has one; every committee page has one. Draft while you&apos;re
+          in the seat; submit and lock when you&apos;re ready. The next chair inherits it
+          automatically — state of the district, key contacts, open-task dispositions, pipeline
+          snapshot, and a personal note to your successor. That&apos;s the muscle memory of the
+          party, preserved in writing.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            href="/my-ld"
+            className="inline-flex items-center gap-1 rounded-md bg-[var(--color-ldp-red)] px-3 py-1.5 text-xs font-bold text-white hover:bg-[var(--color-ldp-red)]/90"
+          >
+            Start my LD&apos;s continuity package →
+          </Link>
+          <Link
+            href="/committees"
+            className="inline-flex items-center gap-1 rounded-md border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20"
+          >
+            Committee continuity →
+          </Link>
+        </div>
       </section>
     </>
   );
