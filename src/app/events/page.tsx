@@ -282,31 +282,26 @@ export default async function EventsPage() {
             emphasis
           />
         </ol>
-        <div className="mt-5 rounded-lg border-2 border-dashed border-[var(--color-ldp-red)] bg-[#FFF5F6] p-4">
+        <div className="mt-5 rounded-lg border border-dashed border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-red)]" />
+            <AlertCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[var(--color-ldp-navy-700)]" />
             <div className="flex-1">
-              <div className="text-sm font-bold text-[var(--color-ldp-red)]">
-                Don&apos;t have your link? Request it early — not three days before the event.
+              <div className="text-sm font-bold text-[var(--color-ldp-navy-900)]">
+                Watch your email ~30 days before each event.
               </div>
               <p className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
-                The earlier you have your link, the longer you have to share it. A link that goes
-                out the week of the event does a fraction of what a link pushed for 30 days does.
+                Links go out automatically from Communications — no action needed on your end
+                until one lands. The earlier you have your link, the longer you have to share it.
+                Once it&apos;s live, every ticket sold through it counts toward your $500 raise.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <Button asChild variant="ldp" size="sm">
-                  <a href="mailto:communications@louisvilledems.com?subject=Need%20my%20ticket%20links%20for%202026%20events">
-                    Email Communications
-                    <ExternalLink aria-hidden="true" className="ml-1 size-3.5" />
-                  </a>
-                </Button>
                 <Button asChild variant="outline" size="sm">
                   <a
                     href="https://loukydemparty.fillout.com/eventrequest"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    File a request through the intake form
+                    Comms intake form
                   </a>
                 </Button>
               </div>
@@ -749,12 +744,10 @@ function EventCard({ event, chair }: { event: Event; chair: Chair | null | undef
               </a>
             </Button>
           ) : (
-            <Button asChild variant="outline" size="sm">
-              <a href="mailto:communications@louisvilledems.com?subject=Ticket%20link%20for%20this%20event">
-                <Link2 aria-hidden="true" className="mr-1 size-3.5" />
-                Request your personal link
-              </a>
-            </Button>
+            <div className="inline-flex items-center gap-1.5 rounded-md border border-dashed border-[var(--color-ldp-line)] bg-[#FAFBFC] px-3 py-1.5 text-xs text-[var(--color-ldp-ink-700)]">
+              <Link2 aria-hidden="true" className="size-3.5" />
+              Your personal link will appear here once Comms generates it (~30 days before the event).
+            </div>
           )}
           {event.drive_folder_url && (
             <Button asChild variant="outline" size="sm">
