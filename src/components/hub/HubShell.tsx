@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Sidebar } from "./Sidebar";
 import { Breadcrumbs } from "./Breadcrumbs";
 import { AccentBar } from "./AccentBar";
+import { HelpButton } from "./HelpButton";
 
 // Shared layout for every page BEHIND the passphrase gate except
 // landing and tour. Wraps the page in sidebar + breadcrumb + masthead.
@@ -40,6 +41,7 @@ export function HubShell({
         />
         <main className={`mx-auto w-full ${maxWidthClass} flex-1 px-6 py-8`}>{children}</main>
       </div>
+      <HelpButton />
     </div>
   );
 }
