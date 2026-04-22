@@ -138,28 +138,72 @@ export default async function ThisMonthPage() {
         )}
 
         <section>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-            Full Rock Star Playbook · {currentYear}
+          <h2 className="mb-1 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+            The full {currentYear} Rock Star Playbook
           </h2>
-          <div className="grid gap-2 md:grid-cols-2">
+          <p className="mb-4 text-xs text-[var(--color-ldp-ink-700)]">
+            Every month of the year, live and historical. Click any month to expand the full playbook for that window. Past months stay here so you can look back at what was live.
+          </p>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {cards
               .filter((c) => c.year === currentYear)
-              .map((c) => (
-                <details
-                  key={`${c.year}-${c.month}`}
-                  className="group rounded-lg border border-[var(--color-ldp-line)] bg-white p-3"
-                >
-                  <summary className="cursor-pointer text-sm font-semibold text-[var(--color-ldp-navy-900)] list-none">
-                    {MONTH_NAMES[c.month]}
-                    {c.month === currentMonth && (
-                      <span className="ml-2 rounded-full bg-[var(--color-ldp-red)] px-1.5 py-0.5 text-[9px] font-semibold uppercase text-white">
-                        Now
-                      </span>
-                    )}
-                  </summary>
-                  <p className="mt-2 text-xs text-[var(--color-ldp-ink-700)] whitespace-pre-wrap">{c.content_md}</p>
-                </details>
-              ))}
+              .map((c) => {
+                const isPast = c.month < currentMonth;
+                const isCurrent = c.month === currentMonth;
+                const preview = c.content_md
+                  .replace(/^\*\*[^*]+\*\*\s*/, "") // strip the leading "**Month — headline.**" bold
+                  .replace(/\s+/g, " ")
+                  .slice(0, 140);
+                return (
+                  <details
+                    key={`${c.year}-${c.month}`}
+                    open={isCurrent}
+                    className={`group overflow-hidden rounded-lg border bg-white transition-colors ${
+                      isCurrent
+                        ? "border-[var(--color-ldp-red)] shadow-sm"
+                        : isPast
+                          ? "border-[var(--color-ldp-line)] opacity-75"
+                          : "border-[var(--color-ldp-line)]"
+                    }`}
+                  >
+                    <summary className="cursor-pointer list-none p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">
+                          {MONTH_NAMES[c.month]}
+                        </div>
+                        {isCurrent ? (
+                          <span className="rounded-full bg-[var(--color-ldp-red)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white">
+                            Now
+                          </span>
+                        ) : isPast ? (
+                          <span className="rounded-full bg-[#FAFAFA] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                            Past
+                          </span>
+                        ) : (
+                          <span className="rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+                            Teed up
+                          </span>
+                        )}
+                      </div>
+                      {c.theme_tag && (
+                        <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+                          {c.theme_tag.replace(/_/g, " ").toLowerCase()}
+                        </div>
+                      )}
+                      <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[var(--color-ldp-ink-700)]">
+                        {preview}
+                        {c.content_md.length > 140 && "…"}
+                      </p>
+                      <div className="mt-2 text-[10px] font-medium uppercase tracking-widest text-[var(--color-ldp-navy-700)] group-open:hidden">
+                        Open full playbook →
+                      </div>
+                    </summary>
+                    <div className="border-t border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4 text-sm leading-relaxed text-[var(--color-ldp-ink-900)] whitespace-pre-wrap">
+                      {c.content_md}
+                    </div>
+                  </details>
+                );
+              })}
           </div>
         </section>
       </main>
