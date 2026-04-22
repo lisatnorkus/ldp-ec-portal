@@ -19,7 +19,11 @@ type Body = {
 
 const REPO_OWNER = "lisatnorkus";
 const REPO_NAME = "ldp-ec-portal";
-const FALLBACK_EMAIL = "communications@louisvilledems.com";
+// Feedback + bug reports go to Lisa during the preview so she can
+// triage and route. Flip this to a shared Google Workspace address
+// once those accounts are issued (FEEDBACK_FALLBACK_EMAIL env var
+// takes precedence so the switch is a no-deploy env change).
+const FALLBACK_EMAIL = process.env.FEEDBACK_FALLBACK_EMAIL || "lisatnorkus@gmail.com";
 
 export async function POST(req: Request) {
   let body: Body;

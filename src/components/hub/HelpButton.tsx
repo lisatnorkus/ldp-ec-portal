@@ -158,10 +158,10 @@ function MenuTab({
       <div className="border-t border-[var(--color-ldp-line)] pt-3 text-[11px] text-[var(--color-ldp-ink-700)]">
         Urgent? Email{" "}
         <a
-          href="mailto:communications@louisvilledems.com"
+          href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20Portal%20-%20urgent"
           className="text-[var(--color-ldp-navy-700)] underline"
         >
-          communications@louisvilledems.com
+          Lisa directly
         </a>
         .
       </div>
@@ -222,7 +222,7 @@ function FeedbackForm({
         onSubmitted();
       } catch (err) {
         console.error(err);
-        setError("Request failed. Try again, or email communications@louisvilledems.com.");
+        setError("Request failed. Try again, or email Lisa at lisatnorkus@gmail.com.");
       }
     });
   }
@@ -313,10 +313,17 @@ function SubmittedTab({ onClose }: { onClose: () => void }) {
       <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
         <MessageSquare aria-hidden="true" className="size-6" />
       </div>
-      <h3 className="text-base font-bold text-[var(--color-ldp-navy-900)]">Thanks — it&apos;s in the queue.</h3>
+      <h3 className="text-base font-bold text-[var(--color-ldp-navy-900)]">Thanks — it&apos;s in Lisa&apos;s queue.</h3>
       <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-        Lisa reviews new requests daily during the preview. Urgent things always beat the queue —
-        email Communications if it&apos;s blocking you.
+        Lisa reviews new requests daily during the preview. If it&apos;s blocking you, email her
+        directly at{" "}
+        <a
+          href="mailto:lisatnorkus@gmail.com"
+          className="text-[var(--color-ldp-navy-700)] underline"
+        >
+          lisatnorkus@gmail.com
+        </a>
+        .
       </p>
       <button
         type="button"
