@@ -282,8 +282,8 @@ export default async function CommitteeDetailPage({
           </section>
         )}
 
-        {committee.drive_folder_url && (
-          <div className="mt-8 border-t border-[var(--color-ldp-line)] pt-6">
+        <div className="mt-8 flex flex-wrap gap-3 border-t border-[var(--color-ldp-line)] pt-6">
+          {committee.drive_folder_url && (
             <Button asChild variant="ldp" size="lg">
               <a
                 href={committee.drive_folder_url}
@@ -294,8 +294,16 @@ export default async function CommitteeDetailPage({
                 <Folder className="size-4" /> Open committee Drive folder
               </a>
             </Button>
-          </div>
-        )}
+          )}
+          <Button asChild variant="outline" size="lg">
+            <Link
+              href={`/committees/${committee.code.toLowerCase()}/continuity`}
+              className="inline-flex items-center gap-2"
+            >
+              Continuity & handoff →
+            </Link>
+          </Button>
+        </div>
     </HubShell>
   );
 }

@@ -23,6 +23,7 @@ import { VoterGuideCallout } from "@/components/dashboard/VoterGuideCallout";
 import { WorkingSetHeader } from "@/components/dashboard/WorkingSetHeader";
 import { MyAreaWidget } from "@/components/dashboard/MyAreaWidget";
 import { YourWeekPanel } from "@/components/dashboard/YourWeekPanel";
+import { FirstTimeNudge } from "@/components/dashboard/FirstTimeNudge";
 import { fetchAssignedTasks } from "@/lib/db/my-tasks";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchRightNowContext } from "@/lib/db/right-now";
@@ -187,6 +188,8 @@ export default async function DashboardPage() {
         generalUrl={voterGuideGeneralUrl}
         mode={voterGuideMode}
       />
+
+      <FirstTimeNudge />
 
       <WorkingSetHeader />
 
