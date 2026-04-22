@@ -93,7 +93,12 @@ export default async function DashboardPage() {
   const [data, members, rightNow] = await Promise.all([
     fetchDashboardData(),
     fetchAllMembers(),
-    fetchRightNowContext(),
+    // fetchRightNowContext touches both supabase projects; any
+    // failure there should NOT bring the whole dashboard down.
+    fetchRightNowContext().catch((err) => {
+      console.error("fetchRightNowContext failed — dashboard will render without right-now panel", err);
+      return undefined;
+    }),
   ]);
   const {
     transitions,

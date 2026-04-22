@@ -51,20 +51,26 @@ export async function fetchRightNowContext(): Promise<RightNowContext> {
       .eq("is_endorsed", true),
   ]);
 
-  // Fetch precinct counts per LD from kypolitics.
-  const kypolitics = await getKypoliticsServer();
+  // Fetch precinct counts per LD from kypolitics. Wrapped because the
+  // kypolitics project is a separate Supabase and a missing env var
+  // there should NOT crash the dashboard.
   const LD_NUMBERS = [28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41, 42, 43, 44, 46, 48];
-  const { data: precinctRows } = await kypolitics
-    .from("precincts")
-    .select("hd")
-    .in("hd", LD_NUMBERS.map(String));
-
   const precinctCountByLd = new Map<number, number>();
-  for (const p of precinctRows ?? []) {
-    const n = parseInt(p.hd, 10);
-    if (!Number.isNaN(n)) {
-      precinctCountByLd.set(n, (precinctCountByLd.get(n) ?? 0) + 1);
+  try {
+    const kypolitics = await getKypoliticsServer();
+    const { data: precinctRows } = await kypolitics
+      .from("precincts")
+      .select("hd")
+      .in("hd", LD_NUMBERS.map(String));
+    for (const p of precinctRows ?? []) {
+      const n = parseInt(p.hd, 10);
+      if (!Number.isNaN(n)) {
+        precinctCountByLd.set(n, (precinctCountByLd.get(n) ?? 0) + 1);
+      }
     }
+  } catch (err) {
+    console.error("fetchRightNowContext: kypolitics precinct fetch failed", err);
+    // Fall through with empty map — dashboard still renders.
   }
 
   // PC counts + distinct precincts per LD
