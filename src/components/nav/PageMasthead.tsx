@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -24,7 +25,7 @@ export function PageMasthead({
   maxWidthClass?: string;
 }) {
   return (
-    <header className="relative overflow-hidden bg-[var(--color-ldp-navy-900)] text-white">
+    <header className="relative overflow-hidden bg-gradient-to-br from-[var(--color-ldp-navy-900)] via-[var(--color-ldp-navy-800)] to-[var(--color-ldp-navy-900)] text-white">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -38,9 +39,24 @@ export function PageMasthead({
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 85% -20%, rgba(96,165,250,0.25), transparent 55%)",
+            "radial-gradient(circle at 15% 15%, rgba(96,165,250,0.35), transparent 45%), radial-gradient(circle at 85% 85%, rgba(200,16,46,0.22), transparent 50%)",
         }}
       />
+
+      {/* Kicking donkey watermark — right side, hidden on mobile */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-6 -top-6 hidden opacity-[0.10] md:block md:opacity-[0.12] lg:right-16 lg:top-2 lg:opacity-[0.14]"
+      >
+        <Image
+          src="/democratic-kicking-donkey.png"
+          alt=""
+          width={240}
+          height={240}
+          priority
+          className="h-36 w-auto md:h-44 lg:h-56"
+        />
+      </div>
 
       {/* Top strip: back link + flag stripe eyebrow + right-nav */}
       <div className={`relative mx-auto flex ${maxWidthClass} items-center justify-between gap-4 px-6 pt-5 pb-3`}>

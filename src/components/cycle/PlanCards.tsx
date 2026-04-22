@@ -21,12 +21,13 @@ function Card({ plan }: { plan: PlanCard }) {
   const styles = PLAN_STYLES[plan.status];
   const isExternal = plan.primaryCtaHref.startsWith("http");
   return (
-    <article className={`flex flex-col rounded-xl border-2 bg-white p-5 ${styles.border}`}>
-      <div className={`text-[10px] font-semibold uppercase tracking-widest ${styles.eyebrowClass}`}>
+    <article className={`flex flex-col overflow-hidden rounded-xl shadow-sm ${styles.cardBg} ${styles.textTheme}`}>
+      <div className={`${styles.stripeBg} px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] ${styles.stripeText}`}>
         {plan.eyebrow}
       </div>
-      <h3 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">{plan.title}</h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--color-ldp-ink-700)]">{plan.body}</p>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className={`text-xl font-black tracking-tight ${styles.titleClass}`}>{plan.title}</h3>
+        <p className={`mt-2 flex-1 text-sm leading-relaxed ${styles.bodyClass}`}>{plan.body}</p>
 
       <div className="mt-4">
         {isExternal ? (
@@ -49,51 +50,82 @@ function Card({ plan }: { plan: PlanCard }) {
         )}
       </div>
 
-      {plan.secondaryLinks && plan.secondaryLinks.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2 border-t border-[var(--color-ldp-line)] pt-3">
-          {plan.secondaryLinks.map((link) => {
-            const linkExternal = link.href.startsWith("http");
-            const className =
-              "text-[11px] text-[var(--color-ldp-navy-700)] hover:underline inline-flex items-center gap-1";
-            return linkExternal ? (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={className}
-              >
-                {link.label} <ExternalLink className="size-3" />
-              </a>
-            ) : (
-              <Link key={link.href} href={link.href} className={className}>
-                {link.label} →
-              </Link>
-            );
-          })}
-        </div>
-      )}
+        {plan.secondaryLinks && plan.secondaryLinks.length > 0 && (
+          <div className={`mt-3 flex flex-wrap gap-2 border-t pt-3 ${styles.borderClass}`}>
+            {plan.secondaryLinks.map((link) => {
+              const linkExternal = link.href.startsWith("http");
+              const className = `text-[11px] ${styles.secondaryLinkClass} hover:underline inline-flex items-center gap-1`;
+              return linkExternal ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {link.label} <ExternalLink className="size-3" />
+                </a>
+              ) : (
+                <Link key={link.href} href={link.href} className={className}>
+                  {link.label} →
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </article>
   );
 }
 
 const PLAN_STYLES: Record<
   PlanCard["status"],
-  { border: string; eyebrowClass: string; ctaClass: string }
+  {
+    cardBg: string;
+    textTheme: string;
+    stripeBg: string;
+    stripeText: string;
+    titleClass: string;
+    bodyClass: string;
+    ctaClass: string;
+    borderClass: string;
+    secondaryLinkClass: string;
+  }
 > = {
+  // LIVE — filled red. Demands attention.
   LIVE: {
-    border: "border-[var(--color-ldp-red)]",
-    eyebrowClass: "text-[var(--color-ldp-red)]",
-    ctaClass: "bg-[var(--color-ldp-red)] text-white hover:brightness-95",
+    cardBg: "bg-gradient-to-br from-[#E11D48] to-[var(--color-ldp-red)] text-white",
+    textTheme: "text-white",
+    stripeBg: "bg-black/20",
+    stripeText: "text-white",
+    titleClass: "text-white",
+    bodyClass: "text-white/90",
+    ctaClass: "bg-white text-[var(--color-ldp-red)] hover:bg-white/90",
+    borderClass: "border-white/20",
+    secondaryLinkClass: "text-white/90",
   },
+  // TEED UP — navy solid. Next up, confident.
   TEED_UP: {
-    border: "border-[var(--color-ldp-navy-800)]",
-    eyebrowClass: "text-[var(--color-ldp-navy-800)]",
-    ctaClass: "bg-[var(--color-ldp-navy-800)] text-white hover:bg-[var(--color-ldp-navy-900)]",
+    cardBg: "bg-gradient-to-br from-[var(--color-ldp-navy-900)] to-[var(--color-ldp-navy-700)] text-white",
+    textTheme: "text-white",
+    stripeBg: "bg-black/20",
+    stripeText: "text-white",
+    titleClass: "text-white",
+    bodyClass: "text-white/85",
+    ctaClass: "bg-white text-[var(--color-ldp-navy-900)] hover:bg-white/90",
+    borderClass: "border-white/20",
+    secondaryLinkClass: "text-white/90",
   },
+  // HORIZON — clean white. Reference material, not urgent.
   HORIZON: {
-    border: "border-[var(--color-ldp-line)]",
-    eyebrowClass: "text-[var(--color-ldp-gold)]",
-    ctaClass: "bg-white border border-[var(--color-ldp-line)] text-[var(--color-ldp-navy-900)] hover:border-[var(--color-ldp-navy-700)]",
+    cardBg: "bg-white border border-[var(--color-ldp-line)]",
+    textTheme: "text-[var(--color-ldp-ink-900)]",
+    stripeBg: "bg-[var(--color-ldp-gold)]",
+    stripeText: "text-[var(--color-ldp-navy-900)]",
+    titleClass: "text-[var(--color-ldp-navy-900)]",
+    bodyClass: "text-[var(--color-ldp-ink-700)]",
+    ctaClass: "bg-[var(--color-ldp-navy-800)] text-white hover:bg-[var(--color-ldp-navy-900)]",
+    borderClass: "border-[var(--color-ldp-line)]",
+    secondaryLinkClass: "text-[var(--color-ldp-navy-700)]",
   },
 };
