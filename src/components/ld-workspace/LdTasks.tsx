@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, ChevronRight, Plus, Sparkles, Square, SquareCheck } from "lucide-react";
+import Link from "next/link";
+import { Check, CheckSquare, ChevronRight, ListTodo, Plus, Sparkles, Square, SquareCheck } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
 import type { LdTask, TaskPriority } from "@/lib/db/ld-tasks";
 import {
@@ -101,29 +102,20 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
             </span>
           )}
         </div>
-        <div className="flex flex-wrap gap-2">
-          {tasks.length === 0 && canWrite && (
-            <button
-              type="button"
-              onClick={handleInsertTemplate}
-              disabled={isPending}
-              className="inline-flex items-center gap-1 rounded-md border border-[var(--color-ldp-gold)] bg-[var(--color-ldp-gold)] px-3 py-1.5 text-xs font-semibold text-[var(--color-ldp-navy-900)] hover:bg-[var(--color-ldp-gold)]/80 disabled:opacity-50"
-            >
-              <Sparkles aria-hidden="true" className="size-3.5" />
-              Insert new-chair template
-            </button>
-          )}
-          {canWrite && !composing && (
-            <button
-              type="button"
-              onClick={() => setComposing(true)}
-              className="inline-flex items-center gap-1 rounded-md bg-[var(--color-ldp-navy-800)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
-            >
-              <Plus aria-hidden="true" className="size-3.5" />
-              Add task
-            </button>
-          )}
-        </div>
+        {/* Add-task button is always rendered when there are tasks
+            and a profile — keeping it present makes the section's
+            action model obvious without adding visual noise to the
+            empty-state card below. */}
+        {canWrite && tasks.length > 0 && !composing && (
+          <button
+            type="button"
+            onClick={() => setComposing(true)}
+            className="inline-flex items-center gap-1 rounded-md bg-[var(--color-ldp-navy-800)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
+          >
+            <Plus aria-hidden="true" className="size-3.5" />
+            Add task
+          </button>
+        )}
       </div>
 
       {composing && (
@@ -144,21 +136,23 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
         </div>
       )}
 
-      {!canWrite && tasks.length === 0 && (
-        <div className="mb-3 rounded-lg border border-dashed border-[var(--color-ldp-line)] bg-white p-3 text-xs text-[var(--color-ldp-ink-700)]">
-          Set your name on the dashboard to add tasks.
-        </div>
+      {/* Empty state: unified card with clear actions. Changes shape
+          based on whether the user has set their name yet. */}
+      {tasks.length === 0 && (
+        <EmptyTasksHero
+          canWrite={canWrite}
+          isPending={isPending}
+          onInsertTemplate={handleInsertTemplate}
+          onAddTask={() => setComposing(true)}
+        />
       )}
 
       {open.length === 0 && tasks.length > 0 ? (
-        <div className="rounded-lg border border-dashed border-[var(--color-ldp-line)] bg-white p-6 text-center text-sm text-[var(--color-ldp-ink-700)]">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-6 text-center text-sm text-emerald-800">
+          <CheckSquare aria-hidden="true" className="mx-auto mb-2 size-6 text-emerald-600" />
           No open tasks. Nice.
         </div>
-      ) : open.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-[var(--color-ldp-line)] bg-white p-6 text-center text-sm text-[var(--color-ldp-ink-700)]">
-          No tasks yet. Use the new-chair template to start, or add your own.
-        </div>
-      ) : (
+      ) : open.length === 0 ? null : (
         <div className="space-y-4">
           {overdue.length > 0 && (
             <TaskGroup title="Overdue" tone="red" tasks={overdue} onStatus={handleStatus} disabled={isPending} />
@@ -191,6 +185,86 @@ export function LdTasks({ ldNumber, tasks }: { ldNumber: number; tasks: LdTask[]
         </details>
       )}
     </section>
+  );
+}
+
+function EmptyTasksHero({
+  canWrite,
+  isPending,
+  onInsertTemplate,
+  onAddTask,
+}: {
+  canWrite: boolean;
+  isPending: boolean;
+  onInsertTemplate: () => void;
+  onAddTask: () => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white shadow-sm">
+      <div
+        aria-hidden="true"
+        className="h-1.5 w-full"
+        style={{
+          background:
+            "linear-gradient(90deg, var(--color-ldp-navy-800) 0%, var(--color-ldp-gold) 100%)",
+        }}
+      />
+      <div className="p-6">
+        <div className="flex items-start gap-4">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-ldp-navy-800)] text-white">
+            <ListTodo aria-hidden="true" className="size-6" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-red)]">
+              Start your task list
+            </div>
+            <h3 className="mt-1 text-xl font-black tracking-tight text-[var(--color-ldp-navy-900)]">
+              {canWrite ? "Drop in the 8 onboarding tasks or add your own." : "Set your name first — then start tracking."}
+            </h3>
+            <p className="mt-2 text-sm text-[var(--color-ldp-ink-900)]">
+              Tasks live with the LD, not with you. Anything you track here carries forward to
+              the next chair so the district never starts from scratch again.
+            </p>
+
+            {canWrite ? (
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={onInsertTemplate}
+                  disabled={isPending}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-gold)] px-4 py-2 text-sm font-bold text-[var(--color-ldp-navy-900)] shadow hover:bg-[var(--color-ldp-gold)]/90 disabled:opacity-50"
+                >
+                  <Sparkles aria-hidden="true" className="size-4" />
+                  Insert new-chair template · 8 tasks
+                </button>
+                <button
+                  type="button"
+                  onClick={onAddTask}
+                  disabled={isPending}
+                  className="inline-flex items-center gap-1.5 rounded-md border-2 border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] hover:bg-[var(--color-ldp-navy-900)] hover:text-white disabled:opacity-50"
+                >
+                  <Plus aria-hidden="true" className="size-4" />
+                  Add a custom task
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-navy-800)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
+                >
+                  <Plus aria-hidden="true" className="size-4" />
+                  Set your name on the dashboard
+                </Link>
+                <span className="text-xs text-[var(--color-ldp-ink-700)]">
+                  Takes 5 seconds. Required so we can credit who added what.
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
