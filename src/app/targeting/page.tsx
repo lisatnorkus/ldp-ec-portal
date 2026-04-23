@@ -216,42 +216,23 @@ function StrategyBlock({
         </div>
       </div>
 
-      {/* Stats strip — big numbers so each card has a visual anchor
-          before the text starts. */}
-      <div
-        className="grid grid-cols-3 border-b"
-        style={{ borderColor: `${accent}30` }}
-      >
-        <Stat value={stats.precincts.toString()} label="Precincts" accent={accent} />
-        <Stat
-          value={marginLabel}
-          label="Avg D-margin"
-          accent={accent}
-          divider
-        />
-        <Stat
-          value={`${Math.round((stats.precincts / 629) * 100)}%`}
-          label="of 629 countywide"
-          accent={accent}
-        />
-      </div>
-
-      {/* Evergreen — what / who / your job — with icon badges so the
-          three cells read as visually distinct, not three text columns. */}
-      <div className="grid gap-4 px-5 py-5 md:grid-cols-3">
-        <EvergreenCell
+      {/* Evergreen — stacked rows, full-width. Kills the whitespace
+          from the 3-column grid. Icon anchors the left, label + body
+          flow inline so short descriptions don't leave dead space. */}
+      <div className="divide-y divide-[var(--color-ldp-line)]">
+        <EvergreenRow
           kicker="What it is"
           body={evergreen.what}
           accent={accent}
           Icon={MapPin}
         />
-        <EvergreenCell
+        <EvergreenRow
           kicker="Who's in it"
           body={evergreen.who}
           accent={accent}
           Icon={Users}
         />
-        <EvergreenCell
+        <EvergreenRow
           kicker="Your standing job"
           body={evergreen.yourJob}
           accent={accent}
@@ -332,7 +313,7 @@ function StrategyBlock({
   );
 }
 
-function EvergreenCell({
+function EvergreenRow({
   kicker,
   body,
   accent,
@@ -344,51 +325,21 @@ function EvergreenCell({
   Icon: typeof MapPin;
 }) {
   return (
-    <div
-      className="rounded-lg p-3"
-      style={{ backgroundColor: `${accent}08` }}
-    >
-      <div
-        className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest"
-        style={{ color: accent }}
+    <div className="flex items-start gap-4 px-5 py-4">
+      <span
+        className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg text-white"
+        style={{ backgroundColor: accent }}
       >
-        <span
-          className="flex size-5 items-center justify-center rounded-md text-white"
-          style={{ backgroundColor: accent }}
+        <Icon aria-hidden="true" className="size-4" />
+      </span>
+      <div className="flex-1">
+        <div
+          className="text-[10px] font-bold uppercase tracking-widest"
+          style={{ color: accent }}
         >
-          <Icon aria-hidden="true" className="size-3" />
-        </span>
-        {kicker}
-      </div>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">{body}</p>
-    </div>
-  );
-}
-
-function Stat({
-  value,
-  label,
-  accent,
-  divider = false,
-}: {
-  value: string;
-  label: string;
-  accent: string;
-  divider?: boolean;
-}) {
-  return (
-    <div
-      className={`px-5 py-3 text-center ${divider ? "border-x" : ""}`}
-      style={divider ? { borderColor: `${accent}30` } : undefined}
-    >
-      <div
-        className="text-2xl font-black leading-none tracking-tight"
-        style={{ color: accent }}
-      >
-        {value}
-      </div>
-      <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-        {label}
+          {kicker}
+        </div>
+        <p className="mt-1 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">{body}</p>
       </div>
     </div>
   );
