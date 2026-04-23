@@ -2,31 +2,30 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
+  BookOpen,
   Building2,
   CalendarCheck,
   ClipboardList,
+  Compass,
   FileCheck,
   Gavel,
   HandHeart,
   HeartHandshake,
+  HelpCircle,
   Home,
+  IdCard,
   LayoutDashboard,
   ListChecks,
   Repeat,
   Share2,
   Target,
+  Ticket,
   UserPlus,
   Vote,
 } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 
 export const metadata = { title: "What this portal does" };
-
-// One-page overview for Lisa to present to the EC. Grouped by role
-// so people see themselves in one section instead of scrolling a
-// full feature list. No public-facing block intentionally — the
-// public surfaces (volunteer signup, voter reg form, ballot lookup)
-// exist but don't need to be announced in the rollout conversation.
 
 type Tile = {
   href: string;
@@ -38,21 +37,33 @@ type Tile = {
 const EVERYONE: Tile[] = [
   {
     href: "/dashboard",
-    label: "Your Week",
-    body: "Every task anyone has assigned you across every LD and committee — overdue, due this week, waiting on your accept.",
+    label: "Dashboard — state of the party",
+    body: "Six KPIs at the top, a 'needs attention' queue, your personal task list, cycle phase, and a live activity feed. One glance = what's urgent.",
     Icon: LayoutDashboard,
   },
   {
     href: "/voter-registration",
     label: "Voter guide + ballot lookup",
-    body: "Official LDP 2026 voter guide, ballot tool, and KY/Jefferson County voter-reg rules.",
+    body: "Official LDP 2026 voter guide, ballot tool, KY/Jefferson County voter-reg rules, and the party-switch deadline countdown.",
     Icon: Vote,
   },
   {
     href: "/amplify",
     label: "Amplify — one-click share",
-    body: "When Comms publishes a post for the board to push, it lands here pre-filled for Facebook, X, Threads, Bluesky, LinkedIn, email, texts — tap once.",
+    body: "When Comms publishes a post for the board to push, it lands here. One tap = pre-filled Facebook, X, Threads, Bluesky, LinkedIn, email, or texts. Clipboard copy for Instagram + TikTok.",
     Icon: Share2,
+  },
+  {
+    href: "/events",
+    label: "Events + the $620 math",
+    body: "Three signature fundraisers with per-member ticket-link tracking. Push your link, get credit, hit your $500 raise target.",
+    Icon: Ticket,
+  },
+  {
+    href: "/this-month",
+    label: "This Month",
+    body: "What's live right now. Theme-coded monthly playbook tied to the cycle phase, plus the full 12-month Rock Star Playbook grid.",
+    Icon: CalendarCheck,
   },
 ];
 
@@ -60,7 +71,7 @@ const LD: Tile[] = [
   {
     href: "/my-ld",
     label: "My LD workspace",
-    body: "Your district's live work surface: notes, tasks, attendance, precinct-level targeting.",
+    body: "Your district's live work surface: notes, tasks, attendance, precinct-level targeting. When your profile is set, clicking 'My LD' in the sidebar jumps straight here.",
     Icon: Home,
   },
   {
@@ -72,19 +83,25 @@ const LD: Tile[] = [
   {
     href: "/follow-ups",
     label: "Follow-Ups queue",
-    body: "Who you've talked to but haven't touched in 14+ days. The DNC Playbook 'layering' idea, made actionable.",
+    body: "Who you've talked to but haven't touched in 14+ days. The DNC Playbook 'layering' idea, made actionable. 'Mine only' filter shows your 10-20 working relationships.",
     Icon: Repeat,
   },
   {
     href: "/captains",
     label: "Captain Coverage",
-    body: "How close we are to a captain in every ACTIVATE and DEFEND precinct, with a punch list of uncovered precincts.",
+    body: "How close we are to a captain in every ACTIVATE and DEFEND precinct. Countywide tile plus per-bucket cards plus a punch list of uncovered precincts with one-click Recruit.",
     Icon: Target,
+  },
+  {
+    href: "/targeting",
+    label: "Targeting Explained",
+    body: "Power Base / Hold the Line / Wake the Vote / Plant the Flag — what each bucket is, who's in it, your standing job, and why this matters in THIS phase of the cycle.",
+    Icon: Compass,
   },
   {
     href: "/transitions",
     label: "Continuity + handoff",
-    body: "The 7-section package every outgoing chair writes so the next person hits the ground running.",
+    body: "The 7-section package every outgoing LD chair writes so the next person hits the ground running. Mirrored for committee chairs too.",
     Icon: ClipboardList,
   },
 ];
@@ -99,20 +116,20 @@ const COMMITTEE: Tile[] = [
   {
     href: "/volunteers",
     label: "Volunteers roster",
-    body: "Jessica's working file — intake, interests, activity log, new-signup review queue.",
+    body: "Jessica's working file — intake, interests (what they like to do), activity log, new-signup review queue, and a 'gone quiet' list for retention.",
     Icon: HeartHandshake,
-  },
-  {
-    href: "/events",
-    label: "Events + $620 math",
-    body: "Three signature fundraisers with per-member ticket-link tracking toward the annual raise target.",
-    Icon: CalendarCheck,
   },
   {
     href: "/coalitions",
     label: "Coalition partners",
-    body: "Six Louisville constituencies with named partners and year-round engagement notes.",
+    body: "Six Louisville constituencies (Black, labor, LGBTQ+, Latino, youth, faith) with named partners and year-round engagement notes.",
     Icon: HandHeart,
+  },
+  {
+    href: "/voter-registration",
+    label: "VR drive events",
+    body: "When Events or Volunteering schedules a voter-registration drive, it appears on the Voter Registration page with target populations tagged.",
+    Icon: IdCard,
   },
 ];
 
@@ -120,20 +137,47 @@ const OFFICER: Tile[] = [
   {
     href: "/governance",
     label: "Governance reference",
-    body: "Quorum, proxies, finance tiers ($500 / $501–999 / $1000+), vacancy rules, KREF 2026 dates, the primary-endorsement bylaw.",
+    body: "Quorum, proxies, finance tiers ($500 / $501–999 / $1000+), vacancy rules, KREF 2026 dates, the primary-endorsement bylaw — every claim cited.",
     Icon: Gavel,
   },
   {
     href: "/transitions",
     label: "Transitions & vacancies",
-    body: "Every announced change and open seat with the 30/90-day fill rules surfaced.",
+    body: "Every announced change and open seat with the 30/90-day fill rules surfaced. Distinguishes announced-but-not-departed from currently vacant.",
     Icon: ListChecks,
   },
   {
     href: "/endorsement",
     label: "Endorsement process",
-    body: "Mayor / Metro Council timelines, 60% threshold, and the KDP rule that keeps state-leg primaries open.",
+    body: "Mayor / Metro Council timelines, 60% secret-ballot threshold, and the KDP rule that keeps state-leg Democratic primaries prohibited from party endorsement.",
     Icon: FileCheck,
+  },
+];
+
+const REFERENCE: Tile[] = [
+  {
+    href: "/glossary",
+    label: "Glossary",
+    body: "Every bit of lingo defined — Power Base, sleeper Dems, GOTV, D-margin, layering, pipeline, KREF, JCDEC, and more. Terms stay in the portal copy; definitions are one click away.",
+    Icon: BookOpen,
+  },
+  {
+    href: "/targeting",
+    label: "Targeting Explained",
+    body: "The strategy-bucket reference. Visible from this page AND from inside Plan & Map, Captains, and My LD headers.",
+    Icon: Compass,
+  },
+  {
+    href: "/tour/1",
+    label: "Welcome Tour",
+    body: "Six steps, ~3 minutes. Walks new members through the rhythm of how the portal fits into how the EC already works.",
+    Icon: Compass,
+  },
+  {
+    href: "/help",
+    label: "Help & FAQ",
+    body: "Getting-started answers plus every question preview reviewers have asked. Help button in the bottom-right of every page creates a GitHub issue for bugs and requests.",
+    Icon: HelpCircle,
   },
 ];
 
@@ -142,7 +186,7 @@ export default function OverviewPage() {
     <HubShell
       eyebrow="What this portal does"
       title="One place the EC runs its work."
-      subtitle="Your week, your committee, your LD, your governance obligations — all here. Grouped by how you actually use it, not by every feature. Pick the section that sounds like you and click through."
+      subtitle="Your week, your LD, your committee, your governance obligations — all here. Grouped by how you actually use it, not by every feature. Pick the section that sounds like you and click through."
       maxWidthClass="max-w-5xl"
       actions={
         <Link
@@ -156,7 +200,7 @@ export default function OverviewPage() {
       <Section
         eyebrow="Every EC member"
         title="What you open first."
-        body="Three surfaces everyone uses — whether you're an LD chair, a committee member, or a county officer."
+        body="Five surfaces everyone uses — whether you're an LD chair, a committee member, or a county officer. They live at the always-open top of the sidebar."
         accent="var(--color-ldp-navy-800)"
         tiles={EVERYONE}
       />
@@ -164,7 +208,7 @@ export default function OverviewPage() {
       <Section
         eyebrow="LD Chairs & Vice Chairs"
         title="Your district, your pipeline, your coverage."
-        body="Everything an LD leader needs to run a ground game — plus the continuity tools that make sure your work survives when your seat changes hands."
+        body="Everything an LD leader needs to run a ground game — recruiting CRM, precinct captain coverage, layering queue, strategy reference — plus the continuity tools that keep your work intact when your seat changes hands."
         accent="var(--color-ldp-red)"
         tiles={LD}
       />
@@ -172,7 +216,7 @@ export default function OverviewPage() {
       <Section
         eyebrow="Committee Chairs"
         title="Same tools, scoped to your committee."
-        body="The LD workspace pattern mirrored onto committees — notes, tasks, member communication, handoff packages. Plus the surfaces specific to certain committees (Volunteering, Events, Communications)."
+        body="The LD workspace pattern mirrored onto committees — notes, tasks, email-all, handoff packages. Plus surfaces specific to the committees doing heavy people work (Volunteering, Events, Comms, Candidate Recruitment)."
         accent="#0891b2"
         tiles={COMMITTEE}
       />
@@ -180,9 +224,17 @@ export default function OverviewPage() {
       <Section
         eyebrow="County Officers"
         title="Governance + oversight."
-        body="The rules of the road for the whole party and the cross-LD visibility that only officers need."
+        body="The rules of the road for the whole party and the cross-LD visibility that only officers need. Every load-bearing bylaw surfaced with citations, so no one has to hunt the PDF."
         accent="#0E4C9E"
         tiles={OFFICER}
+      />
+
+      <Section
+        eyebrow="Reference & learning"
+        title="Look it up without asking."
+        body="Targeting, lingo, and help — all in one place, so new members learn the vocabulary at their own pace instead of having to ask every time."
+        accent="#b45309"
+        tiles={REFERENCE}
       />
 
       <section className="mt-12 rounded-xl border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-5">
@@ -192,25 +244,32 @@ export default function OverviewPage() {
         <ul className="mt-3 space-y-1.5 text-sm text-[var(--color-ldp-ink-900)]">
           <li>
             <strong>KYPolitics data</strong> — all 629 Jefferson County precincts scored into four
-            strategies (Power Base · Hold the Line · Wake the Vote · Plant the Flag).
+            strategies (Power Base · Hold the Line · Wake the Vote · Plant the Flag), with
+            sleeper-Dem counts, D-margins, and priority rankings live in every LD view.
           </li>
           <li>
             <strong>Google Drive</strong> — every committee folder, event folder, canvass guide,
-            and training doc linked directly from the portal.
+            and training doc linked directly. Sign-in-to-your-LDP-Google banner restored so
+            permission walls don&apos;t ambush anyone.
           </li>
           <li>
-            <strong>louisvilledems.com</strong> — the public voter guide, ballot lookup, and
-            precinct-leader app live there; the portal is the working backstage.
+            <strong>louisvilledems.com</strong> — public voter guide, ballot lookup, and
+            precinct-leader application all live there. The portal is the working backstage; the
+            public site is the storefront.
           </li>
           <li>
-            <strong>VoteBuilder</strong> — the recruiting CRM exports in VoteBuilder-friendly CSV
-            so you can pull cuts without retyping.
+            <strong>VoteBuilder</strong> — recruiting CRM exports in VoteBuilder-friendly CSV so
+            you can pull cuts without retyping.
+          </li>
+          <li>
+            <strong>KDP monthly call</strong> — 3rd Tuesday at 7pm ET auto-appears on the
+            dashboard with the Zoom link (Morgan Eaves hosts LD chairs + VCs as county chairs).
           </li>
         </ul>
       </section>
 
       <section className="mt-8 rounded-xl border-l-4 border-[var(--color-ldp-gold)] bg-white p-4 text-sm text-[var(--color-ldp-ink-900)]">
-        <strong className="text-[var(--color-ldp-navy-900)]">New to this?</strong> Start with the
+        <strong className="text-[var(--color-ldp-navy-900)]">New to this?</strong> Take the
         welcome tour — six steps, about three minutes, shows you the rhythm of how the portal
         fits into how the EC already works.
         <span className="ml-2">
