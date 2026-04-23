@@ -21,6 +21,7 @@ import { KdpCallStrip } from "@/components/dashboard/KdpCallStrip";
 import { KpiHero } from "@/components/dashboard/KpiHero";
 import { NeedsAttention } from "@/components/dashboard/NeedsAttention";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
+import { SpecialMeetingBanner } from "@/components/dashboard/SpecialMeetingBanner";
 import { fetchAssignedTasks } from "@/lib/db/my-tasks";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchRightNowContext } from "@/lib/db/right-now";
@@ -147,6 +148,8 @@ export default async function DashboardPage() {
           </div>
         </div>
       )}
+
+      <SpecialMeetingBanner />
 
       <VoterGuideCallout
         primaryUrl={voterSettings.voterGuidePrimaryUrl}

@@ -4,6 +4,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { MarkdownBody, markdownToPlain } from "@/lib/markdown";
 import { MonthHero } from "@/components/this-month/MonthHero";
 import { themeFor } from "@/components/this-month/month-themes";
+import { SpecialMeetingBanner } from "@/components/dashboard/SpecialMeetingBanner";
 import {
   fetchLdpCalendarEvents,
   eventsInRange,
@@ -110,6 +111,8 @@ export default async function ThisMonthPage() {
       title="What's live right now."
       maxWidthClass="max-w-4xl"
     >
+      <SpecialMeetingBanner />
+
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">
           {voterGuideUrl && (
