@@ -46,6 +46,16 @@ export const STRATEGY_COLOR_VAR: Record<Strategy, string> = {
   GROW: "var(--color-strategy-plant-the-flag)",
 };
 
+// Raw hex values matching the CSS vars above. Used anywhere we need
+// to concatenate alpha (`${hex}CC` for gradient stops, `${hex}10` for
+// tinted backgrounds) — you can't append alpha to a var() call.
+export const STRATEGY_COLOR_HEX: Record<Strategy, string> = {
+  PRIMARY: "#7a1f2b",
+  DEFEND: "#0a4f8f",
+  ACTIVATE: "#2a6f3a",
+  GROW: "#7a5a1f",
+};
+
 export type StrategyCounts = {
   total: number;
   PRIMARY: number;

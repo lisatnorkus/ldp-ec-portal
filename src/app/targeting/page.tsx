@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 import {
-  STRATEGY_COLOR_VAR,
+  STRATEGY_COLOR_HEX,
   STRATEGY_FRIENDLY,
   type Strategy,
 } from "@/lib/db/precincts-types";
@@ -127,7 +127,7 @@ export default function TargetingPage() {
 }
 
 function QuickTile({ strategy }: { strategy: Strategy }) {
-  const accent = STRATEGY_COLOR_VAR[strategy];
+  const accent = STRATEGY_COLOR_HEX[strategy];
   const stats = STRATEGY_STATS[strategy];
   const Icon = stats.Icon;
   const marginLabel =
@@ -172,7 +172,7 @@ function StrategyBlock({
   strategy: Strategy;
   currentPhase: CyclePhase;
 }) {
-  const accent = STRATEGY_COLOR_VAR[strategy];
+  const accent = STRATEGY_COLOR_HEX[strategy];
   const evergreen = STRATEGY_EVERGREEN[strategy];
   const whyNow = STRATEGY_WHY_NOW[strategy];
   const stats = STRATEGY_STATS[strategy];
