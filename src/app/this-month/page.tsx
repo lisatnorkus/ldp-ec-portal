@@ -2,6 +2,8 @@ import { ExternalLink, MapPin, Clock } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { MarkdownBody, markdownToPlain } from "@/lib/markdown";
+import { MonthHero } from "@/components/this-month/MonthHero";
+import { themeFor } from "@/components/this-month/month-themes";
 import {
   fetchLdpCalendarEvents,
   eventsInRange,
@@ -69,13 +71,6 @@ const MONTH_NAMES = [
   "December",
 ];
 
-function titleCaseTag(tag: string): string {
-  return tag
-    .replace(/_/g, " ")
-    .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
 export default async function ThisMonthPage() {
   const now = new Date();
   const currentMonth = now.getMonth() + 1;
@@ -140,21 +135,15 @@ export default async function ThisMonthPage() {
         </div>
       </div>
 
-      {/* Month playbook card — evergreen asks for the current month. */}
+      {/* Month playbook card — hero-band design pulls the theme forward
+          and replaces what used to be a wall of markdown. */}
       {current ? (
-        <article className="mb-8 rounded-xl border-2 border-[var(--color-ldp-navy-900)] bg-white p-6">
-          {current.theme_tag && (
-            <span className="mb-3 inline-flex items-center rounded-full bg-[var(--color-ldp-gold)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-900)]">
-              {titleCaseTag(current.theme_tag)}
-            </span>
-          )}
-          <MarkdownBody
-            text={current.content_md}
-            className="space-y-3 text-base leading-relaxed text-[var(--color-ldp-ink-900)]"
-            paragraphClass="first:text-lg first:font-semibold first:text-[var(--color-ldp-navy-900)]"
-            listClass="ml-5 list-disc space-y-1.5 text-sm text-[var(--color-ldp-ink-900)] marker:text-[var(--color-ldp-navy-700)]"
-          />
-        </article>
+        <MonthHero
+          monthName={MONTH_NAMES[currentMonth]}
+          year={currentYear}
+          themeTag={current.theme_tag}
+          contentMd={current.content_md}
+        />
       ) : (
         <div className="mb-8 rounded-xl border border-[var(--color-ldp-line)] bg-white p-6 text-sm text-[var(--color-ldp-ink-700)]">
           No month card for {MONTH_NAMES[currentMonth]} {currentYear} yet.
@@ -224,6 +213,8 @@ export default async function ThisMonthPage() {
             .map((c) => {
               const isPast = c.month < currentMonth;
               const isCurrent = c.month === currentMonth;
+              const theme = themeFor(c.theme_tag);
+              const Icon = theme.Icon;
               const preview = markdownToPlain(c.content_md)
                 .replace(/^[^—.]*[—.]\s*/, "")
                 .slice(0, 140);
@@ -231,21 +222,36 @@ export default async function ThisMonthPage() {
                 <details
                   key={`${c.year}-${c.month}`}
                   open={isCurrent}
-                  className={`group overflow-hidden rounded-lg border bg-white transition-colors ${
-                    isCurrent
-                      ? "border-[var(--color-ldp-red)] shadow-sm"
-                      : isPast
-                        ? "border-[var(--color-ldp-line)] opacity-75"
-                        : "border-[var(--color-ldp-line)]"
+                  className={`group overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow ${
+                    isPast ? "opacity-75" : ""
                   }`}
+                  style={{
+                    borderLeftWidth: 4,
+                    borderLeftColor: theme.accent,
+                    borderColor: isCurrent ? theme.accent : "var(--color-ldp-line)",
+                    borderTopWidth: 1,
+                    borderRightWidth: 1,
+                    borderBottomWidth: 1,
+                  }}
                 >
                   <summary className="cursor-pointer list-none p-4">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">
-                        {MONTH_NAMES[c.month]}
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="flex size-7 items-center justify-center rounded-lg text-white"
+                          style={{ backgroundColor: theme.accent }}
+                        >
+                          <Icon aria-hidden="true" className="size-3.5" />
+                        </span>
+                        <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">
+                          {MONTH_NAMES[c.month]}
+                        </div>
                       </div>
                       {isCurrent ? (
-                        <span className="rounded-full bg-[var(--color-ldp-red)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white">
+                        <span
+                          className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white"
+                          style={{ backgroundColor: theme.accent }}
+                        >
                           Now
                         </span>
                       ) : isPast ? (
@@ -253,25 +259,38 @@ export default async function ThisMonthPage() {
                           Past
                         </span>
                       ) : (
-                        <span className="rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+                        <span
+                          className="rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest"
+                          style={{
+                            backgroundColor: theme.accentBg,
+                            color: theme.accent,
+                          }}
+                        >
                           Teed up
                         </span>
                       )}
                     </div>
-                    {c.theme_tag && (
-                      <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
-                        {titleCaseTag(c.theme_tag)}
-                      </div>
-                    )}
-                    <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[var(--color-ldp-ink-700)]">
+                    <div
+                      className="mt-2 text-[10px] font-semibold uppercase tracking-widest"
+                      style={{ color: theme.accent }}
+                    >
+                      {theme.label}
+                    </div>
+                    <p className="mt-1.5 line-clamp-3 text-xs leading-relaxed text-[var(--color-ldp-ink-700)]">
                       {preview}
                       {c.content_md.length > 140 && "…"}
                     </p>
-                    <div className="mt-2 text-[10px] font-medium uppercase tracking-widest text-[var(--color-ldp-navy-700)] group-open:hidden">
+                    <div
+                      className="mt-2 text-[10px] font-medium uppercase tracking-widest group-open:hidden"
+                      style={{ color: theme.accent }}
+                    >
                       Open full playbook →
                     </div>
                   </summary>
-                  <div className="border-t border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4">
+                  <div
+                    className="border-t p-4"
+                    style={{ borderColor: theme.accent, backgroundColor: theme.accentBg }}
+                  >
                     <MarkdownBody
                       text={c.content_md}
                       className="space-y-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]"
