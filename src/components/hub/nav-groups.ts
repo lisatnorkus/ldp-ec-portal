@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import {
+  BookOpen,
   LayoutDashboard,
   Calendar,
   Home,
@@ -107,6 +108,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Resources",
     accent: "#b45309",
     items: [
+      { href: "/overview", label: "What this portal does", icon: BookOpen },
       { href: "/drive", label: "Drive", icon: FolderOpen },
       { href: "/tour/1", label: "Welcome Tour", icon: Compass },
       { href: "/help", label: "Help & FAQ", icon: HelpCircle },
