@@ -40,7 +40,7 @@ export default function EndorsementProcessPage() {
     <HubShell
       eyebrow="Endorsement Process"
       title="How the LDP endorses."
-      subtitle="The party endorses in Mayoral and Metro Council primaries. State-legislature primaries are traditionally left open. Endorsement cycles have a structured timeline, a formal interview process, and a high bar (60%) to prevent narrow-majority endorsements that don't represent the committee's consensus."
+      subtitle="Under KRS changes now in effect, Louisville Mayor and Metro Council races are nonpartisan — no Democratic primary, no general. 2026 is the first cycle run this way, which is why the LDPEC endorses in those two races. Democratic primaries for state legislature remain true Democratic primaries; KDP bylaws prohibit endorsing in those (see below). Endorsement cycles have a structured timeline, a formal interview process, and a high bar (60%) to prevent narrow-majority endorsements that don't represent the committee's consensus."
       maxWidthClass="max-w-5xl"
     >
         {/* Who does this */}
@@ -49,10 +49,11 @@ export default function EndorsementProcessPage() {
             Who runs the endorsement process
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
-            The <strong>Endorsement Process Committee</strong> (standing committee under LJCDP §26)
-            owns the intake form, interviews, and materials packet. The <strong>full LDPEC</strong>
-            {" "}casts the final secret ballot at a regular EC meeting. The committee <em>recommends</em>;
-            the EC <em>decides</em>.
+            The <strong>Endorsement Process Committee</strong> (ad-hoc committee seated by the
+            County Chair under LJCDP §11.6; reconvenes after the 2026 primary to refine the
+            process) owns the intake form, interviews, and materials packet. The{" "}
+            <strong>full LDPEC</strong> casts the final secret ballot at a regular EC meeting. The
+            committee <em>recommends</em>; the EC <em>decides</em>.
           </p>
           <p className="mt-3 text-sm text-[var(--color-ldp-ink-700)]">
             LDWC and LYD have voting representatives on the LDPEC and vote alongside Chairs, Vice
@@ -145,24 +146,31 @@ export default function EndorsementProcessPage() {
           />
         </div>
 
-        {/* Why not legislature */}
-        <section className="mt-10 rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
-          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+        {/* Why not legislature — this one is bylaw, not practice. */}
+        <section className="mt-10 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-5">
+          <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
             Why not State House / State Senate primaries
           </div>
           <h3 className="mt-1 text-base font-bold text-[var(--color-ldp-navy-900)]">
-            Traditionally left open.
+            KDP bylaws prohibit it.
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
-            The LDPEC historically does not endorse in contested Democratic primaries for state
-            legislature. The reasoning: multiple Democratic candidates competing for a nomination
-            is a healthy contest within the party; weighing in risks alienating the losing
-            candidate&apos;s coalition before the general election. In uncontested state-leg
-            primaries, the sole Democrat gets organizational support without a formal endorsement
-            vote.
+            <strong>KDP Article I, Section I:</strong> <em>&ldquo;No Democrat Committee governed
+            by these By-Laws, or any Democratic Party Officer acting in their official capacity,
+            shall endorse or support one Democratic candidate over another Democratic candidate
+            in a Democratic Primary Election.&rdquo;</em>
+          </p>
+          <p className="mt-3 text-sm text-[var(--color-ldp-ink-900)]">
+            State House and State Senate races are partisan — they have Democratic primaries —
+            so the prohibition applies. The LDPEC cannot endorse one Democrat over another in
+            those contests. The only bylaw-recognized exception is the <strong>SCEC</strong> (not
+            JCDEC) by a <strong>3/4 vote</strong> endorsing an incumbent Statewide Constitutional
+            Officer for reelection.
           </p>
           <p className="mt-3 text-xs text-[var(--color-ldp-ink-700)]">
-            This is party practice, not bylaw. A future LDPEC could vote to change it.
+            Mayor and Metro Council are different: KRS now makes them nonpartisan races, so there
+            is no &ldquo;Democratic primary&rdquo; for the bylaw to govern. That&apos;s the narrow
+            window in which LDPEC endorsements are legitimate.
           </p>
         </section>
 
@@ -179,6 +187,12 @@ export default function EndorsementProcessPage() {
             className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-navy-900)] transition-colors hover:bg-[var(--color-ldp-navy-900)] hover:text-white"
           >
             Endorsement Process Committee page →
+          </Link>
+          <Link
+            href="/governance"
+            className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-line)] bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ldp-ink-900)] transition-colors hover:border-[var(--color-ldp-navy-700)]"
+          >
+            Governance reference →
           </Link>
         </section>
     </HubShell>

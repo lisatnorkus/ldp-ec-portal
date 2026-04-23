@@ -24,6 +24,7 @@ import { WorkingSetHeader } from "@/components/dashboard/WorkingSetHeader";
 import { MyAreaWidget } from "@/components/dashboard/MyAreaWidget";
 import { YourWeekPanel } from "@/components/dashboard/YourWeekPanel";
 import { FirstTimeNudge } from "@/components/dashboard/FirstTimeNudge";
+import { KdpCallStrip } from "@/components/dashboard/KdpCallStrip";
 import { fetchAssignedTasks } from "@/lib/db/my-tasks";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchRightNowContext } from "@/lib/db/right-now";
@@ -206,6 +207,8 @@ export default async function DashboardPage() {
         </div>
         <CycleTimeline />
       </section>
+
+      <KdpCallStrip />
 
       {/* Widget grid — everything compact, every tile a door into its section. */}
       <section className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">

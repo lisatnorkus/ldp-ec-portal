@@ -17,6 +17,8 @@ import {
   FolderOpen,
   Compass,
   HelpCircle,
+  Gavel,
+  HeartHandshake,
 } from "lucide-react";
 
 export type NavItem = {
@@ -24,6 +26,10 @@ export type NavItem = {
   label: string;
   icon: LucideIcon;
   accent?: string; // per-item override; else inherits from group
+  // Hidden from the sidebar unless the viewer holds the admin token
+  // cookie. Used while a feature is being previewed and not yet ready
+  // for the wider EC to see.
+  adminOnly?: boolean;
 };
 
 export type NavGroup = {
@@ -70,6 +76,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/people", label: "Directory", icon: Users },
       { href: "/committees", label: "Committees", icon: Building2 },
+      { href: "/volunteers", label: "Volunteers", icon: HeartHandshake },
       { href: "/partners", label: "Partners", icon: Handshake },
     ],
   },
@@ -78,6 +85,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Meetings & Decisions",
     accent: "#0891b2",
     items: [
+      { href: "/governance", label: "Governance", icon: Gavel },
       { href: "/endorsement", label: "Endorsement Process", icon: Scale },
       { href: "/comms", label: "Communications", icon: Megaphone },
       { href: "/events", label: "Events", icon: Ticket, accent: "#059669" }, // money = green
@@ -127,6 +135,12 @@ export function labelForPath(pathname: string): string {
     if (code) return code.replace(/_/g, " ");
   }
   if (pathname.startsWith("/people/")) return "Member";
+  if (pathname.startsWith("/volunteers/")) {
+    const seg = pathname.split("/")[2];
+    if (seg === "new") return "Add Volunteer";
+    if (seg === "signup") return "Volunteer Signup";
+    return "Volunteer";
+  }
   if (pathname.startsWith("/precincts/")) {
     const code = pathname.split("/")[2];
     return code ? `Precinct ${code.toUpperCase()}` : "Precinct";

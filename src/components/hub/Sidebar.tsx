@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Menu, X, ExternalLink } from "lucide-react";
 import { NAV_GROUPS } from "./nav-groups";
 
-export function Sidebar() {
+export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -99,7 +99,9 @@ export function Sidebar() {
                 </div>
               )}
               <ul className="space-y-0.5">
-                {group.items.map((item) => {
+                {group.items
+                  .filter((item) => !item.adminOnly || showAdminItems)
+                  .map((item) => {
                   const Icon = item.icon;
                   const active =
                     pathname === item.href ||

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, Folder, Mail, Users } from "lucide-react";
+import { ExternalLink, Folder, HeartHandshake, Mail, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchCommitteeByCode } from "@/lib/db/committees";
@@ -191,6 +191,49 @@ export default async function CommitteeDetailPage({
         {committee.adhoc_note && (
           <div className="mb-6 rounded-lg border-l-4 border-[var(--color-ldp-gold)] bg-white p-4 text-sm italic text-[var(--color-ldp-ink-700)]">
             {committee.adhoc_note}
+          </div>
+        )}
+
+        {committee.code === "VOLUNTEERING" && (
+          <div className="mb-6 rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white p-4">
+            <div className="flex items-start gap-3">
+              <HeartHandshake
+                aria-hidden="true"
+                className="mt-0.5 size-5 text-[var(--color-ldp-navy-800)]"
+              />
+              <div className="flex-1">
+                <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+                  Volunteer file
+                </div>
+                <h3 className="mt-0.5 text-base font-bold text-[var(--color-ldp-navy-900)]">
+                  Roster, intake, and activity log for everyone who wants to help.
+                </h3>
+                <p className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
+                  Track interests, availability, and what they&apos;ve actually done. Review new
+                  sign-ups, flag people who&apos;ve gone quiet.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link
+                    href="/volunteers"
+                    className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-navy-800)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
+                  >
+                    Open volunteer roster →
+                  </Link>
+                  <Link
+                    href="/volunteers/new"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-800)] bg-white px-3 py-1.5 text-xs font-semibold text-[var(--color-ldp-navy-900)] hover:bg-[#FAFBFC]"
+                  >
+                    Add a volunteer
+                  </Link>
+                  <Link
+                    href="/volunteers/signup"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-line)] bg-white px-3 py-1.5 text-xs text-[var(--color-ldp-ink-900)] hover:border-[var(--color-ldp-navy-700)]"
+                  >
+                    Public signup form
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

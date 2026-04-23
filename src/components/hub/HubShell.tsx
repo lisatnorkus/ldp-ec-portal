@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cookies } from "next/headers";
 import { Sidebar } from "./Sidebar";
 import { Breadcrumbs } from "./Breadcrumbs";
 import { AccentBar } from "./AccentBar";
@@ -7,7 +8,7 @@ import { HelpButton } from "./HelpButton";
 // Shared layout for every page BEHIND the passphrase gate except
 // landing and tour. Wraps the page in sidebar + breadcrumb + masthead.
 
-export function HubShell({
+export async function HubShell({
   eyebrow,
   title,
   subtitle,
@@ -26,9 +27,16 @@ export function HubShell({
   // the AccentBar derives it from the current pathname via nav-groups.
   accent?: string;
 }) {
+  // Admin-gated nav items (e.g. /volunteers during preview) only render
+  // when the viewer holds the admin token cookie set by middleware.
+  const cookieStore = await cookies();
+  const adminToken = process.env.ADMIN_ACCESS_TOKEN;
+  const hasAdminCookie =
+    !!adminToken && cookieStore.get("ldp_admin_key")?.value === adminToken;
+
   return (
     <div className="flex min-h-screen bg-[#F7F8FA]">
-      <Sidebar />
+      <Sidebar showAdminItems={hasAdminCookie} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Breadcrumbs />
         <HubMasthead
