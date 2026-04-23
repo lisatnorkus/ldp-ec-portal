@@ -1,4 +1,21 @@
+import type { LucideIcon } from "lucide-react";
+import { BellRing, Crown, Shield, Sprout } from "lucide-react";
 import type { Strategy } from "@/lib/db/precincts-types";
+
+// Visual identity per strategy — big icon + the stat line we render
+// on the top quick-reference strip and inside each strategy block.
+export type StrategyStats = {
+  precincts: number;
+  avgMargin: number; // D-margin average; negative means R-leaning
+  Icon: LucideIcon;
+};
+
+export const STRATEGY_STATS: Record<Strategy, StrategyStats> = {
+  PRIMARY: { precincts: 328, avgMargin: 44, Icon: Crown },
+  ACTIVATE: { precincts: 150, avgMargin: 12, Icon: BellRing },
+  DEFEND: { precincts: 79, avgMargin: 0.1, Icon: Shield },
+  GROW: { precincts: 72, avgMargin: -16, Icon: Sprout },
+};
 
 // Canonical cycle phases (match month_cards.theme_tag).
 export type CyclePhase =

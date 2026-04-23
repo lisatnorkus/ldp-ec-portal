@@ -9,10 +9,12 @@ import {
 import {
   PHASE_LABEL,
   STRATEGY_EVERGREEN,
+  STRATEGY_STATS,
   STRATEGY_WHY_NOW,
   currentPhaseForDate,
   type CyclePhase,
 } from "@/content/strategy-copy";
+import { themeFor } from "@/components/this-month/month-themes";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Voter Targeting Explained" };
@@ -30,13 +32,15 @@ const PHASE_ORDER: CyclePhase[] = [
 
 export default function TargetingPage() {
   const phase = currentPhaseForDate();
+  const phaseTheme = themeFor(phase);
+  const PhaseIcon = phaseTheme.Icon;
 
   return (
     <HubShell
       eyebrow="Voter Targeting · Strategy Buckets Explained"
       title="Power Base, Hold the Line, Wake the Vote, Plant the Flag."
-      subtitle={`Every Jefferson County precinct is scored into one of four strategy buckets. This page explains what each bucket is, who's in it, what your job is there year-round, and — because priorities shift with the cycle — what matters in THIS phase (${PHASE_LABEL[phase].toLowerCase()}).`}
-      maxWidthClass="max-w-5xl"
+      subtitle="Every Jefferson County precinct scored into one of four strategy buckets. What each bucket is, who's in it, what your job is there year-round, and what matters in THIS phase of the cycle."
+      maxWidthClass="max-w-6xl"
       actions={
         <Link
           href="/glossary"
@@ -47,18 +51,31 @@ export default function TargetingPage() {
         </Link>
       }
     >
-      <div className="mb-8 inline-flex items-center gap-2 rounded-full border-2 border-[var(--color-ldp-navy-800)] bg-white px-3 py-1.5 text-xs">
-        <TargetIcon aria-hidden="true" className="size-3.5 text-[var(--color-ldp-navy-800)]" />
-        <span className="font-semibold text-[var(--color-ldp-navy-900)]">
-          Current phase:
-        </span>
-        <span className="font-bold text-[var(--color-ldp-red)]">
-          {PHASE_LABEL[phase]}
-        </span>
-        <span className="text-[var(--color-ldp-ink-700)]">
-          · &ldquo;Why now&rdquo; below reflects this phase. Other phases collapsed.
-        </span>
-      </div>
+      {/* Quick-reference strip: 4 icon tiles summarizing the county split. */}
+      <section className="mb-6">
+        <div className="mb-3 flex flex-wrap items-center gap-3">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            Jefferson County · 629 precincts · strategy split
+          </div>
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold text-white"
+            style={{ backgroundColor: phaseTheme.accent }}
+          >
+            <PhaseIcon aria-hidden="true" className="size-3.5" />
+            Current phase: {PHASE_LABEL[phase]}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+          {STRATEGY_ORDER.map((s) => (
+            <QuickTile key={s} strategy={s} />
+          ))}
+        </div>
+        <div className="mt-2 text-[11px] italic text-[var(--color-ldp-ink-700)]">
+          &ldquo;Why now&rdquo; boxes below reflect the{" "}
+          <strong className="text-[var(--color-ldp-navy-900)]">{PHASE_LABEL[phase]}</strong> phase.
+          Other phases collapse into each block&apos;s accordion.
+        </div>
+      </section>
 
       <div className="space-y-6">
         {STRATEGY_ORDER.map((s) => (
@@ -67,22 +84,22 @@ export default function TargetingPage() {
       </div>
 
       <section className="mt-10 rounded-xl border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-5">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+          <TargetIcon aria-hidden="true" className="size-4" />
           How this drives your week
-        </h2>
+        </div>
         <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
-          The strategy map assigns every precinct in Jefferson County to one of these buckets.
-          When you open your LD or a canvass cut, the bucket tells you what conversation you&apos;re
-          having at the door — whether you&apos;re turning out a reliable Dem, persuading a
-          toss-up voter, waking up a sleeper, or registering a hidden Dem. The cycle phase tells
-          you whether THIS is the week to be there at all.
+          The strategy map assigns every precinct to a bucket. When you open your LD or a canvass
+          cut, the bucket tells you what conversation you&apos;re having at the door — turning out
+          a reliable Dem, persuading a toss-up, waking a sleeper, or registering a hidden Dem.
+          The cycle phase tells you whether this is the week to be there at all.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
             href="/plan-map"
             className="inline-flex items-center gap-1 rounded-md bg-[var(--color-ldp-navy-800)] px-3 py-1.5 text-xs font-semibold text-white"
           >
-            See the countywide strategy map →
+            Countywide strategy map →
           </Link>
           <Link
             href="/my-ld"
@@ -102,6 +119,45 @@ export default function TargetingPage() {
   );
 }
 
+function QuickTile({ strategy }: { strategy: Strategy }) {
+  const accent = STRATEGY_COLOR_VAR[strategy];
+  const stats = STRATEGY_STATS[strategy];
+  const Icon = stats.Icon;
+  const marginLabel =
+    stats.avgMargin >= 0 ? `D+${stats.avgMargin}` : `D${stats.avgMargin}`;
+  return (
+    <article
+      className="flex items-center gap-3 rounded-xl border-2 bg-white p-3 shadow-sm"
+      style={{ borderColor: accent }}
+    >
+      <span
+        className="flex size-12 shrink-0 items-center justify-center rounded-xl text-white"
+        style={{ backgroundColor: accent }}
+      >
+        <Icon aria-hidden="true" className="size-6" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <div
+          className="text-[9px] font-bold uppercase tracking-[0.2em]"
+          style={{ color: accent }}
+        >
+          {strategy}
+        </div>
+        <div className="text-sm font-bold text-[var(--color-ldp-navy-900)]">
+          {STRATEGY_FRIENDLY[strategy]}
+        </div>
+        <div className="mt-0.5 text-[11px] text-[var(--color-ldp-ink-700)]">
+          <strong className="text-[var(--color-ldp-navy-900)]">
+            {stats.precincts}
+          </strong>{" "}
+          precincts · avg{" "}
+          <strong className="text-[var(--color-ldp-navy-900)]">{marginLabel}</strong>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function StrategyBlock({
   strategy,
   currentPhase,
@@ -112,23 +168,45 @@ function StrategyBlock({
   const accent = STRATEGY_COLOR_VAR[strategy];
   const evergreen = STRATEGY_EVERGREEN[strategy];
   const whyNow = STRATEGY_WHY_NOW[strategy];
+  const stats = STRATEGY_STATS[strategy];
+  const StrategyIcon = stats.Icon;
+  const phaseTheme = themeFor(currentPhase);
+  const CurrentPhaseIcon = phaseTheme.Icon;
+  const marginLabel =
+    stats.avgMargin >= 0 ? `D+${stats.avgMargin}` : `D${stats.avgMargin}`;
 
   return (
     <article
       className="overflow-hidden rounded-xl border-2 bg-white shadow-sm"
       style={{ borderColor: accent }}
     >
-      {/* Header band */}
+      {/* Header band — icon + name + stats */}
       <div
-        className="px-5 py-4 text-white"
+        className="relative flex items-center gap-4 px-5 py-4 text-white"
         style={{ background: `linear-gradient(135deg, ${accent} 0%, ${accent}CC 100%)` }}
       >
-        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/85">
-          Strategy bucket · {strategy}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(135deg, rgba(255,255,255,0.9) 0 1px, transparent 1px 14px)",
+          }}
+        />
+        <span className="relative flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 ring-1 ring-white/25 backdrop-blur">
+          <StrategyIcon aria-hidden="true" className="size-7" />
+        </span>
+        <div className="relative min-w-0 flex-1">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/85">
+            Strategy bucket · {strategy}
+          </div>
+          <h2 className="mt-0.5 text-2xl font-black tracking-[-0.02em]">
+            {STRATEGY_FRIENDLY[strategy]}
+          </h2>
+          <div className="mt-1 text-xs text-white/85">
+            {stats.precincts} precincts · avg {marginLabel}
+          </div>
         </div>
-        <h2 className="mt-0.5 text-2xl font-black tracking-[-0.02em]">
-          {STRATEGY_FRIENDLY[strategy]}
-        </h2>
       </div>
 
       {/* Evergreen — what / who / your job */}
@@ -138,7 +216,7 @@ function StrategyBlock({
         <EvergreenCell kicker="Your standing job" body={evergreen.yourJob} accent={accent} />
       </div>
 
-      {/* Current-phase why-now — highlighted */}
+      {/* Current-phase why-now — highlighted with phase icon */}
       <div
         className="border-y px-5 py-4"
         style={{ borderColor: accent, backgroundColor: `${accent}10` }}
@@ -147,18 +225,24 @@ function StrategyBlock({
           className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em]"
           style={{ color: accent }}
         >
-          <ArrowRight aria-hidden="true" className="size-3.5" />
+          <span
+            className="flex size-6 items-center justify-center rounded-lg text-white"
+            style={{ backgroundColor: accent }}
+          >
+            <CurrentPhaseIcon aria-hidden="true" className="size-3.5" />
+          </span>
           Why now · {PHASE_LABEL[currentPhase]}
+          <ArrowRight aria-hidden="true" className="size-3.5" />
         </div>
         <p
-          className="mt-1 text-base font-bold leading-snug"
+          className="mt-2 text-base font-bold leading-snug"
           style={{ color: accent }}
         >
           {whyNow[currentPhase]}
         </p>
       </div>
 
-      {/* Other phases — collapsed */}
+      {/* Other phases — collapsed; each row has its phase icon */}
       <details className="group">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-5 py-3 text-xs font-semibold text-[var(--color-ldp-ink-700)] hover:bg-[#FAFBFC]">
           <span>See how this bucket changes across the full cycle</span>
@@ -170,18 +254,32 @@ function StrategyBlock({
           </span>
         </summary>
         <div className="border-t border-[var(--color-ldp-line)] bg-[#FAFBFC] px-5 py-4">
-          <ul className="space-y-2.5 text-sm">
-            {PHASE_ORDER.filter((p) => p !== currentPhase).map((p) => (
-              <li key={p} className="flex gap-3">
-                <span
-                  className="min-w-[130px] shrink-0 text-[10px] font-semibold uppercase tracking-widest"
-                  style={{ color: accent }}
-                >
-                  {PHASE_LABEL[p]}
-                </span>
-                <span className="text-[var(--color-ldp-ink-900)]">{whyNow[p]}</span>
-              </li>
-            ))}
+          <ul className="space-y-3 text-sm">
+            {PHASE_ORDER.filter((p) => p !== currentPhase).map((p) => {
+              const theme = themeFor(p);
+              const PIcon = theme.Icon;
+              return (
+                <li key={p} className="flex items-start gap-3">
+                  <span
+                    className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg text-white"
+                    style={{ backgroundColor: theme.accent }}
+                  >
+                    <PIcon aria-hidden="true" className="size-3.5" />
+                  </span>
+                  <div className="flex-1">
+                    <div
+                      className="text-[10px] font-semibold uppercase tracking-widest"
+                      style={{ color: theme.accent }}
+                    >
+                      {PHASE_LABEL[p]}
+                    </div>
+                    <div className="mt-0.5 text-[var(--color-ldp-ink-900)]">
+                      {whyNow[p]}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </details>
