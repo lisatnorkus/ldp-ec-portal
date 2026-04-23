@@ -39,7 +39,15 @@ export function DriveAccessBanner() {
           <Step
             n={1}
             title="Go to google.com and sign in"
-            body="Use the Google account LDP invited you with — usually your personal Gmail. If you use multiple Google accounts, the LDP-approved one needs to be the FIRST one signed in, or you'll hit permission walls."
+            body={
+              <>
+                <strong>LD Chairs, VCs, At-Large members:</strong> use the personal Gmail LDP
+                invited you with — LDs do not receive @louisvilledems.com addresses.{" "}
+                <strong>County officers</strong> (Chair, Vice Chair, Secretary, Treasurer): use
+                your @louisvilledems.com account. If you have multiple Google accounts, the
+                LDP-approved one needs to be signed in FIRST, or you&apos;ll hit permission walls.
+              </>
+            }
           />
           <Step
             n={2}
