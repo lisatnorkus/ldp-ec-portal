@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthGate } from "@/components/auth/AuthGate";
 import { Analytics } from "@vercel/analytics/react";
@@ -24,6 +24,16 @@ export const metadata: Metadata = {
     title: "LDPEC Portal",
     description: "Louisville Democratic Party Executive Committee — internal portal.",
   },
+};
+
+// Without this, iOS Safari defaults to a ~980px virtual viewport on
+// phones and scales the page down to fit, forcing pinch-zoom to read
+// anything. device-width makes the browser honor the actual screen
+// width so the responsive breakpoints kick in as designed.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
