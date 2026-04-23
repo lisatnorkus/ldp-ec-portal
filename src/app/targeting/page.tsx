@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, Compass, Target as TargetIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Briefcase,
+  Compass,
+  MapPin,
+  Target as TargetIcon,
+  Users,
+} from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 import {
   STRATEGY_COLOR_VAR,
@@ -209,37 +216,75 @@ function StrategyBlock({
         </div>
       </div>
 
-      {/* Evergreen — what / who / your job */}
-      <div className="grid gap-4 px-5 py-4 md:grid-cols-3">
-        <EvergreenCell kicker="What it is" body={evergreen.what} accent={accent} />
-        <EvergreenCell kicker="Who's in it" body={evergreen.who} accent={accent} />
-        <EvergreenCell kicker="Your standing job" body={evergreen.yourJob} accent={accent} />
+      {/* Stats strip — big numbers so each card has a visual anchor
+          before the text starts. */}
+      <div
+        className="grid grid-cols-3 border-b"
+        style={{ borderColor: `${accent}30` }}
+      >
+        <Stat value={stats.precincts.toString()} label="Precincts" accent={accent} />
+        <Stat
+          value={marginLabel}
+          label="Avg D-margin"
+          accent={accent}
+          divider
+        />
+        <Stat
+          value={`${Math.round((stats.precincts / 629) * 100)}%`}
+          label="of 629 countywide"
+          accent={accent}
+        />
       </div>
 
-      {/* Current-phase why-now — highlighted with phase icon */}
+      {/* Evergreen — what / who / your job — with icon badges so the
+          three cells read as visually distinct, not three text columns. */}
+      <div className="grid gap-4 px-5 py-5 md:grid-cols-3">
+        <EvergreenCell
+          kicker="What it is"
+          body={evergreen.what}
+          accent={accent}
+          Icon={MapPin}
+        />
+        <EvergreenCell
+          kicker="Who's in it"
+          body={evergreen.who}
+          accent={accent}
+          Icon={Users}
+        />
+        <EvergreenCell
+          kicker="Your standing job"
+          body={evergreen.yourJob}
+          accent={accent}
+          Icon={Briefcase}
+        />
+      </div>
+
+      {/* Current-phase why-now — the most important box on the card. */}
       <div
-        className="border-y px-5 py-4"
+        className="flex gap-4 border-y px-5 py-5"
         style={{ borderColor: accent, backgroundColor: `${accent}10` }}
       >
-        <div
-          className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em]"
-          style={{ color: accent }}
+        <span
+          className="flex size-12 shrink-0 items-center justify-center rounded-xl text-white shadow-md"
+          style={{ backgroundColor: accent }}
         >
-          <span
-            className="flex size-6 items-center justify-center rounded-lg text-white"
-            style={{ backgroundColor: accent }}
+          <CurrentPhaseIcon aria-hidden="true" className="size-6" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div
+            className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em]"
+            style={{ color: accent }}
           >
-            <CurrentPhaseIcon aria-hidden="true" className="size-3.5" />
-          </span>
-          Why now · {PHASE_LABEL[currentPhase]}
-          <ArrowRight aria-hidden="true" className="size-3.5" />
+            Why now · {PHASE_LABEL[currentPhase]}
+            <ArrowRight aria-hidden="true" className="size-3.5" />
+          </div>
+          <p
+            className="mt-1 text-base font-bold leading-snug"
+            style={{ color: accent }}
+          >
+            {whyNow[currentPhase]}
+          </p>
         </div>
-        <p
-          className="mt-2 text-base font-bold leading-snug"
-          style={{ color: accent }}
-        >
-          {whyNow[currentPhase]}
-        </p>
       </div>
 
       {/* Other phases — collapsed; each row has its phase icon */}
@@ -291,20 +336,60 @@ function EvergreenCell({
   kicker,
   body,
   accent,
+  Icon,
 }: {
   kicker: string;
   body: string;
   accent: string;
+  Icon: typeof MapPin;
 }) {
   return (
-    <div>
+    <div
+      className="rounded-lg p-3"
+      style={{ backgroundColor: `${accent}08` }}
+    >
       <div
-        className="text-[10px] font-bold uppercase tracking-widest"
+        className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest"
         style={{ color: accent }}
       >
+        <span
+          className="flex size-5 items-center justify-center rounded-md text-white"
+          style={{ backgroundColor: accent }}
+        >
+          <Icon aria-hidden="true" className="size-3" />
+        </span>
         {kicker}
       </div>
-      <p className="mt-1 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">{body}</p>
+      <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">{body}</p>
+    </div>
+  );
+}
+
+function Stat({
+  value,
+  label,
+  accent,
+  divider = false,
+}: {
+  value: string;
+  label: string;
+  accent: string;
+  divider?: boolean;
+}) {
+  return (
+    <div
+      className={`px-5 py-3 text-center ${divider ? "border-x" : ""}`}
+      style={divider ? { borderColor: `${accent}30` } : undefined}
+    >
+      <div
+        className="text-2xl font-black leading-none tracking-tight"
+        style={{ color: accent }}
+      >
+        {value}
+      </div>
+      <div className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+        {label}
+      </div>
     </div>
   );
 }
