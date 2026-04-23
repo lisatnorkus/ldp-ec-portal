@@ -78,7 +78,7 @@ export default function CommsPage() {
                 href={p.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative overflow-hidden rounded-xl border-2 border-transparent bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                className="group relative overflow-hidden rounded-xl border-2 border-transparent bg-white shadow-sm transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-md"
                 style={{ borderColor: color.ring }}
                 title={`${p.label} · ${p.handle}`}
               >

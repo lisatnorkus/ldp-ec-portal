@@ -184,7 +184,7 @@ function ShareBtn({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-white transition-transform hover:-translate-y-0.5"
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-white transition-transform motion-safe:hover:-translate-y-0.5"
       style={{ background: bg }}
     >
       {icon}

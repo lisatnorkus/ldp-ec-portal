@@ -192,7 +192,7 @@ export function FollowUpQueue({ contacts }: { contacts: LdContact[] }) {
                   {c.phone && (
                     <a
                       href={`tel:${c.phone}`}
-                      className="rounded border border-[var(--color-ldp-line)] bg-white p-1.5 text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
+                      className="flex size-11 items-center justify-center rounded border border-[var(--color-ldp-line)] bg-white text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
                       aria-label={`Call ${c.first_name}`}
                     >
                       <Phone aria-hidden="true" className="size-3.5" />
@@ -201,7 +201,7 @@ export function FollowUpQueue({ contacts }: { contacts: LdContact[] }) {
                   {c.email && (
                     <a
                       href={`mailto:${c.email}`}
-                      className="rounded border border-[var(--color-ldp-line)] bg-white p-1.5 text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
+                      className="flex size-11 items-center justify-center rounded border border-[var(--color-ldp-line)] bg-white text-[var(--color-ldp-navy-700)] hover:border-[var(--color-ldp-navy-700)]"
                       aria-label={`Email ${c.first_name}`}
                     >
                       <Mail aria-hidden="true" className="size-3.5" />

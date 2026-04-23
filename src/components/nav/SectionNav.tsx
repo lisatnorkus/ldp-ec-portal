@@ -10,7 +10,7 @@ export function SectionNav() {
           <Link
             key={item.slug}
             href={item.href}
-            className="group relative overflow-hidden rounded-xl border border-[var(--color-ldp-line)] bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-transparent hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="group relative overflow-hidden rounded-xl border border-[var(--color-ldp-line)] bg-white p-4 transition-all motion-safe:hover:-translate-y-0.5 hover:border-transparent hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             style={{
               // Focus ring color matches the section's accent
               // @ts-expect-error — CSS custom property, fine at runtime

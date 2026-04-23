@@ -45,7 +45,7 @@ export function MyAreaWidget() {
   return (
     <Link
       href={href}
-      className="group relative flex flex-col overflow-hidden rounded-xl border bg-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-md"
+      className="group relative flex flex-col overflow-hidden rounded-xl border bg-white p-5 transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-md"
       style={{
         borderColor: "var(--color-ldp-line)",
         borderWidth: 1,

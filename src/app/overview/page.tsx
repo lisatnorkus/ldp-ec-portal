@@ -319,7 +319,7 @@ function Section({
             <Link
               key={`${t.href}-${t.label}`}
               href={t.href}
-              className="group flex flex-col rounded-xl border bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-sm"
+              className="group flex flex-col rounded-xl border bg-white p-4 transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-sm"
               style={{ borderLeftWidth: 4, borderLeftColor: accent }}
             >
               <div className="flex items-center gap-2">

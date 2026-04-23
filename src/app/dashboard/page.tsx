@@ -256,7 +256,7 @@ function JumpTile({
   return (
     <Link
       href={href}
-      className="group flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-sm"
+      className="group flex flex-col items-center justify-center gap-2 rounded-xl border bg-white p-4 transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-sm"
       style={{ borderLeftWidth: 4, borderLeftColor: color }}
     >
       <span

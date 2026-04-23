@@ -84,6 +84,18 @@ export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }
     setMobileOpen(false);
   }, [pathname]);
 
+  // Close drawer on Escape — WCAG 2.1.2 expects keyboard users to
+  // dismiss modal overlays without mouse. Also makes the drawer
+  // dismissible for anyone who opens it by accident.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
   return (
     <>
       {/* Mobile trigger — fixed top-left; hidden on lg+ */}
@@ -166,6 +178,7 @@ export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }
                     onClick={() => toggleGroup(group)}
                     className="mb-1 flex w-full items-center gap-2 rounded px-3 py-1 text-left transition-colors hover:bg-white/5"
                     aria-expanded={open}
+                    aria-label={`Toggle ${group.label} section`}
                   >
                     <span
                       aria-hidden="true"

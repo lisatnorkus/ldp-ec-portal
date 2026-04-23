@@ -611,7 +611,7 @@ function QuickLink({
   return (
     <a
       href={href}
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-[var(--color-ldp-line)] bg-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-md"
+      className="group relative flex flex-col overflow-hidden rounded-xl border border-[var(--color-ldp-line)] bg-white p-5 transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-md"
     >
       <span
         aria-hidden="true"

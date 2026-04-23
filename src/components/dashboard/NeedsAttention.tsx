@@ -39,7 +39,7 @@ export function NeedsAttention({ items }: { items: NeedsAttentionItem[] }) {
               <li key={item.id}>
                 <Link
                   href={item.href}
-                  className="group flex items-center gap-4 rounded-xl border bg-white p-4 transition-all hover:-translate-y-0.5 hover:shadow-sm"
+                  className="group flex items-center gap-4 rounded-xl border bg-white p-4 transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-sm"
                   style={{ borderLeftWidth: 4, borderLeftColor: color }}
                 >
                   <span
