@@ -18,8 +18,11 @@ import {
   Compass,
   HelpCircle,
   Gavel,
+  HandHeart,
   HeartHandshake,
   IdCard,
+  Repeat,
+  Target,
 } from "lucide-react";
 
 export type NavItem = {
@@ -65,7 +68,9 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/my-ld", label: "My LD", icon: Home },
       { href: "/plan-map", label: "Plan & Map", icon: Map },
+      { href: "/captains", label: "Captain Coverage", icon: Target },
       { href: "/canvass-tools", label: "Canvass Tools", icon: Vote },
+      { href: "/follow-ups", label: "Follow-Ups", icon: Repeat },
       { href: "/candidates", label: "2026 Candidates", icon: ClipboardList },
       { href: "/voter-registration", label: "Voter Registration", icon: IdCard },
       { href: "/early-voting", label: "Early Voting", icon: Clock },
@@ -79,6 +84,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/people", label: "Directory", icon: Users },
       { href: "/committees", label: "Committees", icon: Building2 },
       { href: "/volunteers", label: "Volunteers", icon: HeartHandshake },
+      { href: "/coalitions", label: "Coalitions", icon: HandHeart },
       { href: "/partners", label: "Partners", icon: Handshake },
     ],
   },

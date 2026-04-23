@@ -108,6 +108,28 @@ export function precinctCodeFrom(precinct: string): string | null {
   return m ? m[1].toUpperCase() : null;
 }
 
+// All 629 Jefferson County precincts. Used by the captain-coverage
+// dashboard to compute how many of each strategy bucket have a captain
+// assigned.
+export async function fetchAllPrecincts(): Promise<Precinct[]> {
+  try {
+    const supabase = await getKypoliticsServer();
+    const { data, error } = await supabase
+      .from("jeffco_voter_targeting")
+      .select(SELECT_COLS)
+      .order("hd", { ascending: true })
+      .order("precinct", { ascending: true });
+    if (error) {
+      console.error("fetchAllPrecincts supabase error", error);
+      return [];
+    }
+    return (data ?? []) as Precinct[];
+  } catch (err) {
+    console.error("fetchAllPrecincts failed", err);
+    return [];
+  }
+}
+
 export async function fetchPrecinctsForMcPriority(mc_number: number): Promise<Precinct[]> {
   try {
     const supabase = await getKypoliticsServer();

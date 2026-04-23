@@ -20,6 +20,20 @@ export type PrecinctCaptain = {
   notes: string | null;
 };
 
+export async function fetchAllPrecinctCaptains(): Promise<PrecinctCaptain[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("precinct_captains")
+    .select("*")
+    .order("ld_number", { ascending: true })
+    .order("precinct_code", { ascending: true });
+  if (error) {
+    console.error("fetchAllPrecinctCaptains error", error);
+    return [];
+  }
+  return (data ?? []) as PrecinctCaptain[];
+}
+
 export async function fetchPcsForLd(ld: number): Promise<PrecinctCaptain[]> {
   const supabase = await getSupabaseServer();
   const { data, error } = await supabase

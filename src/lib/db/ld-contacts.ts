@@ -14,6 +14,23 @@ export type {
 } from "./ld-contacts-types";
 export { STAGE_LABEL, STAGE_COLOR } from "./ld-contacts-types";
 
+// All contacts across all LDs — used by the /follow-ups queue so
+// someone wearing multiple hats (LD chair + committee role) can see
+// their entire working-relationships list in one view.
+export async function fetchAllContacts(): Promise<LdContact[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("ld_contacts")
+    .select("*")
+    .order("last_contacted_at", { ascending: true, nullsFirst: true })
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("fetchAllContacts error", error);
+    return [];
+  }
+  return (data ?? []) as LdContact[];
+}
+
 export async function fetchContactsByLd(ld_number: number): Promise<LdContact[]> {
   const supabase = await getSupabaseServer();
   const { data, error } = await supabase
