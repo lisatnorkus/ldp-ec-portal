@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  AlertTriangle,
   ArrowRight,
   Clock,
   Compass,
@@ -50,27 +51,36 @@ async function fetchVoterGuideSettings() {
 }
 
 export default async function DashboardPage() {
+  // Track which fetches failed so the UI can surface a "some data
+  // couldn't load" banner rather than silently rendering blank tiles.
+  const fetchErrors: string[] = [];
+
   const [voterSettings, rightNow, assignedTasks, kpis, attention, activity] =
     await Promise.all([
       fetchVoterGuideSettings(),
       fetchRightNowContext().catch((err) => {
-        console.error("fetchRightNowContext failed", err);
+        console.error("[dashboard] fetchRightNowContext failed", err);
+        fetchErrors.push("cycle context");
         return undefined;
       }),
       fetchAssignedTasks().catch((err) => {
-        console.error("fetchAssignedTasks failed", err);
+        console.error("[dashboard] fetchAssignedTasks failed", err);
+        fetchErrors.push("assigned tasks");
         return [];
       }),
       fetchDashboardKpis().catch((err) => {
-        console.error("fetchDashboardKpis failed", err);
+        console.error("[dashboard] fetchDashboardKpis failed", err);
+        fetchErrors.push("KPIs");
         return null;
       }),
       fetchNeedsAttention().catch((err) => {
-        console.error("fetchNeedsAttention failed", err);
+        console.error("[dashboard] fetchNeedsAttention failed", err);
+        fetchErrors.push("needs-attention queue");
         return [];
       }),
       fetchRecentActivity(12).catch((err) => {
-        console.error("fetchRecentActivity failed", err);
+        console.error("[dashboard] fetchRecentActivity failed", err);
+        fetchErrors.push("activity feed");
         return [];
       }),
     ]);
@@ -113,6 +123,31 @@ export default async function DashboardPage() {
         </>
       }
     >
+      {fetchErrors.length > 0 && (
+        <div className="mb-6 flex items-start gap-3 rounded-md border-l-4 border-[var(--color-ldp-red)] bg-[#FFF5F6] p-3 text-xs text-[var(--color-ldp-ink-900)]">
+          <AlertTriangle
+            aria-hidden="true"
+            className="mt-0.5 size-4 shrink-0 text-[var(--color-ldp-red)]"
+          />
+          <div>
+            <div className="font-semibold text-[var(--color-ldp-red)]">
+              Some dashboard data didn&apos;t load
+            </div>
+            <div className="mt-0.5">
+              Couldn&apos;t fetch: {fetchErrors.join(", ")}. The portal is still working — try a
+              hard refresh. If it persists,{" "}
+              <a
+                href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20Portal%20dashboard%20fetch%20error"
+                className="underline"
+              >
+                tell Lisa
+              </a>
+              .
+            </div>
+          </div>
+        </div>
+      )}
+
       <VoterGuideCallout
         primaryUrl={voterSettings.voterGuidePrimaryUrl}
         generalUrl={voterSettings.voterGuideGeneralUrl}

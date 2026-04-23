@@ -1,12 +1,17 @@
 import { Video } from "lucide-react";
-import { KDP_CALL_META, getNextKdpCall } from "@/lib/kdp-monthly-call";
+import { KDP_CALL_DEFAULTS, getNextKdpCall } from "@/lib/kdp-monthly-call";
+import { getSupabaseServer } from "@/lib/supabase/server";
 
 // Compact strip advertising the next KDP monthly county-party call.
 // Placed below the cycle section on the dashboard and intentionally
 // rendered smaller than the "Join EC Meeting" action so it doesn't
 // compete with LDPEC's own meeting link.
-export function KdpCallStrip() {
-  const call = getNextKdpCall();
+//
+// Zoom URL + IDs come from the `settings` table so Morgan rotating
+// the meeting is a data update, not a deploy. Falls back to the
+// hardcoded defaults if the settings rows are missing.
+export async function KdpCallStrip() {
+  const [call, meta] = [getNextKdpCall(), await fetchKdpCallMeta()];
   const soon = call.daysUntil >= 0 && call.daysUntil <= 7;
 
   return (
@@ -17,22 +22,22 @@ export function KdpCallStrip() {
       </span>
       {call.isToday ? (
         <span className="font-bold text-[var(--color-ldp-red)]">
-          Tonight · {KDP_CALL_META.startLocalLabel}
+          Tonight · {meta.startLocalLabel}
         </span>
       ) : soon ? (
         <span>
           <span className="font-semibold text-[var(--color-ldp-navy-900)]">{call.label}</span>
-          <span> · {KDP_CALL_META.startLocalLabel}</span>
+          <span> · {meta.startLocalLabel}</span>
         </span>
       ) : (
         <span>
           Next:{" "}
           <span className="font-medium text-[var(--color-ldp-ink-900)]">{call.label}</span>,{" "}
-          {KDP_CALL_META.startLocalLabel}
+          {meta.startLocalLabel}
         </span>
       )}
       <a
-        href={KDP_CALL_META.zoomUrl}
+        href={meta.zoomUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="text-[var(--color-ldp-navy-700)] underline"
@@ -40,8 +45,41 @@ export function KdpCallStrip() {
         Join
       </a>
       <span className="text-[10px] italic">
-        {KDP_CALL_META.cadenceLabel} · host: {KDP_CALL_META.host}
+        {meta.cadenceLabel} · host: {meta.host}
       </span>
     </div>
   );
+}
+
+type KdpCallMetaResolved = {
+  zoomUrl: string;
+  meetingId: string;
+  passcode: string;
+  startLocalLabel: string;
+  cadenceLabel: string;
+  host: string;
+};
+
+async function fetchKdpCallMeta(): Promise<KdpCallMetaResolved> {
+  try {
+    const supabase = await getSupabaseServer();
+    const { data } = await supabase
+      .from("settings")
+      .select("key, value")
+      .in("key", [
+        "kdp_monthly_call_zoom_url",
+        "kdp_monthly_call_meeting_id",
+        "kdp_monthly_call_passcode",
+      ]);
+    const map = new Map(((data ?? []) as Array<{ key: string; value: string }>).map((r) => [r.key, r.value]));
+    return {
+      ...KDP_CALL_DEFAULTS,
+      zoomUrl: map.get("kdp_monthly_call_zoom_url") || KDP_CALL_DEFAULTS.zoomUrl,
+      meetingId: map.get("kdp_monthly_call_meeting_id") || KDP_CALL_DEFAULTS.meetingId,
+      passcode: map.get("kdp_monthly_call_passcode") || KDP_CALL_DEFAULTS.passcode,
+    };
+  } catch (err) {
+    console.error("[KdpCallStrip] fetchKdpCallMeta failed, using defaults", err);
+    return KDP_CALL_DEFAULTS;
+  }
 }

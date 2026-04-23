@@ -3,9 +3,12 @@
 // includes them on this call. The call runs every third Tuesday at 7pm ET.
 //
 // We compute the next occurrence at render time so the date auto-rolls
-// each month — no manual maintenance.
+// each month — no manual maintenance. Zoom URL + IDs live in the
+// `settings` table so Morgan rotating the link is a data update, not
+// a deploy (see fetchKdpCallMeta in this file). The hardcoded values
+// are the fallback if the settings rows are missing.
 
-export const KDP_CALL_META = {
+export const KDP_CALL_DEFAULTS = {
   zoomUrl: "https://us02web.zoom.us/j/84094120630?pwd=SXv4Da1uPCsDl7Fb18l35IW4LC6D3I.1",
   meetingId: "840 9412 0630",
   passcode: "645896",
@@ -13,6 +16,8 @@ export const KDP_CALL_META = {
   cadenceLabel: "3rd Tue monthly",
   host: "Morgan Eaves (KDP)",
 } as const;
+
+export type KdpCallMeta = typeof KDP_CALL_DEFAULTS;
 
 export type KdpCallDate = {
   iso: string;
