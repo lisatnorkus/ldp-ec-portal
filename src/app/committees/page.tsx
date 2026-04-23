@@ -42,7 +42,7 @@ export default async function CommitteesIndexPage() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold)]">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
           Ad Hoc Committees
         </h2>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">

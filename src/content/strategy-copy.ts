@@ -59,10 +59,10 @@ export const STRATEGY_EVERGREEN: Record<Strategy, StrategyEvergreen> = {
       "Persuasion AND turnout, both. Best canvass ROI in the county. Every door knocked here is worth three in a safe precinct.",
   },
   ACTIVATE: {
-    what: "Dem-leaning precincts (average D+12) where many registered Dems skip primaries.",
+    what: "Dem-leaning precincts (average D+12) where many registered Dems skip primaries. 150 precincts × ~114 GOTV targets each ≈ 17,000 inconsistent Democrats in already-leaning neighborhoods.",
     who: "The 'sleeper Dem' universe — registered Democrats who show up in generals but not May primaries. Huge turnout upside.",
     yourJob:
-      "Activate. Wake them up before primary day. Every inconsistent primary voter you convert into a reliable one is a 2x vote — they'll show in the general too.",
+      "Activate. Wake them up before primary day. Every inconsistent primary voter you convert into a reliable one is a 2x vote — they'll show in the general too. Converting even 30% of the 17,000 is a structural election win, without persuasion.",
   },
   GROW: {
     what: "R-leaning precincts. The party is underwater here, but Democrats exist.",

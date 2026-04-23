@@ -197,7 +197,7 @@ function StrategyCoverageCard({
         </span>
         <span className="text-sm text-[var(--color-ldp-ink-700)]">of {total}</span>
       </div>
-      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#F1F5F9]">
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--color-ldp-line)]">
         <div
           className="h-full rounded-full transition-all"
           style={{ width: `${pct}%`, backgroundColor: accent }}

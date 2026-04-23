@@ -257,9 +257,18 @@ export default async function VoterRegPage() {
         <h2 className="mb-3 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
           Who the party prioritizes for registration
         </h2>
+        <div className="mb-4 rounded-md border-l-4 border-[var(--color-ldp-red)] bg-[#FFF5F6] p-3">
+          <p className="text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            Voter registration is a year-round program — not a deadline sprint.
+          </p>
+          <p className="mt-1 text-xs text-[var(--color-ldp-ink-900)]">
+            The parties that wait until October register fewer people per dollar than the parties
+            that show up at community events every month. Start now. Every month between primary
+            and general is recruitable if we&apos;re in the room.
+          </p>
+        </div>
         <p className="mb-4 text-xs text-[var(--color-ldp-ink-700)]">
-          Voter registration is a year-round program, not a deadline sprint. These are the
-          populations the skill flags as highest-yield in Jefferson County.
+          These are the populations the skill flags as highest-yield in Jefferson County.
         </p>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {VOTER_REG_TARGETS.map((t) => (
