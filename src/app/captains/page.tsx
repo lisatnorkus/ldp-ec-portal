@@ -135,6 +135,45 @@ export default async function CaptainCoveragePage() {
         )}
       </section>
 
+      {/* Retention best practices — recruiting a captain is only half
+          the job. The DNC skill flags retention as where most
+          precinct-captain programs fail. */}
+      <section className="mt-10 rounded-xl border-l-4 border-[var(--color-ldp-gold)] bg-white p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+          Retention matters more than recruitment
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
+          Recruiting a captain is the easy part. Keeping them engaged through a full cycle is
+          where most precinct-captain programs fail. The DNC skill flags four things that kill
+          retention, and four things that fix it.
+        </p>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="rounded-lg border border-[var(--color-ldp-red)]/30 bg-[#FFF5F6] p-4">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-ldp-red)]">
+              What kills retention
+            </div>
+            <ul className="mt-2 space-y-1.5 text-sm text-[var(--color-ldp-ink-900)]">
+              <li>• <strong>No feedback loop.</strong> Captains do work and hear nothing.</li>
+              <li>• <strong>No community.</strong> They never meet another captain.</li>
+              <li>• <strong>No recognition.</strong> Nobody says thank you.</li>
+              <li>• <strong>Too much, too fast.</strong> Overwhelmed captains don&apos;t come back.</li>
+            </ul>
+          </div>
+          <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-700">
+              What the skill prescribes
+            </div>
+            <ul className="mt-2 space-y-1.5 text-sm text-[var(--color-ldp-ink-900)]">
+              <li>• <strong>Monthly email</strong> from LD chair: what&apos;s happening + what each captain did.</li>
+              <li>• <strong>Quarterly all-captain meeting</strong> with peer sharing — that&apos;s where motivation comes from.</li>
+              <li>• <strong>Annual awards + thank-you notes.</strong> Named in the party newsletter.</li>
+              <li>• <strong>Start small.</strong> First-year captains do one thing well, not five.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <p className="mt-6 text-[11px] italic text-[var(--color-ldp-ink-700)]">
         A precinct counts as &ldquo;covered&rdquo; when there is at least one precinct_captains row
         for it in the portal. The bylaws allow up to three per precinct (Man / Woman / Youth); that

@@ -69,10 +69,12 @@ export default async function TransitionsPage() {
       `${announced.length} announced departure${announced.length === 1 ? "" : "s"}`
     );
   if (filled.length > 0) subtitleParts.push(`${filled.length} filled`);
+  const rulesLine =
+    "LJCDP §21: CEC fills LD vacancies within 30 days by majority vote. If the CEC doesn't fill within 90 days, KDP Art. III §D(h) puts the SCEC Chair on the clock.";
   const subtitle =
     subtitleParts.length > 0
-      ? `${subtitleParts.join(" · ")}. CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).`
-      : "CEC has 90 days from notification to fill LD vacancies per state bylaws (KDP Art. III.B).";
+      ? `${subtitleParts.join(" · ")}. ${rulesLine}`
+      : rulesLine;
 
   return (
     <HubShell

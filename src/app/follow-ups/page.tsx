@@ -15,6 +15,16 @@ export default async function FollowUpsPage() {
       subtitle="Per the DNC Playbook: every contact triggers the next one. Track 10–20 working relationships per captain and review weekly. This page shows contacts in a working stage (Contacted → Active) who haven't heard from us recently."
       maxWidthClass="max-w-5xl"
     >
+      <section className="mb-6 rounded-md border-l-4 border-[var(--color-ldp-gold)] bg-[#FEF9E7] p-3 text-xs text-[var(--color-ldp-ink-900)]">
+        <strong className="text-[var(--color-ldp-navy-900)]">
+          Why this page exists:
+        </strong>{" "}
+        VAN / VoteBuilder is not built as a CRM. It doesn&apos;t surface who you contacted three
+        weeks ago and haven&apos;t touched since. The DNC 2026 Playbook calls this out
+        explicitly — until better tools exist, every captain maintains a manual working-relationships
+        file of 10-20 people and reviews it weekly. This queue is that file for Jefferson County.
+      </section>
+
       <FollowUpQueue contacts={contacts} />
 
       <section className="mt-8 rounded-xl border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-4">
