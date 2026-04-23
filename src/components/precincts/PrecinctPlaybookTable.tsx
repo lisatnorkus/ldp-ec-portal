@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
-import type { Precinct } from "@/lib/db/precincts";
+import type { Precinct } from "@/lib/db/precincts-types";
 
 type SortKey =
   | "precinct"

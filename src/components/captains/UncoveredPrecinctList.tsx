@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Filter, Search, UserPlus } from "lucide-react";
-import { STRATEGY_COLOR_VAR, STRATEGY_FRIENDLY, type Strategy } from "@/lib/db/precincts";
+import { STRATEGY_COLOR_VAR, STRATEGY_FRIENDLY, type Strategy } from "@/lib/db/precincts-types";
 
 type UncoveredRow = {
   precinctFull: string;
