@@ -70,6 +70,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/my-ld", label: "My LD", icon: Home },
       { href: "/plan-map", label: "Plan & Map", icon: Map },
+      { href: "/targeting", label: "Targeting Explained", icon: Compass },
       { href: "/captains", label: "Captain Coverage", icon: Target },
       { href: "/canvass-tools", label: "Canvass Tools", icon: Vote },
       { href: "/follow-ups", label: "Follow-Ups", icon: Repeat },
@@ -109,6 +110,7 @@ export const NAV_GROUPS: NavGroup[] = [
     accent: "#b45309",
     items: [
       { href: "/overview", label: "What this portal does", icon: BookOpen },
+      { href: "/glossary", label: "Glossary", icon: BookOpen },
       { href: "/drive", label: "Drive", icon: FolderOpen },
       { href: "/tour/1", label: "Welcome Tour", icon: Compass },
       { href: "/help", label: "Help & FAQ", icon: HelpCircle },
