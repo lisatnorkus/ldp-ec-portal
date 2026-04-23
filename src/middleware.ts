@@ -53,5 +53,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/admin/:path*",
+  // /amplify/new is under the admin gate so only the Comms Committee
+  // (people with the token cookie) can publish new broadcasts. The
+  // read-only /amplify board view is open to every logged-in EC member.
+  matcher: ["/admin/:path*", "/amplify/new"],
 };

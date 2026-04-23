@@ -22,6 +22,7 @@ import {
   HeartHandshake,
   IdCard,
   Repeat,
+  Share2,
   Target,
 } from "lucide-react";
 
@@ -96,6 +97,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/governance", label: "Governance", icon: Gavel },
       { href: "/endorsement", label: "Endorsement Process", icon: Scale },
       { href: "/comms", label: "Communications", icon: Megaphone },
+      { href: "/amplify", label: "Amplify", icon: Share2 },
       { href: "/events", label: "Events", icon: Ticket, accent: "#059669" }, // money = green
       { href: "/transitions", label: "Transitions", icon: ArrowLeftRight, accent: "#64748b" },
     ],
