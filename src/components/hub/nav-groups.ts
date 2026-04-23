@@ -19,6 +19,7 @@ import {
   HelpCircle,
   Gavel,
   HeartHandshake,
+  IdCard,
 } from "lucide-react";
 
 export type NavItem = {
@@ -66,6 +67,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/plan-map", label: "Plan & Map", icon: Map },
       { href: "/canvass-tools", label: "Canvass Tools", icon: Vote },
       { href: "/candidates", label: "2026 Candidates", icon: ClipboardList },
+      { href: "/voter-registration", label: "Voter Registration", icon: IdCard },
       { href: "/early-voting", label: "Early Voting", icon: Clock },
     ],
   },
