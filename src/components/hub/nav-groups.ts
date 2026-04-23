@@ -46,13 +46,17 @@ export type NavGroup = {
 };
 
 // Semantic color map:
-//   Dashboard / This Month — navy (command)
-//   Plan — red (urgent, campaign)
+//   Top (no label) — Dashboard, My LD, This Month, Amplify, Events
+//     These are daily/weekly surfaces. Always visible, never collapsed.
+//   Campaign & Field — red (urgent, organizing work)
 //   People — violet
-//   Meetings & Decisions — cyan (governance)
+//   Governance — cyan
 //   Resources — amber
-//   Per-item overrides for concepts with their own semantic color
-//   (Events = green because money; Transitions = slate because neutral)
+//   Per-item overrides for concepts with their own semantic color.
+//
+// Targeting Explained intentionally NOT in the sidebar — it's a
+// reference, not a destination. Linked from Plan & Map, Captains,
+// My LD, and anywhere we render strategy buckets.
 export const NAV_GROUPS: NavGroup[] = [
   {
     key: "command",
@@ -60,17 +64,18 @@ export const NAV_GROUPS: NavGroup[] = [
     accent: "#0E4C9E",
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { href: "/my-ld", label: "My LD", icon: Home, accent: "#C8102E" },
       { href: "/this-month", label: "This Month", icon: Calendar, accent: "#F59E0B" },
+      { href: "/amplify", label: "Amplify", icon: Share2, accent: "#0891b2" },
+      { href: "/events", label: "Events", icon: Ticket, accent: "#059669" },
     ],
   },
   {
-    key: "plan",
-    label: "Plan",
+    key: "field",
+    label: "Campaign & Field",
     accent: "#C8102E",
     items: [
-      { href: "/my-ld", label: "My LD", icon: Home },
       { href: "/plan-map", label: "Plan & Map", icon: Map },
-      { href: "/targeting", label: "Targeting Explained", icon: Compass },
       { href: "/captains", label: "Captain Coverage", icon: Target },
       { href: "/canvass-tools", label: "Canvass Tools", icon: Vote },
       { href: "/follow-ups", label: "Follow-Ups", icon: Repeat },
@@ -93,14 +98,12 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     key: "governance",
-    label: "Meetings & Decisions",
+    label: "Governance",
     accent: "#0891b2",
     items: [
-      { href: "/governance", label: "Governance", icon: Gavel },
+      { href: "/governance", label: "Governance Reference", icon: Gavel },
       { href: "/endorsement", label: "Endorsement Process", icon: Scale },
       { href: "/comms", label: "Communications", icon: Megaphone },
-      { href: "/amplify", label: "Amplify", icon: Share2 },
-      { href: "/events", label: "Events", icon: Ticket, accent: "#059669" }, // money = green
       { href: "/transitions", label: "Transitions", icon: ArrowLeftRight, accent: "#64748b" },
     ],
   },

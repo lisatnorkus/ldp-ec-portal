@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight, ExternalLink, Menu, X } from "lucide-react";
 import { NAV_GROUPS } from "./nav-groups";
+import { useUserProfile } from "@/lib/userContext";
 
 // Groups collapse by default (except the one containing the current
 // page) so the sidebar doesn't read as 27 items. Expanded state is
@@ -25,7 +26,22 @@ function isGroupActive(
 
 export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }) {
   const pathname = usePathname();
+  const { profile, hydrated: profileHydrated } = useUserProfile();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Route /my-ld directly to the user's LD once their profile is set.
+  // Falls back to the generic /my-ld picker when the profile has no
+  // LD yet (e.g. county officers, or first-time users).
+  function resolveHref(href: string): string {
+    if (
+      href === "/my-ld" &&
+      profileHydrated &&
+      profile.ld_number != null
+    ) {
+      return `/my-ld/${profile.ld_number}`;
+    }
+    return href;
+  }
 
   // Persisted: user's explicit open/closed preference per group. If a
   // group isn't in this map, use the default (open if active, else
@@ -175,6 +191,7 @@ export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }
                       .filter((item) => !item.adminOnly || showAdminItems)
                       .map((item) => {
                         const Icon = item.icon;
+                        const href = resolveHref(item.href);
                         const itemActive =
                           pathname === item.href ||
                           (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -182,7 +199,7 @@ export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }
                         return (
                           <li key={item.href}>
                             <Link
-                              href={item.href}
+                              href={href}
                               className={`group relative flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                                 itemActive
                                   ? "bg-white/15 text-white"
