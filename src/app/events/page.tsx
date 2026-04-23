@@ -21,6 +21,7 @@ import { HubShell } from "@/components/hub/HubShell";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { displayName, fetchAllMembers } from "@/lib/db/members";
+import { DriveAccessNote } from "@/components/drive/DriveAccessNote";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Events" };
@@ -469,6 +470,7 @@ export default async function EventsPage() {
               </Button>
             )}
           </div>
+          {eventsCommittee.drive_folder_url && <DriveAccessNote className="mt-3" />}
         </section>
       )}
     </HubShell>

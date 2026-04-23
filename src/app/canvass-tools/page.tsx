@@ -1,6 +1,7 @@
 import { ExternalLink, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HubShell } from "@/components/hub/HubShell";
+import { DriveAccessNote } from "@/components/drive/DriveAccessNote";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { fetchPrecinctsForMcPriority, countByStrategy } from "@/lib/db/precincts";
 
@@ -197,6 +198,7 @@ export default async function CanvassToolsPage() {
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Guides &amp; tools
           </h2>
+          <DriveAccessNote className="mb-3" />
           <div className="grid gap-3 md:grid-cols-2">
             <GuideCard
               title="LDP Canvassing Guide"

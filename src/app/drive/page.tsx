@@ -2,6 +2,7 @@ import { ExternalLink, Folder } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchCommittees } from "@/lib/db/members";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { DriveAccessBanner } from "@/components/drive/DriveAccessNote";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Drive" };
@@ -27,6 +28,8 @@ export default async function DrivePage() {
       subtitle="Every committee's working folder plus the party's top-traffic forms."
       maxWidthClass="max-w-5xl"
     >
+        <DriveAccessBanner />
+
         <section className="mb-10">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Committee folders · {withFolders.length}

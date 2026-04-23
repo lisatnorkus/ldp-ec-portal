@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, Folder, HeartHandshake, Mail, Users } from "lucide-react";
+import { DriveAccessNote } from "@/components/drive/DriveAccessNote";
 import { Button } from "@/components/ui/button";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchCommitteeByCode } from "@/lib/db/committees";
@@ -325,27 +326,30 @@ export default async function CommitteeDetailPage({
           </section>
         )}
 
-        <div className="mt-8 flex flex-wrap gap-3 border-t border-[var(--color-ldp-line)] pt-6">
-          {committee.drive_folder_url && (
-            <Button asChild variant="ldp" size="lg">
-              <a
-                href={committee.drive_folder_url}
-                target="_blank"
-                rel="noopener noreferrer"
+        <div className="mt-8 border-t border-[var(--color-ldp-line)] pt-6">
+          <div className="flex flex-wrap gap-3">
+            {committee.drive_folder_url && (
+              <Button asChild variant="ldp" size="lg">
+                <a
+                  href={committee.drive_folder_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2"
+                >
+                  <Folder className="size-4" /> Open committee Drive folder
+                </a>
+              </Button>
+            )}
+            <Button asChild variant="outline" size="lg">
+              <Link
+                href={`/committees/${committee.code.toLowerCase()}/continuity`}
                 className="inline-flex items-center gap-2"
               >
-                <Folder className="size-4" /> Open committee Drive folder
-              </a>
+                Continuity & handoff →
+              </Link>
             </Button>
-          )}
-          <Button asChild variant="outline" size="lg">
-            <Link
-              href={`/committees/${committee.code.toLowerCase()}/continuity`}
-              className="inline-flex items-center gap-2"
-            >
-              Continuity & handoff →
-            </Link>
-          </Button>
+          </div>
+          {committee.drive_folder_url && <DriveAccessNote className="mt-3" />}
         </div>
     </HubShell>
   );

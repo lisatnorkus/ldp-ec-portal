@@ -3,6 +3,7 @@ import { ExternalLink, Megaphone, Mail, Camera, FolderOpen, Radio, Share2 } from
 import { HubShell } from "@/components/hub/HubShell";
 import { SOCIAL_PLATFORMS, type SocialPlatform } from "@/content/social-platforms";
 import { SocialIcon } from "@/components/social/SocialIcon";
+import { DriveAccessNote } from "@/components/drive/DriveAccessNote";
 
 export const metadata = { title: "Communications Committee" };
 
@@ -31,7 +32,7 @@ export default function CommsPage() {
     >
       {/* Brand strip — the colors and mark that carry through every
           piece Comms ships. Makes 'this is a brand' visible. */}
-      <section className="mb-8">
+      <section className="mb-8 space-y-2">
         <div className="flex flex-wrap items-center gap-3 rounded-lg border border-[var(--color-ldp-line)] bg-white p-3">
           <div className="flex items-center gap-2">
             <span className="size-8 rounded bg-[var(--color-ldp-navy-900)]" aria-label="LDP Navy" />
@@ -54,6 +55,7 @@ export default function CommsPage() {
             Brand assets in Drive
           </Link>
         </div>
+        <DriveAccessNote />
       </section>
 
       {/* Social hero — the thing every board member actually interacts
