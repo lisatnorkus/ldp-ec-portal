@@ -4,12 +4,64 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronRight, ExternalLink, Menu, X } from "lucide-react";
 import { NAV_GROUPS } from "./nav-groups";
+
+// Groups collapse by default (except the one containing the current
+// page) so the sidebar doesn't read as 27 items. Expanded state is
+// persisted per-user in localStorage.
+const COLLAPSE_KEY = "ldpec_sidebar_collapsed";
+
+function isGroupActive(
+  group: (typeof NAV_GROUPS)[number],
+  pathname: string
+): boolean {
+  return group.items.some(
+    (item) =>
+      pathname === item.href ||
+      (item.href !== "/dashboard" && pathname.startsWith(item.href))
+  );
+}
 
 export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Persisted: user's explicit open/closed preference per group. If a
+  // group isn't in this map, use the default (open if active, else
+  // closed). Click always flips to the opposite of current state.
+  const [userPref, setUserPref] = useState<Record<string, boolean>>({});
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(COLLAPSE_KEY);
+      if (raw) setUserPref(JSON.parse(raw) as Record<string, boolean>);
+    } catch {
+      // no-op
+    }
+    setHydrated(true);
+  }, []);
+
+  function isGroupOpen(
+    group: (typeof NAV_GROUPS)[number],
+    userPrefLocal: Record<string, boolean>
+  ): boolean {
+    if (!group.label) return true;
+    if (group.key in userPrefLocal) return userPrefLocal[group.key];
+    return isGroupActive(group, pathname);
+  }
+
+  function toggleGroup(group: (typeof NAV_GROUPS)[number]) {
+    const currentlyOpen = isGroupOpen(group, userPref);
+    const next = { ...userPref, [group.key]: !currentlyOpen };
+    setUserPref(next);
+    try {
+      window.localStorage.setItem(COLLAPSE_KEY, JSON.stringify(next));
+    } catch {
+      // no-op
+    }
+  }
 
   // Close drawer on route change
   useEffect(() => {
@@ -80,61 +132,83 @@ export function Sidebar({ showAdminItems = false }: { showAdminItems?: boolean }
           <div className="flex-1 bg-[var(--color-ldp-red)]" />
         </div>
 
-        <nav className="flex-1 space-y-5 px-2 pb-4">
-          {NAV_GROUPS.map((group) => (
-            <div key={group.key}>
-              {group.label && (
-                <div className="mb-1 flex items-center gap-2 px-3">
-                  <span
-                    aria-hidden="true"
-                    className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: group.accent }}
-                  />
-                  <span
-                    className="text-[10px] font-bold uppercase tracking-[0.2em]"
-                    style={{ color: group.accent }}
+        <nav className="flex-1 space-y-3 px-2 pb-4">
+          {NAV_GROUPS.map((group) => {
+            // Server render + pre-hydration: use active-group-is-open
+            // default so SSR matches the deterministic initial state.
+            // Post-hydration: use the user's stored preference if set,
+            // else the default.
+            const open = hydrated
+              ? isGroupOpen(group, userPref)
+              : !group.label || isGroupActive(group, pathname);
+
+            return (
+              <div key={group.key}>
+                {group.label && (
+                  <button
+                    type="button"
+                    onClick={() => toggleGroup(group)}
+                    className="mb-1 flex w-full items-center gap-2 rounded px-3 py-1 text-left transition-colors hover:bg-white/5"
+                    aria-expanded={open}
                   >
-                    {group.label}
-                  </span>
-                </div>
-              )}
-              <ul className="space-y-0.5">
-                {group.items
-                  .filter((item) => !item.adminOnly || showAdminItems)
-                  .map((item) => {
-                  const Icon = item.icon;
-                  const active =
-                    pathname === item.href ||
-                    (item.href !== "/dashboard" && pathname.startsWith(item.href));
-                  const color = item.accent ?? group.accent;
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className={`group relative flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                          active
-                            ? "bg-white/15 text-white"
-                            : "text-white/70 hover:bg-white/10 hover:text-white"
-                        }`}
-                        style={
-                          active
-                            ? { boxShadow: `inset 3px 0 0 ${color}` }
-                            : undefined
-                        }
-                      >
-                        <Icon
-                          aria-hidden="true"
-                          className="size-4 shrink-0"
-                          style={active ? { color } : undefined}
-                        />
-                        <span className="flex-1 truncate">{item.label}</span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+                    <span
+                      aria-hidden="true"
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: group.accent }}
+                    />
+                    <span
+                      className="flex-1 text-[10px] font-bold uppercase tracking-[0.2em]"
+                      style={{ color: group.accent }}
+                    >
+                      {group.label}
+                    </span>
+                    {open ? (
+                      <ChevronDown aria-hidden="true" className="size-3 text-white/50" />
+                    ) : (
+                      <ChevronRight aria-hidden="true" className="size-3 text-white/50" />
+                    )}
+                  </button>
+                )}
+                {open && (
+                  <ul className="space-y-0.5">
+                    {group.items
+                      .filter((item) => !item.adminOnly || showAdminItems)
+                      .map((item) => {
+                        const Icon = item.icon;
+                        const itemActive =
+                          pathname === item.href ||
+                          (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                        const color = item.accent ?? group.accent;
+                        return (
+                          <li key={item.href}>
+                            <Link
+                              href={item.href}
+                              className={`group relative flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                                itemActive
+                                  ? "bg-white/15 text-white"
+                                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                              }`}
+                              style={
+                                itemActive
+                                  ? { boxShadow: `inset 3px 0 0 ${color}` }
+                                  : undefined
+                              }
+                            >
+                              <Icon
+                                aria-hidden="true"
+                                className="size-4 shrink-0"
+                                style={itemActive ? { color } : undefined}
+                              />
+                              <span className="flex-1 truncate">{item.label}</span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         {/* Footer: Zoom CTA */}
