@@ -7,10 +7,13 @@ import {
   FileText,
   HelpCircle,
   Home,
+  LayoutDashboard,
   ListTodo,
   Mail,
   Map as MapIcon,
   MessageCircle,
+  Navigation,
+  Target,
   Ticket,
   Users,
 } from "lucide-react";
@@ -93,6 +96,173 @@ export default function HelpPage() {
           <P>
             Stored in your browser (localStorage). No account, no password, no tracking beyond the
             portal itself.
+          </P>
+          <P>
+            Once your LD is set, the sidebar&apos;s <strong>My LD</strong> link goes straight to
+            your district page — you skip the picker.
+          </P>
+        </Section>
+
+        <Section id="dashboard" icon={<LayoutDashboard />} title="Dashboard — state of the party">
+          <P>
+            The <Link href="/dashboard" className="underline">dashboard</Link> is the first thing
+            you see. It answers &ldquo;how&apos;s the operation today?&rdquo; in one glance and
+            then hands you the things on YOUR plate.
+          </P>
+          <Ul>
+            <li>
+              <strong>Six KPIs up top</strong> — days to primary, priority-precinct captain
+              coverage, active volunteers, tasks overdue countywide, EC attendance rate, annual
+              raise floor. Color-coded, no tiny type.
+            </li>
+            <li>
+              <strong>Needs attention queue</strong> — concrete action items, not just links.
+              Uncovered priority precincts, open vacancies, volunteers gone quiet, new signups to
+              review. Each with a one-click CTA. Empty-state is a green &ldquo;nothing urgent&rdquo;
+              panel.
+            </li>
+            <li>
+              <strong>Your Week</strong> — every task assigned to you across every LD and
+              committee. Overdue / due this week / waiting on your accept, all in one view.
+            </li>
+            <li>
+              <strong>Cycle Timeline + KDP call strip</strong> — where we are in the cycle +
+              auto-computed next 3rd-Tuesday KDP monthly Zoom.
+            </li>
+            <li>
+              <strong>Jump to</strong> — 6 tiles (My LD, Targeting, Captains, Events, Volunteers,
+              Amplify) for the most-used destinations. Full surface list lives at{" "}
+              <Link href="/overview" className="underline">/overview</Link>.
+            </li>
+            <li>
+              <strong>Activity feed</strong> — last 2 weeks of notes, tasks, interactions, new
+              volunteers, logged activities. Shows the place is alive.
+            </li>
+          </Ul>
+        </Section>
+
+        <Section id="navigating" icon={<Navigation />} title="Getting around — the sidebar">
+          <P>
+            The sidebar has one always-open block at the top plus four collapsible groups. The
+            group containing your current page auto-expands; everything else collapses until you
+            click its header.
+          </P>
+          <P className="font-semibold text-[var(--color-ldp-navy-900)]">
+            Always-open top
+          </P>
+          <P>
+            Dashboard · My LD · This Month · Amplify · Events. The daily/weekly surfaces, one
+            click from anywhere.
+          </P>
+          <P className="font-semibold text-[var(--color-ldp-navy-900)]">
+            Collapsible groups
+          </P>
+          <Ul>
+            <li>
+              <strong>Campaign &amp; Field</strong> — Plan &amp; Map, Captain Coverage, Canvass
+              Tools, Follow-Ups, 2026 Candidates, Voter Registration, Early Voting.
+            </li>
+            <li>
+              <strong>People</strong> — Directory, Committees, Volunteers, Coalitions, Partners.
+            </li>
+            <li>
+              <strong>Governance</strong> — Governance Reference, Endorsement Process,
+              Communications, Transitions.
+            </li>
+            <li>
+              <strong>Resources</strong> — What this portal does, Glossary, Drive, Welcome Tour,
+              Help &amp; FAQ.
+            </li>
+          </Ul>
+          <P>
+            Your expand/collapse choices persist in the browser. <strong>Targeting Explained</strong>{" "}
+            is intentionally not in the sidebar — it&apos;s a reference surface, linked from Plan
+            &amp; Map, Captains, and My LD headers.
+          </P>
+        </Section>
+
+        <Section id="tools" icon={<Target />} title="Tools to know">
+          <P>
+            Ten surfaces to know about on top of the basics (tasks, notes, CRM, continuity). Each
+            is a full page with its own workflow; one-liners here to orient you.
+          </P>
+          <Ul>
+            <li>
+              <strong>
+                <Link href="/amplify" className="underline">Amplify</Link>
+              </strong>{" "}
+              — when Comms needs the board pushing a message, it lands here pre-filled for
+              Facebook / X / Threads / Bluesky / LinkedIn / email / texts. Copy-buttons for
+              Instagram and TikTok.
+            </li>
+            <li>
+              <strong>
+                <Link href="/captains" className="underline">Captain Coverage</Link>
+              </strong>{" "}
+              — countywide tile + per-bucket cards + punch list of uncovered precincts with
+              one-click Recruit.
+            </li>
+            <li>
+              <strong>
+                <Link href="/follow-ups" className="underline">Follow-Ups</Link>
+              </strong>{" "}
+              — &ldquo;who have I talked to but not touched in 14+ days.&rdquo; DNC Playbook
+              layering made actionable.
+            </li>
+            <li>
+              <strong>
+                <Link href="/targeting" className="underline">Targeting Explained</Link>
+              </strong>{" "}
+              — Power Base, Hold the Line, Wake the Vote, Plant the Flag. What each bucket is,
+              who&apos;s in it, your standing job, and what matters THIS phase of the cycle.
+            </li>
+            <li>
+              <strong>
+                <Link href="/volunteers" className="underline">Volunteers</Link>
+              </strong>{" "}
+              — Jessica&apos;s working file. Roster, intake, activity log, new-signup queue,
+              gone-quiet retention list.
+            </li>
+            <li>
+              <strong>
+                <Link href="/coalitions" className="underline">Coalitions</Link>
+              </strong>{" "}
+              — 6 Louisville constituencies (Black, labor, LGBTQ+, Latino, youth, faith) with
+              named partners and year-round engagement notes.
+            </li>
+            <li>
+              <strong>
+                <Link href="/voter-registration" className="underline">Voter Registration</Link>
+              </strong>{" "}
+              — KY rules, deadlines (voter-reg, party-switch, early voting), Jefferson County
+              Clerk + online portal links, returning-citizens path, plus any VR drives Events or
+              Volunteering have scheduled.
+            </li>
+            <li>
+              <strong>
+                <Link href="/governance" className="underline">Governance</Link>
+              </strong>{" "}
+              — quorum, proxies, finance tiers ($500 / $501–999 / $1000+), vacancy rules, KREF
+              2026 filing dates, primary-endorsement bylaw. Every rule cited.
+            </li>
+            <li>
+              <strong>
+                <Link href="/glossary" className="underline">Glossary</Link>
+              </strong>{" "}
+              — 30+ terms defined. Power Base, sleeper Dems, GOTV, D-margin, layering, pipeline,
+              JCDEC, KREF, and more. We don&apos;t dumb the copy down; we teach the lingo.
+            </li>
+            <li>
+              <strong>
+                <Link href="/overview" className="underline">What this portal does</Link>
+              </strong>{" "}
+              — role-grouped surface list. Dashboard &amp; weekly tools, LD chair tools, committee
+              chair tools, county officer tools, reference surfaces.
+            </li>
+          </Ul>
+          <P>
+            Every page has a floating <strong>help button</strong> in the bottom-right. Use it to
+            request a change or report a bug — submissions become GitHub issues.
           </P>
         </Section>
 
@@ -254,7 +424,7 @@ export default function HelpPage() {
           </Ul>
         </Section>
 
-        <Section id="committees" icon={<ClipboardList />} title="Committees — how to join one">
+        <Section id="committees" icon={<ClipboardList />} title="Committees — how to join + how to run one">
           <P>
             On <Link href="/committees" className="underline">/committees</Link> each card shows
             the chair and an &ldquo;Email chair&rdquo; button. One click opens your email client
@@ -263,6 +433,25 @@ export default function HelpPage() {
           </P>
           <P>
             The expectation for every board member is to serve on one or two committees.
+          </P>
+          <P className="font-semibold text-[var(--color-ldp-navy-900)]">
+            Committee chairs — you have the same workspace tools as LD chairs
+          </P>
+          <P>
+            Click into your committee page and you&apos;ll see notes, tasks, email-all, and a
+            continuity-package option scoped to the committee. Same flow as /my-ld, just
+            committee-scoped. Write the continuity package before you step down so the next chair
+            isn&apos;t starting from scratch.
+          </P>
+          <P className="font-semibold text-[var(--color-ldp-navy-900)]">
+            Note on Endorsement Process Committee
+          </P>
+          <P>
+            Endorsement Process is reclassified as an <strong>ad-hoc</strong> committee (not
+            standing). It seats under LJCDP §11.6 and reconvenes after each primary to refine the
+            process for the next cycle. The 10 standing committees are Bylaws, Facilities,
+            Finance, Events, Volunteering, Youth, Communication, Labor, Training, Candidate
+            Recruitment — see <Link href="/governance" className="underline">/governance</Link>.
           </P>
         </Section>
 

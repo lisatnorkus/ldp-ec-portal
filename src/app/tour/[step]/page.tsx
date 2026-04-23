@@ -499,10 +499,10 @@ function Step5() {
         What&apos;s live in the portal right now:
       </p>
 
-      {/* Workspace callout — new and load-bearing, so lead with it */}
+      {/* Workspace callout — the core ask: portal protects continuity. */}
       <section className="mb-6 rounded-lg border-2 border-[var(--color-ldp-gold)] bg-white/5 p-5">
         <div className="text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
-          Your workspace — new
+          Your workspace
         </div>
         <h3 className="mt-1 text-lg font-bold text-white">
           Every LD and every committee has a workspace.
@@ -511,7 +511,7 @@ function Step5() {
           Notes, tasks (with assignment + accept/decline), a recruiting pipeline, and a handoff
           continuity package. Data belongs to the LD or committee — not the chair — so when
           leadership rotates, the new chair walks in on day one with everything the outgoing
-          chair left behind. No more starting from scratch.
+          chair left behind.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Link
@@ -529,46 +529,98 @@ function Step5() {
         </div>
       </section>
 
+      {/* Dashboard redesign callout — it's the first thing anyone sees,
+          so worth teaching explicitly on the tour. */}
+      <section className="mb-6 rounded-lg border-2 border-white/20 bg-white/5 p-5">
+        <div className="text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+          What the dashboard does
+        </div>
+        <h3 className="mt-1 text-lg font-bold text-white">
+          State of the party, one glance.
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-white/85">
+          6 KPIs at the top (days to primary, captain coverage %, active volunteers, tasks
+          overdue, EC attendance rate, annual raise floor) + a &ldquo;needs attention&rdquo;
+          action queue + your personal tasks + cycle phase + the KDP monthly call + a live
+          activity feed. Every number, every action, every person — one surface.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1 rounded-md border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20"
+          >
+            Open the dashboard →
+          </Link>
+          <Link
+            href="/overview"
+            className="inline-flex items-center gap-1 rounded-md border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/20"
+          >
+            Full surface list →
+          </Link>
+        </div>
+      </section>
+
       <div className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
-        Plan & campaign
+        Campaign &amp; field
       </div>
       <div className="mb-6 grid gap-3 md:grid-cols-2">
         <TourTile
           href="/my-ld"
           title="My LD"
-          body="Your district's precincts, PCs on file, races on the ballot, and the highest-leverage move this week."
+          body="Your district's precincts, PCs on file, races on the ballot, highest-leverage move this week. Auto-routes to your LD once your profile is set."
           primary
         />
         <TourTile
           href="/plan-map"
           title="Plan & Map"
-          body="Jefferson County's 600+ precincts scored into four strategies with a countywide interactive map."
+          body="Jefferson County's 629 precincts scored into four strategies with a countywide interactive map."
           primary
+        />
+        <TourTile
+          href="/captains"
+          title="Captain Coverage"
+          body="Countywide + per-bucket coverage stats. Uncovered ACTIVATE + DEFEND precincts with a one-click Recruit button per row. The skill's top-priority dashboard."
+          primary
+        />
+        <TourTile
+          href="/follow-ups"
+          title="Follow-Ups"
+          body="Working-stage contacts you haven't touched in 14+ days. DNC Playbook 'layering' made actionable. 'Mine only' filter = your 10–20 working relationships."
+        />
+        <TourTile
+          href="/targeting"
+          title="Targeting Explained"
+          body="Power Base, Hold the Line, Wake the Vote, Plant the Flag — what each bucket is, who's in it, your standing job, and what matters this phase."
         />
         <TourTile
           href="/canvass-tools"
           title="Canvass Tools"
-          body="Priority MC districts (17, 21, 7), volunteer pipeline, canvass guides, VoteBuilder."
+          body="Priority MC districts, volunteer pipeline, canvass guides, VoteBuilder."
         />
         <TourTile
           href="/candidates"
           title="2026 Primary Ballot"
-          body="86 candidates across mayor, council, state house, state senate, US senate, and county offices."
+          body="Candidates across mayor, council, state house, state senate, US senate, and county offices with endorsement status."
+        />
+        <TourTile
+          href="/voter-registration"
+          title="Voter Registration"
+          body="KY rules, deadlines (voter reg, party switch, early voting), Jefferson County Clerk links, returning-citizens path, and scheduled VR drives."
         />
         <TourTile
           href="/early-voting"
           title="Early Voting"
-          body="24 countywide early-voting locations for the 2026 primary, mapped by LD."
+          body="Jefferson County early-voting locations for the 2026 primary, mapped by LD."
         />
         <TourTile
           href="/this-month"
           title="This Month"
-          body="The current month's Rock Star Playbook plus live events from the louisvilledems.com calendar."
+          body="The current month's themed playbook plus live events from the louisvilledems.com calendar."
         />
       </div>
 
       <div className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
-        People & governance
+        People &amp; governance
       </div>
       <div className="mb-6 grid gap-3 md:grid-cols-2">
         <TourTile
@@ -579,7 +631,17 @@ function Step5() {
         <TourTile
           href="/committees"
           title="Committees"
-          body="Standing + ad hoc committees with responsibilities, workflow, members, Drive folders, and an Email-chair button."
+          body="Standing + ad hoc committees with responsibilities, workflow, members, Drive folders, workspace tools, continuity packages, and Email-chair buttons."
+        />
+        <TourTile
+          href="/volunteers"
+          title="Volunteers"
+          body="Jessica's roster — intake, interests, availability, activity log. New-signup review queue + 60-day 'gone quiet' retention list."
+        />
+        <TourTile
+          href="/coalitions"
+          title="Coalitions"
+          body="Six Louisville constituencies (Black, labor, LGBTQ+, Latino, youth, faith) with named partners and year-round engagement notes."
         />
         <TourTile
           href="/partners"
@@ -587,41 +649,68 @@ function Step5() {
           body="Labor, advocacy orgs, Democratic clubs, faith partners, training programs — everyone we work alongside."
         />
         <TourTile
+          href="/governance"
+          title="Governance Reference"
+          body="Quorum, proxies, finance tiers ($500 / $501–999 / $1000+), vacancy rules, KREF 2026 filing dates, the primary-endorsement bylaw. Every rule cited."
+        />
+        <TourTile
           href="/transitions"
           title="Transitions"
-          body="Announced changes (Logan → Roz June 10), currently-vacant seats with recommended actions, and recent fills."
+          body="Announced changes (Logan → Roz June 10), currently-vacant seats with 30/90-day fill rules, and recent fills."
         />
         <TourTile
           href="/endorsement"
           title="Endorsement Process"
-          body="How the LDPEC endorses — 60% threshold, secret ballot, Jan–Feb timelines, who votes."
-        />
-        <TourTile
-          href="/comms"
-          title="Communications"
-          body="How the party gets heard — social handles, intake form, ad program."
+          body="60% threshold, secret ballot, Jan–Feb timelines, who votes. Now classified as ad-hoc under LJCDP §11.6."
         />
       </div>
 
       <div className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
-        Money & resources
+        Comms, money &amp; amplify
+      </div>
+      <div className="mb-6 grid gap-3 md:grid-cols-2">
+        <TourTile
+          href="/amplify"
+          title="Amplify"
+          body="When Comms publishes a post for the board to push, it lands here pre-filled for Facebook, X, Threads, Bluesky, LinkedIn, email, and texts. One-click share per platform."
+          primary
+        />
+        <TourTile
+          href="/events"
+          title="Signature Events"
+          body="Celebration of Democracy, Women Deliver Democracy, Dems at the Downs — the three events that fund the party. Your $500 annual raise runs through their ticket links."
+          primary
+        />
+        <TourTile
+          href="/comms"
+          title="Communications"
+          body="How the party gets heard — brand strip, seven social handles in brand colors, intake form, ad program."
+        />
+      </div>
+
+      <div className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+        Reference &amp; learning
       </div>
       <div className="grid gap-3 md:grid-cols-2">
         <TourTile
-          href="/events"
-          title="Signature Events & Fundraising"
-          body="Celebration of Democracy Dinner, Women Deliver Democracy, Dems at the Downs — the three events that fund the party. Your $500 annual raise runs through their ticket links."
-          primary
+          href="/overview"
+          title="What this portal does"
+          body="Role-grouped surface list — every EC member, LD chairs + VCs, committee chairs, county officers, reference. Rollout tool for new members."
+        />
+        <TourTile
+          href="/glossary"
+          title="Glossary"
+          body="30+ terms — Power Base, sleeper Dems, GOTV, D-margin, layering, pipeline, JCDEC, KREF. Operatives' vocabulary, translated for newcomers."
         />
         <TourTile
           href="/drive"
           title="Drive shortcuts"
-          body="Every committee's working folder plus the party's top-traffic forms."
+          body="Every committee's working folder plus the party's top-traffic forms. Sign-in-to-LDP-Google banner so permission walls don't ambush you."
         />
         <TourTile
           href="/help"
           title="Help & FAQ"
-          body="How the portal works, section by section. Troubleshooting for the common snags."
+          body="How the portal works, section by section. Troubleshooting for the common snags. Help button in the bottom-right of every page."
         />
       </div>
     </>
