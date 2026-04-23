@@ -61,9 +61,9 @@ export default function TargetingPage() {
       {/* Quick-reference strip: 4 icon tiles summarizing the county split. */}
       <section className="mb-6">
         <div className="mb-3 flex flex-wrap items-center gap-3">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+          <h2 className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Jefferson County · 629 precincts · strategy split
-          </div>
+          </h2>
           <div
             className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold text-white"
             style={{ backgroundColor: phaseTheme.accent }}
@@ -91,10 +91,10 @@ export default function TargetingPage() {
       </div>
 
       <section className="mt-10 rounded-xl border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-5">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
+        <h2 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
           <TargetIcon aria-hidden="true" className="size-4" />
           How this drives your week
-        </div>
+        </h2>
         <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
           The strategy map assigns every precinct to a bucket. When you open your LD or a canvass
           cut, the bucket tells you what conversation you&apos;re having at the door — turning out

@@ -80,10 +80,10 @@ export default async function CaptainCoveragePage() {
     >
       {/* Overall headline tile. */}
       <section className="mb-6 rounded-xl border-2 border-[var(--color-ldp-navy-900)] bg-white p-5">
-        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-800)]">
+        <h2 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-800)]">
           <Target aria-hidden="true" className="size-4" />
           Countywide coverage
-        </div>
+        </h2>
         <div className="mt-1 flex flex-wrap items-baseline gap-3">
           <div className="text-4xl font-black tracking-tight text-[var(--color-ldp-navy-900)]">
             {overallCovered} / {overallTotal}
@@ -100,9 +100,9 @@ export default async function CaptainCoveragePage() {
       {/* Per-strategy coverage cards. ACTIVATE + DEFEND first since
           the skill says they're the priority. */}
       <section className="mb-8">
-        <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
           By strategy bucket · priority order
-        </div>
+        </h2>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           {STRATEGY_ORDER.map((s) => (
             <StrategyCoverageCard
