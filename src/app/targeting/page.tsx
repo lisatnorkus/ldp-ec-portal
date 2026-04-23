@@ -216,27 +216,33 @@ function StrategyBlock({
         </div>
       </div>
 
-      {/* Evergreen — stacked rows, full-width. Kills the whitespace
-          from the 3-column grid. Icon anchors the left, label + body
-          flow inline so short descriptions don't leave dead space. */}
+      {/* Evergreen — full-width stacked rows. Each row closes with
+          a stat pill on the right so the line never runs out of text
+          before it runs out of width. */}
       <div className="divide-y divide-[var(--color-ldp-line)]">
         <EvergreenRow
           kicker="What it is"
           body={evergreen.what}
           accent={accent}
           Icon={MapPin}
+          statValue={stats.precincts.toString()}
+          statLabel="Precincts"
         />
         <EvergreenRow
           kicker="Who's in it"
           body={evergreen.who}
           accent={accent}
           Icon={Users}
+          statValue={marginLabel}
+          statLabel="Avg D-margin"
         />
         <EvergreenRow
           kicker="Your standing job"
           body={evergreen.yourJob}
           accent={accent}
           Icon={Briefcase}
+          statValue={`${Math.round((stats.precincts / 629) * 100)}%`}
+          statLabel="of the county"
         />
       </div>
 
@@ -318,21 +324,25 @@ function EvergreenRow({
   body,
   accent,
   Icon,
+  statValue,
+  statLabel,
 }: {
   kicker: string;
   body: string;
   accent: string;
   Icon: typeof MapPin;
+  statValue: string;
+  statLabel: string;
 }) {
   return (
-    <div className="flex items-start gap-4 px-5 py-4">
+    <div className="flex items-center gap-4 px-5 py-4">
       <span
-        className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg text-white"
+        className="flex size-9 shrink-0 items-center justify-center rounded-lg text-white"
         style={{ backgroundColor: accent }}
       >
         <Icon aria-hidden="true" className="size-4" />
       </span>
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <div
           className="text-[10px] font-bold uppercase tracking-widest"
           style={{ color: accent }}
@@ -340,6 +350,23 @@ function EvergreenRow({
           {kicker}
         </div>
         <p className="mt-1 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">{body}</p>
+      </div>
+      <div
+        className="shrink-0 rounded-lg border-2 px-3 py-2 text-center"
+        style={{ borderColor: accent, backgroundColor: `${accent}10` }}
+      >
+        <div
+          className="text-xl font-black leading-none"
+          style={{ color: accent }}
+        >
+          {statValue}
+        </div>
+        <div
+          className="mt-1 text-[9px] font-semibold uppercase tracking-widest"
+          style={{ color: accent }}
+        >
+          {statLabel}
+        </div>
       </div>
     </div>
   );
