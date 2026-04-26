@@ -72,6 +72,47 @@ export default async function VoterRegPage() {
         </a>
       }
     >
+      {/* EC-facing callout: KDP just launched IWillVote.com and is asking
+          for QA before broad share. Lives here because this is where
+          voter-tools live; remove once KDP signals general availability. */}
+      <section className="mb-8 overflow-hidden rounded-xl border-2 border-[var(--color-ldp-navy-800)] bg-white shadow-sm">
+        <div
+          aria-hidden="true"
+          className="h-1.5 w-full bg-[var(--color-ldp-navy-800)]"
+        />
+        <div className="p-5">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-800)]">
+            New from KDP · LDPEC pressure-test before broad share
+          </div>
+          <h2 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">
+            IWillVote.com is live.
+          </h2>
+          <p className="mt-2 text-sm text-[var(--color-ldp-ink-900)]">
+            KDP has launched the Kentucky instance of IWillVote.com — drop-box and
+            in-person voting locations, registration check, voter-ID rules, and
+            deadlines, all in one place. State party is asking LDPEC members to
+            walk through it and report anything off before we share with voters.
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <a
+              href="https://iwillvote.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-navy-800)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
+            >
+              Open IWillVote.com
+              <ExternalLink aria-hidden="true" className="size-3" />
+            </a>
+            <a
+              href="mailto:communications@louisvilledems.com?subject=IWillVote.com%20issue"
+              className="text-xs font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
+            >
+              Report an issue → communications@louisvilledems.com
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Single-shouting next-deadline banner. */}
       {imminent && <DeadlineBanner label={imminent.label} date={imminent.date} kind={imminent.kind} />}
 
@@ -372,6 +413,11 @@ export default async function VoterRegPage() {
           Official sources · trust these over us
         </h2>
         <div className="mt-3 grid gap-2 text-sm md:grid-cols-2">
+          <AuthorityLink
+            href="https://iwillvote.com/"
+            label="IWillVote.com (KDP)"
+            body="Drop-box and polling-location lookup, registration check, voter-ID rules, deadlines."
+          />
           <AuthorityLink
             href="https://elect.ky.gov/"
             label="KY State Board of Elections"
