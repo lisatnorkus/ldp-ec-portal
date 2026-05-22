@@ -171,8 +171,18 @@ function countywideTotalsFor(
       const want = c.party === "D" ? "DEM" : c.party === "R" ? "REP" : "";
       if (r.party !== want) return false;
     }
-    // District check: results store district as text; "" means countywide.
-    if ((r.district ?? "") !== districtStr) return false;
+    // District check: US Senate is statewide but the source PDF stored
+    // it per congressional district overlap (2 + 3) — ignore the district
+    // field in that case and aggregate everything. Same for COUNTY_OFFICE
+    // because the office string (COUNTY ATTORNEY / CLERK / SHERIFF) is
+    // already what discriminates the sub-race.
+    if (
+      c.office_type !== "US_SENATE" &&
+      c.office_type !== "COUNTY_OFFICE" &&
+      (r.district ?? "") !== districtStr
+    ) {
+      return false;
+    }
     return matchName(c.full_name, r.candidate);
   });
 
@@ -184,6 +194,214 @@ function countywideTotalsFor(
     race_total,
     pct: race_total ? (votes / race_total) * 100 : 0,
   };
+}
+
+// Reverse map: result office string → candidates.office_type. Returns
+// null for small-city races (Shively / Jeffersontown) that LDP doesn't
+// track centrally.
+function resOfficeToType(office: string): OfficeType | null {
+  switch (office) {
+    case "LOUISVILLE MAYOR":
+      return "MAYOR";
+    case "LOUISVILLE METRO COUNCIL":
+      return "METRO_COUNCIL";
+    case "STATE REPRESENTATIVE":
+      return "STATE_HOUSE";
+    case "STATE SENATE":
+      return "STATE_SENATE";
+    case "U.S. REPRESENTATIVE":
+      return "US_HOUSE";
+    case "U.S. SENATOR":
+      return "US_SENATE";
+    case "COUNTY ATTORNEY":
+    case "COUNTY CLERK":
+    case "SHERIFF":
+      return "COUNTY_OFFICE";
+    default:
+      return null;
+  }
+}
+
+function countySubOfficeFromResultOffice(office: string): string | null {
+  if (office === "COUNTY ATTORNEY") return "County Attorney";
+  if (office === "COUNTY CLERK") return "County Clerk";
+  if (office === "SHERIFF") return "Sheriff";
+  return null;
+}
+
+// Build the race bucket key the same way the seeded path does, but from
+// the result row's office string + district + sub-office. Used to
+// compare against seeded candidates when deciding whether a synthetic
+// entry needs to be added.
+function bucketKeyForResultRow(
+  officeType: OfficeType,
+  district_number: number,
+  countySubOff: string | null
+): string {
+  if (officeType === "COUNTY_OFFICE") {
+    return `COUNTY_OFFICE|${countySubOff ?? "UNKNOWN"}`;
+  }
+  return `${officeType}|${district_number}`;
+}
+
+// Walk the results table for every (party, office, district) primary
+// race and synthesize EnrichedCandidate entries for the winners that
+// the seeded `candidates` table doesn't already cover. This is how
+// Republican nominees (Barr, Rodriguez, Adams, Corley, Guthrie, Shultz
+// …) land on the November ballot view without each one being hand-
+// seeded. Also catches D winners the seed missed (e.g. Jennifer Hardin
+// in HD33).
+function deriveSyntheticCandidates(
+  seeded: EnrichedCandidate[],
+  all: ResultRowAll[]
+): EnrichedCandidate[] {
+  // Index seeded candidates by (race_bucket_key + normalized name) so
+  // synth can skip anyone already present.
+  const seededIndex = new Set<string>();
+  for (const c of seeded) {
+    seededIndex.add(`${c.race_bucket_key}|${normalize(c.full_name)}`);
+  }
+
+  // First aggregate every result row up to a countywide candidate total
+  // keyed by (officeType, race-bucket, party, candidate). US Senate
+  // gets district collapsed to "" because it's statewide.
+  type Agg = {
+    officeType: OfficeType;
+    countySubOff: string | null;
+    district_number: number;
+    party: string; // 'DEM' | 'REP' | ''
+    candidates: Map<string, number>;
+  };
+  const buckets = new Map<string, Agg>();
+  for (const r of all) {
+    const officeType = resOfficeToType(r.office);
+    if (officeType == null) continue;
+    const countySubOff =
+      officeType === "COUNTY_OFFICE"
+        ? countySubOfficeFromResultOffice(r.office)
+        : null;
+    const district_number =
+      officeType === "US_SENATE" || officeType === "COUNTY_OFFICE"
+        ? 0
+        : r.district
+          ? parseInt(r.district, 10)
+          : 0;
+    const bucketKey = `${r.party}|${bucketKeyForResultRow(
+      officeType,
+      district_number,
+      countySubOff
+    )}`;
+    let agg = buckets.get(bucketKey);
+    if (!agg) {
+      agg = {
+        officeType,
+        countySubOff,
+        district_number,
+        party: r.party,
+        candidates: new Map<string, number>(),
+      };
+      buckets.set(bucketKey, agg);
+    }
+    agg.candidates.set(
+      r.candidate,
+      (agg.candidates.get(r.candidate) ?? 0) + (r.ld_votes ?? 0)
+    );
+  }
+
+  const synthetic: EnrichedCandidate[] = [];
+  for (const [bucketKey, agg] of buckets) {
+    const nonpartisan =
+      agg.officeType === "MAYOR" || agg.officeType === "METRO_COUNCIL";
+    // For nonpartisan results party=='' but we want top-two. For partisan
+    // we want only the top-one per party.
+    const n = nonpartisan ? 2 : 1;
+    const sorted = [...agg.candidates.entries()].sort((a, b) => b[1] - a[1]);
+    for (let i = 0; i < Math.min(n, sorted.length); i++) {
+      const [rawName, votes] = sorted[i];
+      if (votes <= 0) continue;
+      const race_bucket_key = bucketKeyForResultRow(
+        agg.officeType,
+        agg.district_number,
+        agg.countySubOff
+      );
+      // Skip if the seeded candidates table already has this person.
+      // The name match is loose to handle "Charles BOOKER" vs "Charles
+      // Booker" and the maiden-name variants in the seed.
+      const indexKey = `${race_bucket_key}|${normalize(rawName)}`;
+      if (seededIndex.has(indexKey)) continue;
+      // Last name + first initial fallback against the seeded set in
+      // this bucket — catches things like "S. Brett GUTHRIE" vs
+      // "Brett Guthrie" if both ever co-exist.
+      const seededInBucket = seeded.filter(
+        (s) => s.race_bucket_key === race_bucket_key
+      );
+      if (
+        seededInBucket.some((s) => matchName(s.full_name, rawName))
+      ) {
+        continue;
+      }
+
+      const dbParty =
+        agg.party === "DEM" ? "D" : agg.party === "REP" ? "R" : "NP";
+      // Convert the all-caps result name into Title Case so it reads
+      // alongside the seeded names. Leave embedded uppercase initials
+      // (e.g. "TJ") alone-ish by only lowercasing characters following
+      // a letter.
+      const displayName = toTitleCase(rawName);
+      synthetic.push({
+        id: `synth-${bucketKey}-${rawName}`,
+        office_type: agg.officeType,
+        district_number: agg.district_number,
+        full_name: displayName,
+        party: dbParty,
+        is_incumbent: false,
+        is_endorsed: false,
+        notes: null,
+        website_url: null,
+        email: null,
+        votes,
+        pct: null,
+        advances: true,
+        status_label:
+          dbParty === "R"
+            ? "Won R primary — Republican nominee"
+            : dbParty === "D"
+              ? "Won D primary — Democratic nominee"
+              : "Top-two — advances to November",
+        was_on_ballot: true,
+        race_bucket_key,
+        county_sub_office: agg.countySubOff,
+      });
+    }
+  }
+  return synthetic;
+}
+
+// Convert "Charles BOOKER" / "S. Brett GUTHRIE" / "TJ ROBERTS" → title
+// case while preserving sensible initials and existing case of multi-cap
+// tokens shorter than 3 chars. Good-enough for ballot rendering; not a
+// general-purpose name normalizer.
+function toTitleCase(s: string): string {
+  return s
+    .split(" ")
+    .map((word) => {
+      if (word.length === 0) return word;
+      // Preserve short all-caps tokens (initials, "TJ", "JR.").
+      const noPunct = word.replace(/[^A-Za-z]/g, "");
+      if (noPunct.length > 0 && noPunct.length <= 3 && noPunct === noPunct.toUpperCase()) {
+        return word;
+      }
+      // Hyphenated or quoted segments: title-case each piece.
+      return word
+        .split(/([-'"])/)
+        .map((part) =>
+          /^[a-z]/i.test(part)
+            ? part[0].toUpperCase() + part.slice(1).toLowerCase()
+            : part
+        )
+        .join("");
+    })
+    .join(" ");
 }
 
 // Within a single race bucket (office, district, party — or office, district
@@ -308,7 +526,10 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
     }
   }
 
-  return enriched;
+  // Add the November opponents (and any D winner the seed missed) by
+  // deriving them from the primary results table.
+  const synthetic = deriveSyntheticCandidates(enriched, all);
+  return [...enriched, ...synthetic];
 }
 
 // Helper for UI: derive a friendly sub-office label from a county
