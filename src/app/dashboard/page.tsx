@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
+  CheckSquare,
   Clock,
   Compass,
   HeartHandshake,
@@ -213,10 +214,10 @@ export default async function DashboardPage() {
             color="#0E4C9E"
           />
           <JumpTile
-            href="/captains"
-            label="Captains"
-            icon={Target}
-            color="#0E4C9E"
+            href="/ballot"
+            label="November Ballot"
+            icon={CheckSquare}
+            color="#c89a3b"
           />
           <JumpTile
             href="/events"

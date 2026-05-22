@@ -29,6 +29,15 @@ import {
   type Strategy,
 } from "@/lib/db/precincts";
 import { evaluateRules, getCurrentPhase, type UserContext } from "@/content/highest-leverage-rules";
+import {
+  fetchPrimaryResults2026ByLd,
+  fetchPrimaryResults2026All,
+  fetchTurnout2026ByLd,
+  fetchTurnout2026All,
+} from "@/lib/db/election-results";
+import { fetchTakeaways } from "@/lib/db/election-takeaways";
+import { PrimaryResults2026Card } from "@/components/election-results/PrimaryResults2026Card";
+import { ElectionTakeaways } from "@/components/election-results/ElectionTakeaways";
 
 export const dynamic = "force-dynamic";
 
@@ -144,19 +153,39 @@ export default async function LdDetailPage({
   const ld = await fetchLd(ld_number);
   if (!ld) notFound();
 
-  const [chair, vc, precincts, nextEvent, pcs, evLocations, notes, tasks, contacts, assignables] =
-    await Promise.all([
-      fetchMemberById(ld.chair_id),
-      fetchMemberById(ld.vc_id),
-      fetchPrecinctsByLd(ld_number),
-      fetchNextEvent(),
-      fetchPcsForLd(ld_number),
-      fetchEvLocationsForLd(ld_number),
-      fetchNotesByLd(ld_number),
-      fetchTasksByLd(ld_number),
-      fetchContactsByLd(ld_number),
-      fetchAssignablesForLd(ld_number),
-    ]);
+  const [
+    chair,
+    vc,
+    precincts,
+    nextEvent,
+    pcs,
+    evLocations,
+    notes,
+    tasks,
+    contacts,
+    assignables,
+    primary_ld_results,
+    primary_all_results,
+    primary_ld_turnout,
+    primary_all_turnout,
+    primary_takeaways,
+  ] = await Promise.all([
+    fetchMemberById(ld.chair_id),
+    fetchMemberById(ld.vc_id),
+    fetchPrecinctsByLd(ld_number),
+    fetchNextEvent(),
+    fetchPcsForLd(ld_number),
+    fetchEvLocationsForLd(ld_number),
+    fetchNotesByLd(ld_number),
+    fetchTasksByLd(ld_number),
+    fetchContactsByLd(ld_number),
+    fetchAssignablesForLd(ld_number),
+    fetchPrimaryResults2026ByLd(ld_number),
+    fetchPrimaryResults2026All(),
+    fetchTurnout2026ByLd(ld_number),
+    fetchTurnout2026All(),
+    fetchTakeaways(ld_number, "2026_primary"),
+  ]);
   const staleCount = countStaleContacts(contacts, 60);
 
   const candidates = await fetchCandidates(ld_number, ld.metro_council_overlap ?? []);
@@ -216,6 +245,23 @@ export default async function LdDetailPage({
             )}
           </p>
         </div>
+
+        {/* 2026 Primary results — institutional memory. Two days old as
+            of this build; the speed of putting it on the page is part of
+            the demo. */}
+        <PrimaryResults2026Card
+          ld_number={ld_number}
+          ld_results={primary_ld_results}
+          ld_turnout={primary_ld_turnout}
+          all_results={primary_all_results}
+          all_turnout={primary_all_turnout}
+        />
+        <ElectionTakeaways
+          ld_number={ld_number}
+          election_key="2026_primary"
+          election_label="2026 Primary"
+          takeaways={primary_takeaways}
+        />
 
         {/* Tasks go at the top — this is what the chair looks at first */}
         <LdTasks ldNumber={ld_number} tasks={tasks} assignables={assignables} />

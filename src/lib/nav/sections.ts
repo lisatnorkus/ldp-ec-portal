@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale, Clock, ArrowLeftRight } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale, Clock, ArrowLeftRight, CheckSquare } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -23,8 +23,11 @@ export const SECTION_NAV: SectionNavItem[] = [
   { slug: "canvass-tools", label: "Canvass Tools", href: "/canvass-tools", icon: Vote,
     description: "VoteBuilder, priority districts, volunteer pipeline, guides.",
     accent: "#059669" },
-  { slug: "candidates", label: "2026 Candidates", href: "/candidates", icon: ClipboardList,
-    description: "Who's on the primary ballot — State House, State Senate, Metro Council. LDP endorsements flagged.",
+  { slug: "ballot", label: "November Ballot", href: "/ballot", icon: CheckSquare,
+    description: "What you'll actually choose on November 3 — finalists only, no primary noise. Picks up your LD automatically.",
+    accent: "#c89a3b" },
+  { slug: "candidates", label: "Primary Results", href: "/candidates", icon: ClipboardList,
+    description: "Full 2026 primary results — vote totals, who advanced, who was eliminated, endorsements.",
     accent: "#0A3772" },
   { slug: "early-voting", label: "Early Voting", href: "/early-voting", icon: Clock,
     description: "24 Jefferson County early voting locations for the May 19 primary. Countywide — any voter can use any site.",
