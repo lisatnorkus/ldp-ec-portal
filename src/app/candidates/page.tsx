@@ -202,13 +202,24 @@ export default async function CandidatesPage() {
 
 function OfficeSection({ office, candidates }: { office: OfficeType; candidates: Candidate[] }) {
   const meta = OFFICE_META[office];
-  const byDistrict = new Map<number, Candidate[]>();
+  // Bucket by race_bucket_key so COUNTY_OFFICE splits into separate
+  // sub-race cards (Attorney / Clerk / Sheriff / PVA / Judge Executive)
+  // instead of one collapsed list.
+  const byBucket = new Map<string, Candidate[]>();
   for (const c of candidates) {
-    const list = byDistrict.get(c.district_number);
+    const k = c.race_bucket_key;
+    const list = byBucket.get(k);
     if (list) list.push(c);
-    else byDistrict.set(c.district_number, [c]);
+    else byBucket.set(k, [c]);
   }
-  const districts = Array.from(byDistrict.keys()).sort((a, b) => a - b);
+  const buckets = Array.from(byBucket.keys()).sort((a, b) => {
+    const partA = a.split("|")[1] ?? "";
+    const partB = b.split("|")[1] ?? "";
+    const na = Number(partA);
+    const nb = Number(partB);
+    if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+    return partA.localeCompare(partB);
+  });
 
   return (
     <section className="mb-10">
@@ -222,15 +233,29 @@ function OfficeSection({ office, candidates }: { office: OfficeType; candidates:
       </div>
 
       <div className="space-y-4">
-        {districts.map((d) => (
-          <DistrictBlock key={d} office={office} district={d} candidates={byDistrict.get(d) ?? []} />
-        ))}
+        {buckets.map((k) => {
+          const list = byBucket.get(k) ?? [];
+          const first = list[0];
+          return (
+            <DistrictBlock
+              key={k}
+              office={office}
+              district={first.district_number}
+              countySubOffice={first.county_sub_office}
+              candidates={list}
+            />
+          );
+        })}
       </div>
     </section>
   );
 }
 
-function officeSlug(office: OfficeType, district: number): string {
+function officeSlug(
+  office: OfficeType,
+  district: number,
+  countySubOffice: string | null
+): string {
   switch (office) {
     case "METRO_COUNCIL":
       return `MC${district}`;
@@ -245,20 +270,24 @@ function officeSlug(office: OfficeType, district: number): string {
     case "MAYOR":
       return "Louisville Mayor";
     case "COUNTY_OFFICE":
-      return "Jefferson County";
+      return countySubOffice
+        ? `Jefferson County · ${countySubOffice}`
+        : "Jefferson County";
   }
 }
 
 function DistrictBlock({
   office,
   district,
+  countySubOffice,
   candidates,
 }: {
   office: OfficeType;
   district: number;
+  countySubOffice: string | null;
   candidates: Candidate[];
 }) {
-  const slug = officeSlug(office, district);
+  const slug = officeSlug(office, district, countySubOffice);
   const hasEndorsed = candidates.some((c) => c.is_endorsed);
   // Sort candidates so winners come first, then by vote count desc.
   // Unrecorded candidates (no votes) drop to the bottom.

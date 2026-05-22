@@ -43,12 +43,22 @@ export type EnrichedCandidate = CandidateRow & {
   advances: boolean;
   status_label: string;
   was_on_ballot: boolean;
+  // race_bucket_key groups candidates that share an actual race —
+  // distinct from office_type alone because COUNTY_OFFICE bundles
+  // several sub-races (Attorney / Clerk / Sheriff / PVA / Judge
+  // Executive). UI code should group by this when rendering races.
+  race_bucket_key: string;
+  // For COUNTY_OFFICE the sub-office name parsed from notes
+  // ("County Attorney", "Sheriff", "PVA", etc.). null for other office
+  // types.
+  county_sub_office: string | null;
 };
 
-// Map candidates.office_type → election_results_2026_primary.office. For
-// COUNTY_OFFICE we have to look at full_name match across multiple result
-// office strings (COUNTY ATTORNEY, COUNTY CLERK, SHERIFF), so the
-// per-candidate join falls back to a free office search.
+// Map candidates.office_type → election_results_2026_primary.office.
+// COUNTY_OFFICE is a bucket type — the actual sub-office (Attorney /
+// Clerk / Sheriff / PVA / Judge Executive) is encoded in candidates.notes
+// (first word/phrase before any " · " separator). We resolve it per-row
+// via countySubOffice() below.
 const OFFICE_RES_LABEL: Partial<Record<OfficeType, string>> = {
   MAYOR: "LOUISVILLE MAYOR",
   METRO_COUNCIL: "LOUISVILLE METRO COUNCIL",
@@ -58,7 +68,41 @@ const OFFICE_RES_LABEL: Partial<Record<OfficeType, string>> = {
   US_SENATE: "U.S. SENATOR",
 };
 
-const COUNTY_RES_LABELS = ["COUNTY ATTORNEY", "COUNTY CLERK", "SHERIFF"];
+// Parse a county sub-office out of the candidates.notes field. Known
+// formats from seed:
+//   "County Attorney"
+//   "County Clerk"
+//   "Sheriff"
+//   "PVA · unopposed in primary"
+//   "Judge Executive · unopposed in primary"
+function countySubOffice(notes: string | null): string | null {
+  if (!notes) return null;
+  const before = notes.split("·")[0].trim();
+  if (!before) return null;
+  return before;
+}
+
+// Map a county sub-office name (from notes) → the office string used in
+// election_results_2026_primary. Returns null for offices that aren't in
+// the results table (PVA, Judge Executive — both unopposed, no primary).
+function countyResOfficeFor(subOffice: string | null): string | null {
+  if (!subOffice) return null;
+  const k = subOffice.toUpperCase();
+  if (k === "COUNTY ATTORNEY") return "COUNTY ATTORNEY";
+  if (k === "COUNTY CLERK") return "COUNTY CLERK";
+  if (k === "SHERIFF") return "SHERIFF";
+  return null; // PVA / Judge Executive / etc.
+}
+
+// Distinct race-bucket key. For COUNTY_OFFICE the sub-office (from
+// notes) is the bucket discriminator; everything else uses district
+// number directly.
+function raceBucketKey(c: CandidateRow): string {
+  if (c.office_type === "COUNTY_OFFICE") {
+    return `COUNTY_OFFICE|${countySubOffice(c.notes) ?? "UNKNOWN"}`;
+  }
+  return `${c.office_type}|${c.district_number}`;
+}
 
 // Top-N rules for KY ballot access:
 //   * MAYOR / METRO_COUNCIL — nonpartisan top-two advance
@@ -96,7 +140,10 @@ function matchName(candName: string, resName: string): boolean {
 }
 
 function resOfficeFor(c: CandidateRow): string[] {
-  if (c.office_type === "COUNTY_OFFICE") return COUNTY_RES_LABELS;
+  if (c.office_type === "COUNTY_OFFICE") {
+    const sub = countyResOfficeFor(countySubOffice(c.notes));
+    return sub ? [sub] : []; // PVA / Judge Executive return [] (no primary)
+  }
   const label = OFFICE_RES_LABEL[c.office_type];
   return label ? [label] : [];
 }
@@ -192,7 +239,7 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
   const candidates = (candidatesRes.data ?? []) as CandidateRow[];
   const all = (allResultsRes.data ?? []) as ResultRowAll[];
 
-  // First pass: attach countywide vote totals.
+  // First pass: attach countywide vote totals + race bucket info.
   const enriched: EnrichedCandidate[] = candidates.map((c) => {
     const totals = countywideTotalsFor(c, all);
     return {
@@ -202,24 +249,27 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
       advances: false,
       status_label: "",
       was_on_ballot: totals !== null,
+      race_bucket_key: raceBucketKey(c),
+      county_sub_office:
+        c.office_type === "COUNTY_OFFICE" ? countySubOffice(c.notes) : null,
     };
   });
 
-  // Second pass: group by (office_type, district_number) and compute advances.
+  // Second pass: bucket candidates into actual races (County Office
+  // splits into Attorney / Clerk / Sheriff / PVA / Judge Executive via
+  // notes) and compute advances per bucket.
   const buckets = new Map<string, EnrichedCandidate[]>();
   for (const c of enriched) {
-    const key = `${c.office_type}|${c.district_number}`;
+    const key = raceBucketKey(c);
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key)!.push(c);
   }
   for (const [key, bucket] of buckets) {
     const office = key.split("|")[0] as OfficeType;
     const advanced = computeAdvances(bucket, office);
-    const total_in_bucket = bucket.length;
     for (const c of bucket) {
       if (advanced.has(c.id)) {
         c.advances = true;
-        // Distinguish "advances unopposed" from "won contested primary".
         const sameParty = bucket.filter(
           (o) =>
             office === "MAYOR" || office === "METRO_COUNCIL"
@@ -235,8 +285,21 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
               : "Won primary — advances to November";
         }
       } else if (c.votes == null) {
-        c.status_label =
-          total_in_bucket > 1 ? "Result pending" : "Filed, no primary recorded";
+        // No primary result is recorded. If this was an unopposed county
+        // office (PVA / Judge Executive — no primary at all), the lone
+        // filer effectively advances; otherwise mark pending.
+        const sameParty = bucket.filter(
+          (o) =>
+            office === "MAYOR" || office === "METRO_COUNCIL"
+              ? true
+              : o.party === c.party
+        );
+        if (sameParty.length === 1) {
+          c.advances = true;
+          c.status_label = "Advances unopposed";
+        } else {
+          c.status_label = "Result pending";
+        }
       } else if ((c.votes ?? 0) === 0) {
         c.status_label = "Withdrew / no votes recorded";
       } else {
@@ -246,4 +309,13 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
   }
 
   return enriched;
+}
+
+// Helper for UI: derive a friendly sub-office label from a county
+// candidate's notes. Exported so /ballot + /candidates can render
+// per-sub-race headers like "Jefferson County Clerk" instead of
+// collapsing every county candidate under "Jefferson County".
+export function countyOfficeLabel(c: EnrichedCandidate): string | null {
+  if (c.office_type !== "COUNTY_OFFICE") return null;
+  return countySubOffice(c.notes);
 }

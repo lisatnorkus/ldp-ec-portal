@@ -145,17 +145,20 @@ function BallotSection({
   title: string;
   races: EnrichedCandidate[];
 }) {
-  // Group finalists by (office_type, district_number).
+  // Group finalists by their actual race bucket — for COUNTY_OFFICE
+  // this splits Attorney / Clerk / Sheriff / PVA / Judge Executive
+  // into separate cards rather than collapsing them all into "Jefferson
+  // County".
   const groups = new Map<string, EnrichedCandidate[]>();
   for (const c of races) {
-    const key = `${c.office_type}|${c.district_number}`;
+    const key = c.race_bucket_key;
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key)!.push(c);
   }
 
   const sorted_keys = Array.from(groups.keys()).sort((a, b) => {
-    const [oa, da] = a.split("|");
-    const [ob, db] = b.split("|");
+    const [oa, partA] = a.split("|");
+    const [ob, partB] = b.split("|");
     const oOrder: Record<string, number> = {
       US_SENATE: 0,
       US_HOUSE: 1,
@@ -167,7 +170,12 @@ function BallotSection({
     };
     const oDiff = (oOrder[oa] ?? 99) - (oOrder[ob] ?? 99);
     if (oDiff !== 0) return oDiff;
-    return Number(da) - Number(db);
+    // For COUNTY_OFFICE the second segment is a sub-office name; for
+    // everything else it's a district number. Both sort lexically OK.
+    const na = Number(partA);
+    const nb = Number(partB);
+    if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+    return partA.localeCompare(partB);
   });
 
   if (sorted_keys.length === 0) return null;
@@ -186,12 +194,13 @@ function BallotSection({
       <div className="space-y-4">
         {sorted_keys.map((key) => {
           const list = groups.get(key)!;
-          const [office_type, district] = key.split("|");
+          const first = list[0];
           return (
             <BallotRace
               key={key}
-              office={office_type as OfficeType}
-              district={Number(district)}
+              office={first.office_type}
+              district={first.district_number}
+              countySubOffice={first.county_sub_office}
               nominees={list}
             />
           );
@@ -201,7 +210,11 @@ function BallotSection({
   );
 }
 
-function raceLabel(office: OfficeType, district: number): string {
+function raceLabel(
+  office: OfficeType,
+  district: number,
+  countySubOffice: string | null
+): string {
   switch (office) {
     case "MAYOR":
       return "Louisville Metro Mayor";
@@ -216,7 +229,9 @@ function raceLabel(office: OfficeType, district: number): string {
     case "METRO_COUNCIL":
       return `Louisville Metro Council — District ${district}`;
     case "COUNTY_OFFICE":
-      return "Jefferson County";
+      return countySubOffice
+        ? `Jefferson County ${countySubOffice}`
+        : "Jefferson County";
   }
 }
 
@@ -227,13 +242,15 @@ function isNonpartisan(office: OfficeType): boolean {
 function BallotRace({
   office,
   district,
+  countySubOffice,
   nominees,
 }: {
   office: OfficeType;
   district: number;
+  countySubOffice: string | null;
   nominees: EnrichedCandidate[];
 }) {
-  const label = raceLabel(office, district);
+  const label = raceLabel(office, district, countySubOffice);
   // Sort: D first, then R, then independents/others; within party, endorsed first.
   const partyOrder: Record<string, number> = { D: 0, R: 1, NP: 2 };
   const sorted = [...nominees].sort((a, b) => {
@@ -242,25 +259,6 @@ function BallotRace({
     if (a.is_endorsed !== b.is_endorsed) return a.is_endorsed ? -1 : 1;
     return a.full_name.localeCompare(b.full_name);
   });
-
-  // For COUNTY_OFFICE, each candidate's "district_number" is the
-  // tagged county-office sub-race. We don't have a clean
-  // per-county-office label other than what's in the data itself — fall
-  // back to a generic Jefferson County header per row.
-  if (office === "COUNTY_OFFICE") {
-    return (
-      <article className="rounded-xl border bg-white p-4">
-        <header className="mb-3 text-sm font-bold text-[var(--color-ldp-navy-900)]">
-          {label}
-        </header>
-        <div className="space-y-3">
-          {sorted.map((n) => (
-            <NomineeCard key={n.id} c={n} nonpartisan={false} />
-          ))}
-        </div>
-      </article>
-    );
-  }
 
   const nonpartisan = isNonpartisan(office);
 
