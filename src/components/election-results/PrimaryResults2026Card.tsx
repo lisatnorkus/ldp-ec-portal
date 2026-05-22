@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BarChart3, Layers, MapPin, Trophy, Vote } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, BarChart3, Layers, MapPin, Trophy, Vote } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
 import {
   fmtRaceLabel,
@@ -88,7 +89,58 @@ export function PrimaryResults2026Card({
           numbers in front of the EC when the data is structured well.
         </p>
       </div>
+
+      <WhyThisMattersForNovember scope_label={scope_label} />
     </section>
+  );
+}
+
+// The post-primary frame: the numbers above are not the ending — they
+// tell us where the November fight actually lives. Surfaces three
+// pointers the LD chair should take with them: who advances, which
+// precincts moved (turnout = November ceiling), and where the soft
+// support sits (margin of advancement = persuasion exposure).
+function WhyThisMattersForNovember({
+  scope_label,
+}: {
+  scope_label: string;
+}) {
+  return (
+    <div className="border-t border-[var(--color-ldp-line)] bg-[var(--color-ldp-cream,#fbf8f1)] px-6 py-5">
+      <div className="flex items-start gap-3">
+        <div className="rounded-full bg-[var(--color-ldp-gold,#c89a3b)] p-1.5 text-white">
+          <ArrowRight className="size-4" aria-hidden />
+        </div>
+        <div className="flex-1">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-800)]">
+            Why this matters for November
+          </div>
+          <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
+            The names above are now the names on the November ballot. The
+            precincts that turned out big for them are your <strong>November
+            ceiling</strong>. The races that finished tight tell you where
+            persuasion still matters in the fall — and where the LDP
+            endorsement carries weight. Use {scope_label}&apos;s primary
+            turnout as your baseline; the general election goal is to beat it.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+            <Link
+              href="/ballot"
+              className="inline-flex items-center gap-1 rounded-md bg-[var(--color-ldp-navy-700)] px-3 py-1.5 font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
+            >
+              See the November ballot
+              <ArrowRight className="size-3.5" aria-hidden />
+            </Link>
+            <Link
+              href="/candidates"
+              className="inline-flex items-center gap-1 rounded-md border border-[var(--color-ldp-navy-700)] bg-white px-3 py-1.5 font-semibold text-[var(--color-ldp-navy-900)] hover:bg-[var(--color-ldp-navy-100,#eef0f4)]"
+            >
+              Open full primary results
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

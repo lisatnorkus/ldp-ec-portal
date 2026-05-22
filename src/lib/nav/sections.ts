@@ -30,7 +30,7 @@ export const SECTION_NAV: SectionNavItem[] = [
     description: "Full 2026 primary results — vote totals, who advanced, who was eliminated, endorsements.",
     accent: "#0A3772" },
   { slug: "early-voting", label: "Early Voting", href: "/early-voting", icon: Clock,
-    description: "24 Jefferson County early voting locations for the May 19 primary. Countywide — any voter can use any site.",
+    description: "24 Jefferson County early-voting locations. Same sites for the November 3 general — confirm hours closer to Oct 29.",
     accent: "#C8102E" },
   { slug: "people", label: "People", href: "/people", icon: Users,
     description: "LDPEC directory: officers, LD Chairs, committee chairs, at-large members.",

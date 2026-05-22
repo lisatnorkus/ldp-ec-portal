@@ -111,7 +111,7 @@ export default function HelpPage() {
           </P>
           <Ul>
             <li>
-              <strong>Six KPIs up top</strong> — days to primary, priority-precinct captain
+              <strong>Six KPIs up top</strong> — days to the next election, priority-precinct captain
               coverage, active volunteers, tasks overdue countywide, EC attendance rate, annual
               raise floor. Color-coded, no tiny type.
             </li>

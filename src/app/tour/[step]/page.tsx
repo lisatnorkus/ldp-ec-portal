@@ -539,8 +539,8 @@ function Step5() {
           State of the party, one glance.
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-white/85">
-          6 KPIs at the top (days to primary, captain coverage %, active volunteers, tasks
-          overdue, EC attendance rate, annual raise floor) + a &ldquo;needs attention&rdquo;
+          6 KPIs at the top (days to the next election, captain coverage %, active volunteers,
+          tasks overdue, EC attendance rate, annual raise floor) + a &ldquo;needs attention&rdquo;
           action queue + your personal tasks + cycle phase + the KDP monthly call + a live
           activity feed. Every number, every action, every person — one surface.
         </p>

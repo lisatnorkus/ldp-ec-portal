@@ -141,30 +141,40 @@ export const STRATEGY_WHY_NOW: Record<Strategy, Record<CyclePhase, string>> = {
   },
 };
 
-// Given today's date, figure out which phase we're in. Simple month-
-// lookup for now — matches the month_cards seed that the rest of the
-// portal already uses, so phases are consistent across /this-month,
-// /targeting, and any future phase-aware surfaces.
+// Given today's date, figure out which phase we're in. Uses date math
+// rather than month buckets so the transition out of PRIMARY_WINDOW
+// happens the moment KY primary day closes (May 19), not at the start
+// of June. Matches the cycle-phases.ts source-of-truth dates and the
+// highest-leverage-rules.ts phase windows.
 export function currentPhaseForDate(d: Date = new Date()): CyclePhase {
-  const month = d.getMonth() + 1; // 1-12
-  const isEvenYear = d.getFullYear() % 2 === 0;
+  const ymd = d.toISOString().slice(0, 10);
+  const year = d.getFullYear();
+  const isEvenYear = year % 2 === 0;
 
-  // Even-year federal/state cycle
   if (isEvenYear) {
-    if (month === 1) return "OFF_CYCLE";
-    if (month >= 2 && month <= 4) return "PRIMARY_WINDOW";
-    if (month === 5) return "PRIMARY_WINDOW"; // election week handled separately if within 7 days
-    if (month === 6) return "POST_PRIMARY";
-    if (month >= 7 && month <= 8) return "SUMMER";
-    if (month >= 9 && month <= 10) return "GENERAL";
-    if (month === 11) return "ELECTION_WEEK";
-    if (month === 12) return "POST_GENERAL";
+    // KY 2026 anchor dates. Same calendar shape applies to 2028 etc.
+    const PRIMARY_WINDOW_START = `${year}-04-21`;
+    const PRIMARY_END = `${year}-05-19`;
+    const POST_PRIMARY_END = `${year}-06-30`;
+    const SUMMER_END = `${year}-08-31`;
+    const GENERAL_LOCKDOWN_START = `${year}-10-29`;
+    const GENERAL_END = `${year}-11-03`;
+    const POST_GENERAL_END = `${year}-12-31`;
+
+    if (ymd < PRIMARY_WINDOW_START) return "OFF_CYCLE";
+    if (ymd <= PRIMARY_END) return "PRIMARY_WINDOW";
+    if (ymd <= POST_PRIMARY_END) return "POST_PRIMARY";
+    if (ymd <= SUMMER_END) return "SUMMER";
+    if (ymd < GENERAL_LOCKDOWN_START) return "GENERAL";
+    if (ymd <= GENERAL_END) return "ELECTION_WEEK";
+    if (ymd <= POST_GENERAL_END) return "POST_GENERAL";
+    return "OFF_CYCLE";
   }
 
-  // Odd year
+  // Odd year — broad bucketing only; we don't need primary detail.
+  const month = d.getMonth() + 1;
   if (month >= 1 && month <= 3) return "OFF_CYCLE";
-  if (month >= 4 && month <= 6) return "SUMMER";
-  if (month >= 7 && month <= 10) return "SUMMER";
+  if (month <= 10) return "SUMMER";
   if (month === 11) return "POST_GENERAL";
   return "OFF_CYCLE";
 }

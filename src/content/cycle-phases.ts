@@ -104,7 +104,7 @@ export function daysUntil(dateStr: string, now: Date = new Date()): number {
 
 export type PlanCard = {
   id: string;
-  status: "LIVE" | "TEED_UP" | "HORIZON";
+  status: "LIVE" | "TEED_UP" | "HORIZON" | "WRAPPED";
   title: string;
   eyebrow: string;
   body: string;
@@ -115,14 +115,42 @@ export type PlanCard = {
 
 export const PLAN_CARDS: PlanCard[] = [
   {
-    id: "primary",
+    id: "general-gotv",
     status: "LIVE",
-    title: "The Primary Plan",
-    eyebrow: "Live right now · May 19 primary",
+    title: "General + GOTV Plan",
+    eyebrow: "Live right now · Nov 3 general",
     body:
-      "Contested D primaries in several LDs (HD29, HD33, HD43, HD44, HD48) and all 10 on-ballot Metro Council districts. The priority MC 7/17/21 turf decides November countywide. The plan details — targeting, canvass cadence, endorsements, volunteer math — live in the Election Year Plan folder.",
-    primaryCtaLabel: "Open the Primary Plan folder →",
+      "Primary's done. The plan is now general-election GOTV: Hold-the-Line precincts decide November, Wake-the-Vote precincts close the gap in the final 30 days, Sleeper Dems are the margin. Every contested race that survived the primary lives or dies here. Open the General + GOTV sections of the Election Year Plan folder for cadence, turf, and volunteer math.",
+    primaryCtaLabel: "Open the General + GOTV sections →",
     primaryCtaHref: "https://drive.google.com/drive/folders/1wNc9Ea5K-xIvuWPftgSQiqMqYiB5gscx",
+    secondaryLinks: [
+      {
+        label: "November ballot — finalists only",
+        href: "/ballot",
+      },
+      {
+        label: "Primary results + LD takeaways",
+        href: "/candidates",
+      },
+      {
+        label: "Mobilize (volunteer events)",
+        href: "https://www.mobilize.us/louisvilledemocrats/",
+      },
+      {
+        label: "Volunteer FB group",
+        href: "https://www.facebook.com/groups/LouisvilleDemsVolunteers",
+      },
+    ],
+  },
+  {
+    id: "primary",
+    status: "WRAPPED",
+    title: "Primary Plan — wrapped",
+    eyebrow: "Closed May 19 · reference + learning",
+    body:
+      "The primary plan covered contested D primaries (HD29, HD33, HD43, HD44, HD48) and all 10 on-ballot Metro Council districts, with priority MC 7/17/21 as the November bellwether. Results, vote totals, and what each LD learned are kept as the institutional memory layer — open them whenever you're modeling the fall.",
+    primaryCtaLabel: "Open primary results →",
+    primaryCtaHref: "/candidates",
     secondaryLinks: [
       {
         label: "LD Chair VoteBuilder Guide",
@@ -133,26 +161,6 @@ export const PLAN_CARDS: PlanCard[] = [
         href: "https://drive.google.com/file/d/1tId_OBvdwa5TGME7LMIX26idTZ8iG_Dj/view",
       },
       { label: "Canvass Tools in the portal", href: "/canvass-tools" },
-    ],
-  },
-  {
-    id: "general-gotv",
-    status: "TEED_UP",
-    title: "General + GOTV Plan",
-    eyebrow: "Teed up · Nov 3 general",
-    body:
-      "Post-primary, the plan flips to general-election GOTV: Hold-the-Line precincts first, Wake-the-Vote precincts in the final 30 days, Sleeper Dems as the margin. Same Election Year Plan folder — the general + GOTV sections sit alongside the primary plan there.",
-    primaryCtaLabel: "Open the General + GOTV sections →",
-    primaryCtaHref: "https://drive.google.com/drive/folders/1wNc9Ea5K-xIvuWPftgSQiqMqYiB5gscx",
-    secondaryLinks: [
-      {
-        label: "Mobilize (volunteer events)",
-        href: "https://www.mobilize.us/louisvilledemocrats/",
-      },
-      {
-        label: "Volunteer FB group",
-        href: "https://www.facebook.com/groups/LouisvilleDemsVolunteers",
-      },
     ],
   },
   {

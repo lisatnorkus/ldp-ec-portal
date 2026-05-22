@@ -13,7 +13,12 @@ export type LdSnapshot = {
 
 export type RightNowContext = {
   days_to_primary: number | null;
+  days_to_general: number | null;
   primary_date_iso: string;
+  general_date_iso: string;
+  // Convenience: which election the UI should put front-and-center.
+  // Flips to "GENERAL" the day after the primary closes.
+  focus_election: "PRIMARY" | "GENERAL";
   voter_guide_url: string | null;
   next_event_name: string | null;
   next_event_days_until: number | null;
@@ -22,6 +27,7 @@ export type RightNowContext = {
 };
 
 const PRIMARY_ISO = "2026-05-19";
+const GENERAL_ISO = "2026-11-03";
 
 export async function fetchRightNowContext(): Promise<RightNowContext> {
   const supabase = await getSupabaseServer();
@@ -29,9 +35,15 @@ export async function fetchRightNowContext(): Promise<RightNowContext> {
   const todayIso = today.toISOString().slice(0, 10);
 
   const primaryDate = new Date(PRIMARY_ISO + "T00:00:00");
+  const generalDate = new Date(GENERAL_ISO + "T00:00:00");
   const daysToPrimary = Math.round(
     (primaryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
   );
+  const daysToGeneral = Math.round(
+    (generalDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const focus_election: "PRIMARY" | "GENERAL" =
+    todayIso > PRIMARY_ISO ? "GENERAL" : "PRIMARY";
 
   const [voterGuide, nextEvent, pcRows, candidateRows] = await Promise.all([
     supabase.from("settings").select("value").eq("key", "voter_guide_url").maybeSingle(),
@@ -117,7 +129,10 @@ export async function fetchRightNowContext(): Promise<RightNowContext> {
 
   return {
     days_to_primary: daysToPrimary >= 0 ? daysToPrimary : null,
+    days_to_general: daysToGeneral >= 0 ? daysToGeneral : null,
     primary_date_iso: PRIMARY_ISO,
+    general_date_iso: GENERAL_ISO,
+    focus_election,
     voter_guide_url: (voterGuide.data?.value as string | undefined) ?? null,
     next_event_name: nextEvent.data?.name ?? null,
     next_event_days_until: nextEventDaysUntil,

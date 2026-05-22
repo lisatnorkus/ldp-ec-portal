@@ -47,21 +47,31 @@ export default async function EarlyVotingPage() {
     fetchLocations(),
     fetchVoterGuideUrl(),
   ]);
-  const dateWindow = locations[0]?.date_window ?? "May 14 – 16, 2026";
+  // The DB still holds the May 14-16 primary window. Post-primary, surface
+  // the November general window as the headline and keep the May window in
+  // a "reference" line below. Replace `general_ev_window` setting with the
+  // Clerk's published Oct dates once available.
+  const dateWindow = "October 29 – 31, 2026 (anticipated)";
   const hours = locations[0]?.hours_note ?? "8:00 am – 6:00 pm";
+  const primaryDateWindow = locations[0]?.date_window ?? "May 14 – 16, 2026";
 
   return (
     <HubShell
-      eyebrow="Early voting · 2026 Primary"
+      eyebrow="Early voting · November general"
       title="24 early voting locations across Jefferson County."
-      subtitle="Any Jefferson County voter can use any of these 24 locations during the early-voting window — you don't have to vote at the one in your LD. Share the location nearest to each voter's home or workplace."
+      subtitle="Same 24 sites the Clerk used for the May primary — confirm hours and dates closer to the November 3 general. Any Jefferson County voter can use any location during the early-voting window; you don't have to vote at the one in your LD."
     >
         <div className="mb-8">
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <InfoTile icon={<Clock aria-hidden="true" className="size-4" />} label="Dates" value={dateWindow} sub="Thursday – Saturday" />
-            <InfoTile icon={<Vote aria-hidden="true" className="size-4" />} label="Hours" value={hours} sub="All 24 sites" />
+            <InfoTile icon={<Clock aria-hidden="true" className="size-4" />} label="Dates" value={dateWindow} sub="Thursday – Saturday · confirm when Clerk publishes" />
+            <InfoTile icon={<Vote aria-hidden="true" className="size-4" />} label="Hours" value={hours} sub="All 24 sites (primary cadence)" />
             <InfoTile icon={<Car aria-hidden="true" className="size-4" />} label="Ride to the polls" value="(502) 582-1999" sub="LDP transportation line" />
+          </div>
+          <div className="mt-3 text-[11px] text-[var(--color-ldp-ink-700)]">
+            Primary early-voting ran {primaryDateWindow}. The Clerk has not yet
+            published official general-election dates — we&apos;ll update the
+            window above as soon as they do.
           </div>
 
           {voterGuideUrl && (

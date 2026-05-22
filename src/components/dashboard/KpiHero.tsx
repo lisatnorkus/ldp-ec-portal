@@ -16,14 +16,26 @@ import type { DashboardKpis } from "@/lib/db/dashboard-health";
 export function KpiHero({
   kpis,
   daysToPrimary,
+  daysToGeneral,
+  focusElection = "PRIMARY",
 }: {
   kpis: DashboardKpis;
   daysToPrimary: number | null;
+  daysToGeneral: number | null;
+  focusElection?: "PRIMARY" | "GENERAL";
 }) {
   const coveragePct =
     kpis.priorityPrecincts > 0
       ? Math.round((kpis.capturedPrecincts / kpis.priorityPrecincts) * 100)
       : 0;
+
+  // After the primary closes, the relevant countdown is to November 3.
+  const showGeneral = focusElection === "GENERAL";
+  const countdownValue = showGeneral ? daysToGeneral : daysToPrimary;
+  const countdownLabel = showGeneral ? "Days to November 3" : "Days to primary";
+  const countdownSub = showGeneral
+    ? "Tuesday, Nov 3 · the one that decides"
+    : "Tuesday, May 19";
 
   return (
     <section className="mb-8">
@@ -38,10 +50,10 @@ export function KpiHero({
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
         <KpiTile
           icon={Timer}
-          value={daysToPrimary != null && daysToPrimary >= 0 ? String(daysToPrimary) : "—"}
-          label="Days to primary"
+          value={countdownValue != null && countdownValue >= 0 ? String(countdownValue) : "—"}
+          label={countdownLabel}
           color="var(--color-ldp-red)"
-          sub="Tuesday, May 19"
+          sub={countdownSub}
         />
         <KpiTile
           icon={Target}

@@ -120,9 +120,9 @@ export default async function BallotPage({
 
       <footer className="mt-10 rounded-xl border border-dashed border-[var(--color-ldp-line)] bg-white p-5 text-xs text-[var(--color-ldp-ink-700)]">
         <p>
-          This page only shows candidates who advanced past the May 19 primary.
-          For full primary results — including who came in second, vote totals,
-          and the takeaways your LD has saved —{" "}
+          This page only shows candidates who advanced past the 2026
+          Democratic primary. For full primary results — vote totals, who came
+          in second, and the takeaways your LD has saved —{" "}
           <Link
             href="/candidates"
             className="font-semibold text-[var(--color-ldp-navy-700)] underline"

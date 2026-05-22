@@ -23,6 +23,7 @@ import { KpiHero } from "@/components/dashboard/KpiHero";
 import { NeedsAttention } from "@/components/dashboard/NeedsAttention";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { SpecialMeetingBanner } from "@/components/dashboard/SpecialMeetingBanner";
+import { RoadToNovemberCallout } from "@/components/dashboard/RoadToNovemberCallout";
 import { fetchAssignedTasks } from "@/lib/db/my-tasks";
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchRightNowContext } from "@/lib/db/right-now";
@@ -94,12 +95,22 @@ export default async function DashboardPage() {
     day: "numeric",
   });
   const daysToPrimary = rightNow?.days_to_primary ?? null;
+  const daysToGeneral = rightNow?.days_to_general ?? null;
+  const focusElection = rightNow?.focus_election ?? "PRIMARY";
 
   return (
     <HubShell
       eyebrow="Dashboard"
-      title="State of the party, right now."
-      subtitle={todayLabel}
+      title={
+        focusElection === "GENERAL"
+          ? "The road to November 3."
+          : "State of the party, right now."
+      }
+      subtitle={
+        focusElection === "GENERAL" && daysToGeneral != null
+          ? `${todayLabel} · ${daysToGeneral} days out`
+          : todayLabel
+      }
       actions={
         <>
           <Link
@@ -152,6 +163,10 @@ export default async function DashboardPage() {
 
       <SpecialMeetingBanner />
 
+      {focusElection === "GENERAL" && (
+        <RoadToNovemberCallout daysToGeneral={daysToGeneral} />
+      )}
+
       <VoterGuideCallout
         primaryUrl={voterSettings.voterGuidePrimaryUrl}
         generalUrl={voterSettings.voterGuideGeneralUrl}
@@ -164,7 +179,14 @@ export default async function DashboardPage() {
 
       {/* KPI hero — six big numbers at the top. State of the operation
           in one glance. */}
-      {kpis && <KpiHero kpis={kpis} daysToPrimary={daysToPrimary} />}
+      {kpis && (
+        <KpiHero
+          kpis={kpis}
+          daysToPrimary={daysToPrimary}
+          daysToGeneral={daysToGeneral}
+          focusElection={focusElection}
+        />
+      )}
 
       {/* Needs-attention queue — concrete surfaces, one-click CTAs. */}
       <NeedsAttention items={attention} />

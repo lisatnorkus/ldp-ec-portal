@@ -6,7 +6,7 @@ export function PlanCards() {
   return (
     <section className="mb-8">
       <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-        Plan · primary, general, long horizon
+        Plan · November first, primary as reference, long horizon
       </h2>
       <div className="grid gap-3 lg:grid-cols-3">
         {PLAN_CARDS.map((p) => (
@@ -125,6 +125,19 @@ const PLAN_STYLES: Record<
     titleClass: "text-[var(--color-ldp-navy-900)]",
     bodyClass: "text-[var(--color-ldp-ink-700)]",
     ctaClass: "bg-[var(--color-ldp-navy-800)] text-white hover:bg-[var(--color-ldp-navy-900)]",
+    borderClass: "border-[var(--color-ldp-line)]",
+    secondaryLinkClass: "text-[var(--color-ldp-navy-700)]",
+  },
+  // WRAPPED — desaturated. Plan is done; this is the memory of it.
+  WRAPPED: {
+    cardBg: "bg-[#FAFAFA] border border-[var(--color-ldp-line)]",
+    textTheme: "text-[var(--color-ldp-ink-900)]",
+    stripeBg: "bg-[var(--color-ldp-ink-200,#d8dbe1)]",
+    stripeText: "text-[var(--color-ldp-ink-700)]",
+    titleClass: "text-[var(--color-ldp-ink-700)]",
+    bodyClass: "text-[var(--color-ldp-ink-700)]",
+    ctaClass:
+      "border border-[var(--color-ldp-navy-800)] text-[var(--color-ldp-navy-900)] hover:bg-[var(--color-ldp-navy-900)] hover:text-white",
     borderClass: "border-[var(--color-ldp-line)]",
     secondaryLinkClass: "text-[var(--color-ldp-navy-700)]",
   },
