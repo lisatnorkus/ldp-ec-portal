@@ -289,6 +289,10 @@ function DistrictBlock({
 }) {
   const slug = officeSlug(office, district, countySubOffice);
   const hasEndorsed = candidates.some((c) => c.is_endorsed);
+  // Mayor + Metro Council are nonpartisan on the KY ballot — even though
+  // each candidate has a party affiliation on file, showing a D/R pill
+  // there misrepresents how voters actually pick. Suppress.
+  const nonpartisan = office === "MAYOR" || office === "METRO_COUNCIL";
   // Sort candidates so winners come first, then by vote count desc.
   // Unrecorded candidates (no votes) drop to the bottom.
   const sorted = [...candidates].sort((a, b) => {
@@ -311,6 +315,11 @@ function DistrictBlock({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <div className="text-sm font-bold text-[var(--color-ldp-navy-900)]">{slug}</div>
+          {nonpartisan && (
+            <span className="rounded-full border border-[var(--color-ldp-line)] bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+              Nonpartisan
+            </span>
+          )}
           {hasEndorsed && (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm">
               <Star aria-hidden="true" className="size-3 fill-white" /> LDP Endorsed
@@ -326,14 +335,14 @@ function DistrictBlock({
       </div>
       <ul className="mt-3 divide-y divide-[var(--color-ldp-line)]">
         {sorted.map((c) => (
-          <CandidateRow key={c.id} c={c} />
+          <CandidateRow key={c.id} c={c} nonpartisan={nonpartisan} />
         ))}
       </ul>
     </article>
   );
 }
 
-function CandidateRow({ c }: { c: Candidate }) {
+function CandidateRow({ c, nonpartisan }: { c: Candidate; nonpartisan: boolean }) {
   const pct = c.pct ?? 0;
   const showBar = c.votes != null && c.votes > 0;
   return (
@@ -364,7 +373,7 @@ function CandidateRow({ c }: { c: Candidate }) {
         >
           {c.full_name}
         </span>
-        <PartyPill party={c.party} />
+        {!nonpartisan && <PartyPill party={c.party} />}
         {c.is_incumbent && (
           <span className="rounded-full border border-[var(--color-ldp-line)] bg-[#FAFAFA] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Incumbent
