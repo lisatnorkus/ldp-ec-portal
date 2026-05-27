@@ -36,6 +36,7 @@ import {
   fetchTurnout2026ByLd,
   fetchTurnout2026All,
 } from "@/lib/db/election-results";
+import { fetchEnrichedCandidates } from "@/lib/db/candidate-results";
 import { fetchTakeaways } from "@/lib/db/election-takeaways";
 import { PrimaryResults2026Card } from "@/components/election-results/PrimaryResults2026Card";
 import { ElectionTakeaways } from "@/components/election-results/ElectionTakeaways";
@@ -190,17 +191,37 @@ export default async function LdDetailPage({
   const staleCount = countStaleContacts(contacts, 60);
 
   const candidates = await fetchCandidates(ld_number, ld.metro_council_overlap ?? []);
+  // Post-primary: also pull the enriched candidate list (with advance
+  // status + synthesized R nominees) so the LD page can render only
+  // November finalists in the "Races on the ballot" section. Primary
+  // losers don't belong on a Phase 2 surface.
+  const enrichedAll = await fetchEnrichedCandidates();
+  const mc_overlap = ld.metro_council_overlap ?? [];
+  const ld_hd_finalists = enrichedAll.filter(
+    (c) =>
+      c.advances &&
+      c.office_type === "STATE_HOUSE" &&
+      c.district_number === ld_number
+  );
+  const ld_mc_finalists = enrichedAll.filter(
+    (c) =>
+      c.advances &&
+      c.office_type === "METRO_COUNCIL" &&
+      mc_overlap.includes(c.district_number)
+  );
   const counts = countByStrategy(precincts);
   const byStrategy = groupByStrategy(precincts);
 
   // Evaluate the highest-leverage-move rules engine.
   // v1 assumption: /my-ld/[n] viewer is the LD Chair (or a surrogate viewing their district).
   // Counts derived from live precinct data; priority-MC overlap from LD row.
-  // Has-contested-primary: the LD's State House race has 2+ D primary candidates.
+  // Has-contested-primary: the LD's State House race had 2+ D primary candidates.
   const dPrimaryCandidates = candidates.hd.filter(
     (c) => c.party === "D" && c.on_primary_ballot
   );
-  const PRIORITY_MCS = [7, 17, 21];
+  // Phase 2 priority MC list per the General Strategic Plan: D11 flip;
+  // D7/9/17/21 R-defense; D1/5 nonpartisan defense.
+  const PRIORITY_MCS = [1, 5, 7, 9, 11, 17, 21];
   const priorityMcOverlap = (ld.metro_council_overlap ?? []).filter((mc) =>
     PRIORITY_MCS.includes(mc)
   );
@@ -366,24 +387,26 @@ export default async function LdDetailPage({
           </div>
         </section>
 
-        {/* Races on the ballot */}
-        {(candidates.hd.length > 0 || candidates.mc.length > 0) && (
+        {/* November ballot races your LD touches — finalists only.
+            Primary losers live on /candidates; this section is the
+            Phase 2 reality. */}
+        {(ld_hd_finalists.length > 0 || ld_mc_finalists.length > 0) && (
           <section id="ld-races" className="mb-8 scroll-mt-24">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-              Races on the 2026 ballot that your LD&apos;s work moves
+              Your November ballot · the races your LD&apos;s work moves
             </h2>
-            {candidates.hd.length > 0 && (
+            {ld_hd_finalists.length > 0 && (
               <RaceBlock
                 title={`State House District ${ld_number}`}
                 subtitle="Your LD seat"
                 officeType="STATE_HOUSE"
-                candidates={candidates.hd}
+                candidates={ld_hd_finalists}
               />
             )}
-            {candidates.mc.length > 0 && (
+            {ld_mc_finalists.length > 0 && (
               <>
                 {ld.metro_council_overlap.map((mc) => {
-                  const mcCandidates = candidates.mc.filter((c) => c.district_number === mc);
+                  const mcCandidates = ld_mc_finalists.filter((c) => c.district_number === mc);
                   if (mcCandidates.length === 0) return null;
                   return (
                     <RaceBlock
@@ -632,10 +655,13 @@ type Candidate = {
   party: string;
   is_incumbent: boolean;
   is_endorsed: boolean;
-  on_primary_ballot: boolean;
+  // on_primary_ballot is only on rows from the raw `candidates` table;
+  // enriched / synthesized candidates (post-primary) don't carry it.
+  // Marked optional so RaceBlock accepts both shapes.
+  on_primary_ballot?: boolean;
   notes: string | null;
-  website_url: string | null;
-  email: string | null;
+  website_url?: string | null;
+  email?: string | null;
 };
 
 function RaceBlock({
