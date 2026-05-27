@@ -7,6 +7,7 @@ import {
   type EnrichedCandidate,
   type OfficeType,
 } from "@/lib/db/candidate-results";
+import { JeffersonShareCallout } from "@/components/election-results/JeffersonShareCallout";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "2026 Primary Results" };
@@ -118,6 +119,8 @@ export default async function CandidatesPage() {
             </span>
           </Link>
         </div>
+
+        <JeffersonShareCallout candidates={candidates} />
 
         <div className="mb-8">
 
@@ -413,6 +416,16 @@ function CandidateRow({ c, nonpartisan }: { c: Candidate; nonpartisan: boolean }
               {pct.toFixed(1)}%
             </span>
           </div>
+        </div>
+      )}
+
+      {c.statewide_votes != null && c.jefferson_share_pct != null && (
+        <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
+          Statewide: {c.statewide_votes.toLocaleString()} votes ·{" "}
+          <span className="font-semibold text-[var(--color-ldp-navy-900)]">
+            {c.jefferson_share_pct.toFixed(1)}%
+          </span>{" "}
+          from Jefferson
         </div>
       )}
 

@@ -52,6 +52,21 @@ export type EnrichedCandidate = CandidateRow & {
   // ("County Attorney", "Sheriff", "PVA", etc.). null for other office
   // types.
   county_sub_office: string | null;
+  // Statewide context (loaded from KY SOS live results). For statewide
+  // races (US Senate, US House, State Senate, State House), this is the
+  // candidate's total statewide vote and Jefferson County's share of
+  // it — the board-facing metric showing how much Louisville drives
+  // each campaign.
+  statewide_votes: number | null;
+  jefferson_share_pct: number | null;
+};
+
+type StatewideRow = {
+  party: string;
+  office: string;
+  district: string;
+  candidate: string;
+  statewide_votes: number;
 };
 
 // Map candidates.office_type → election_results_2026_primary.office.
@@ -335,6 +350,8 @@ function deriveSyntheticCandidates(
         was_on_ballot: true,
         race_bucket_key,
         county_sub_office: agg.countySubOff,
+        statewide_votes: null,
+        jefferson_share_pct: null,
       });
     }
   }
@@ -406,7 +423,7 @@ function computeAdvances(
 
 export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
   const supabase = await getSupabaseServer();
-  const [candidatesRes, allResultsRes] = await Promise.all([
+  const [candidatesRes, allResultsRes, statewideRes] = await Promise.all([
     supabase
       .from("candidates")
       .select(
@@ -416,10 +433,39 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
     supabase
       .from("election_results_2026_primary")
       .select("party, office, district, candidate, ld_number, ld_votes, ld_race_total, precincts_reporting"),
+    supabase
+      .from("election_statewide_2026_primary")
+      .select("party, office, district, candidate, statewide_votes"),
   ]);
 
   const candidates = (candidatesRes.data ?? []) as CandidateRow[];
   const all = (allResultsRes.data ?? []) as ResultRowAll[];
+  const statewide = (statewideRes.data ?? []) as StatewideRow[];
+
+  // Index statewide totals by (party, office, normalized candidate name).
+  // Office strings already match between the two tables. District matters
+  // for US House but US Senate has district="" on both sides.
+  const statewideIdx = new Map<string, number>();
+  for (const s of statewide) {
+    const key = `${s.party}|${s.office}|${s.district}|${normalize(s.candidate)}`;
+    statewideIdx.set(key, s.statewide_votes);
+  }
+  function lookupStatewide(
+    party: string,
+    office: string,
+    district: string,
+    name: string
+  ): number | null {
+    const key = `${party}|${office}|${district}|${normalize(name)}`;
+    const exact = statewideIdx.get(key);
+    if (exact != null) return exact;
+    // Last-name + first-initial fallback against the same (party, office, district)
+    const candidatesInRace = statewide.filter(
+      (s) => s.party === party && s.office === office && s.district === district
+    );
+    const fb = candidatesInRace.find((s) => matchName(s.candidate, name));
+    return fb?.statewide_votes ?? null;
+  }
 
   // First pass: attach countywide vote totals + race bucket info to
   // every seeded candidate.
@@ -435,6 +481,8 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
       race_bucket_key: raceBucketKey(c),
       county_sub_office:
         c.office_type === "COUNTY_OFFICE" ? countySubOffice(c.notes) : null,
+      statewide_votes: null,
+      jefferson_share_pct: null,
     };
   });
 
@@ -517,6 +565,44 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
       } else {
         c.status_label = "Eliminated";
       }
+    }
+  }
+
+  // Fourth pass: attach statewide totals + Jefferson share for every
+  // candidate where the SOS provided a statewide tally. Only statewide
+  // / federal / state-legislative races have SOS rows; nonpartisan
+  // local races (Mayor, MC) do not.
+  for (const c of enriched) {
+    // The statewide table uses the same office strings as the results
+    // table. Map office_type → office string.
+    let office: string | null = null;
+    switch (c.office_type) {
+      case "US_SENATE":
+        office = "U.S. SENATOR";
+        break;
+      case "US_HOUSE":
+        office = "U.S. REPRESENTATIVE";
+        break;
+      case "STATE_SENATE":
+        office = "STATE SENATE";
+        break;
+      case "STATE_HOUSE":
+        office = "STATE REPRESENTATIVE";
+        break;
+      default:
+        office = null;
+    }
+    if (!office) continue;
+    const partyKey = c.party === "D" ? "DEM" : c.party === "R" ? "REP" : "";
+    if (!partyKey) continue;
+    // US Senate is statewide → district "". Everything else uses the
+    // candidate's actual district number.
+    const district =
+      c.office_type === "US_SENATE" ? "" : String(c.district_number);
+    const sw = lookupStatewide(partyKey, office, district, c.full_name);
+    if (sw != null && sw > 0 && c.votes != null) {
+      c.statewide_votes = sw;
+      c.jefferson_share_pct = (c.votes / sw) * 100;
     }
   }
 
