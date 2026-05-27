@@ -419,15 +419,17 @@ function CandidateRow({ c, nonpartisan }: { c: Candidate; nonpartisan: boolean }
         </div>
       )}
 
-      {c.statewide_votes != null && c.jefferson_share_pct != null && (
-        <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
-          Statewide: {c.statewide_votes.toLocaleString()} votes ·{" "}
-          <span className="font-semibold text-[var(--color-ldp-navy-900)]">
-            {c.jefferson_share_pct.toFixed(1)}%
-          </span>{" "}
-          from Jefferson
-        </div>
-      )}
+      {c.statewide_votes != null &&
+        c.jefferson_share_pct != null &&
+        c.jefferson_share_pct < 95 && (
+          <div className="mt-1 text-[11px] text-[var(--color-ldp-ink-700)]">
+            Statewide: {c.statewide_votes.toLocaleString()} votes ·{" "}
+            <span className="font-semibold text-[var(--color-ldp-navy-900)]">
+              {c.jefferson_share_pct.toFixed(1)}%
+            </span>{" "}
+            from Jefferson
+          </div>
+        )}
 
       {c.notes && !c.notes.toLowerCase().includes("barred") && (
         <div className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">{c.notes}</div>

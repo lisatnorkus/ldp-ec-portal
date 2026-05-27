@@ -206,10 +206,19 @@ export default async function ThisMonthPage() {
         <h2 className="mb-1 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
           The full {currentYear} Rock Star Playbook
         </h2>
-        <p className="mb-4 text-xs text-[var(--color-ldp-ink-700)]">
+        <p className="mb-2 text-xs text-[var(--color-ldp-ink-700)]">
           Every month of the year, live and historical. Click any month to expand the full
-          playbook for that window. Past months stay here so you can look back at what was live.
+          playbook for that window. Past months go gray so the colored ones are the months
+          that still matter.
         </p>
+        <div className="mb-4 rounded-lg border-l-4 border-[var(--color-ldp-navy-700)] bg-[var(--color-ldp-cream,#fbf8f1)] px-4 py-3 text-xs text-[var(--color-ldp-ink-900)]">
+          <strong className="text-[var(--color-ldp-navy-900)]">
+            Precinct work is year-round.
+          </strong>{" "}
+          Doors, voter ID, captain recruiting, neighbor-to-neighbor relationships — all of
+          it builds through summer and fall, not just in October. The one thing you can
+          never get more of is time. Use it.
+        </div>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {cards
             .filter((c) => c.year === currentYear)
@@ -221,16 +230,27 @@ export default async function ThisMonthPage() {
               const preview = markdownToPlain(c.content_md)
                 .replace(/^[^—.]*[—.]\s*/, "")
                 .slice(0, 140);
+              // Past months desaturate: gray icon, gray border accent.
+              // Red/theme colors stay reserved for live and upcoming
+              // months so the eye lands on what's actionable. The full
+              // playbook content stays accessible inside the expand
+              // panel for the institutional record.
+              const displayAccent = isPast
+                ? "var(--color-ldp-ink-400, #7a808b)"
+                : theme.accent;
+              const displayBg = isPast
+                ? "var(--color-ldp-ink-100, #e6e7ea)"
+                : theme.accentBg;
               return (
                 <details
                   key={`${c.year}-${c.month}`}
                   open={isCurrent}
                   className={`group overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow ${
-                    isPast ? "opacity-75" : ""
+                    isPast ? "opacity-90" : ""
                   }`}
                   style={{
                     borderLeftWidth: 4,
-                    borderLeftColor: theme.accent,
+                    borderLeftColor: displayAccent,
                     borderColor: isCurrent ? theme.accent : "var(--color-ldp-line)",
                     borderTopWidth: 1,
                     borderRightWidth: 1,
@@ -242,11 +262,11 @@ export default async function ThisMonthPage() {
                       <div className="flex items-center gap-2">
                         <span
                           className="flex size-7 items-center justify-center rounded-lg text-white"
-                          style={{ backgroundColor: theme.accent }}
+                          style={{ backgroundColor: displayAccent }}
                         >
                           <Icon aria-hidden="true" className="size-3.5" />
                         </span>
-                        <div className="text-base font-bold text-[var(--color-ldp-navy-900)]">
+                        <div className={`text-base font-bold ${isPast ? "text-[var(--color-ldp-ink-700)]" : "text-[var(--color-ldp-navy-900)]"}`}>
                           {MONTH_NAMES[c.month]}
                         </div>
                       </div>
@@ -275,7 +295,7 @@ export default async function ThisMonthPage() {
                     </div>
                     <div
                       className="mt-2 text-[10px] font-semibold uppercase tracking-widest"
-                      style={{ color: theme.accent }}
+                      style={{ color: displayAccent }}
                     >
                       {theme.label}
                     </div>
@@ -285,14 +305,14 @@ export default async function ThisMonthPage() {
                     </p>
                     <div
                       className="mt-2 text-[10px] font-medium uppercase tracking-widest group-open:hidden"
-                      style={{ color: theme.accent }}
+                      style={{ color: displayAccent }}
                     >
                       Open full playbook →
                     </div>
                   </summary>
                   <div
                     className="border-t p-4"
-                    style={{ borderColor: theme.accent, backgroundColor: theme.accentBg }}
+                    style={{ borderColor: displayAccent, backgroundColor: displayBg }}
                   >
                     <MarkdownBody
                       text={c.content_md}

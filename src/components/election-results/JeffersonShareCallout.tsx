@@ -35,15 +35,27 @@ function officeLabel(c: EnrichedCandidate): string {
   }
 }
 
+// Only races where the universe extends beyond Jefferson are worth
+// framing as "Jefferson's share of statewide." Wholly-Jefferson races
+// (KY-3, every State Senate / State House district that lives entirely
+// inside the county) trivially come in at ~100% Jefferson and the share
+// number is meaningless to a board.
+const SHARE_MEANINGFUL_THRESHOLD = 95;
+
 export function JeffersonShareCallout({ candidates }: Props) {
-  // Only candidates with statewide data
+  // Only candidates whose statewide universe is larger than Jefferson —
+  // i.e., U.S. Senate (KY-wide) and races that span counties beyond
+  // Jefferson (KY-2). Drop any candidate whose Jefferson share is at or
+  // above the threshold because that means the race is effectively
+  // contained in Jefferson.
   const rows: Row[] = candidates
     .filter(
       (c) =>
         c.statewide_votes != null &&
         c.statewide_votes > 0 &&
         c.votes != null &&
-        c.jefferson_share_pct != null
+        c.jefferson_share_pct != null &&
+        c.jefferson_share_pct < SHARE_MEANINGFUL_THRESHOLD
     )
     .map((c) => ({
       full_name: c.full_name,
@@ -58,11 +70,8 @@ export function JeffersonShareCallout({ candidates }: Props) {
 
   if (rows.length === 0) return null;
 
-  // Headline picks: top three rows by share (within races that aren't
-  // already 100% Jefferson — those are KY-3 only, where the framing is
-  // tautological).
-  const meaningful = rows.filter((r) => r.share_pct < 99.5);
-  const top = [...meaningful]
+  // Headline picks: top three rows by share.
+  const top = [...rows]
     .sort((a, b) => b.share_pct - a.share_pct)
     .slice(0, 3);
 

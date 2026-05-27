@@ -5,6 +5,7 @@ import { HubShell } from "@/components/hub/HubShell";
 import { PrecinctPlaybookTable } from "@/components/precincts/PrecinctPlaybookTable";
 import { LdNotes } from "@/components/ld-workspace/LdNotes";
 import { LdTasks } from "@/components/ld-workspace/LdTasks";
+import { LdJumpNav } from "@/components/ld-workspace/LdJumpNav";
 import { fetchNotesByLd } from "@/lib/db/ld-notes";
 import { fetchTasksByLd, fetchAssignablesForLd } from "@/lib/db/ld-tasks";
 import {
@@ -234,6 +235,7 @@ export default async function LdDetailPage({
       title={`LD${ld_number}.`}
       maxWidthClass="max-w-5xl"
     >
+        <LdJumpNav />
         <div className="mb-8">
           <p className="text-sm text-[var(--color-ldp-ink-700)]">
             {precincts.length} precincts · {counts.sleeper_dems.toLocaleString()} sleeper Dems in LD{ld_number}
@@ -249,20 +251,24 @@ export default async function LdDetailPage({
         {/* 2026 Primary results — institutional memory. Race-by-race
             detail collapses by default so the LD workspace below stays
             close to the top of the page. */}
-        <PrimaryResults2026Card
-          ld_number={ld_number}
-          ld_results={primary_ld_results}
-          ld_turnout={primary_ld_turnout}
-          all_results={primary_all_results}
-          all_turnout={primary_all_turnout}
-        />
+        <div id="ld-results" className="scroll-mt-24">
+          <PrimaryResults2026Card
+            ld_number={ld_number}
+            ld_results={primary_ld_results}
+            ld_turnout={primary_ld_turnout}
+            all_results={primary_all_results}
+            all_turnout={primary_all_turnout}
+          />
+        </div>
 
         {/* Tasks go at the top — this is what the chair looks at first */}
-        <LdTasks ldNumber={ld_number} tasks={tasks} assignables={assignables} />
+        <div id="ld-tasks" className="scroll-mt-24">
+          <LdTasks ldNumber={ld_number} tasks={tasks} assignables={assignables} />
+        </div>
 
         {/* Highest-leverage move this week */}
         {recommendation && (
-          <section className="mb-8 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-6 shadow-sm">
+          <section id="ld-play" className="mb-8 scroll-mt-24 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-6 shadow-sm">
             <div className="flex items-start gap-3">
               <Target className="mt-1 size-5 shrink-0 text-[var(--color-ldp-red)]" />
               <div className="flex-1">
@@ -281,22 +287,26 @@ export default async function LdDetailPage({
         )}
 
         {/* Leadership */}
-        <section className="mb-8 grid gap-3 md:grid-cols-2">
+        <section id="ld-leadership" className="mb-8 grid scroll-mt-24 gap-3 md:grid-cols-2">
           <LeadershipCard role="Chair" member={chair} />
           <LeadershipCard role="Vice Chair" member={vc} />
         </section>
 
-        <LdNotes ldNumber={ld_number} notes={notes} />
+        <div id="ld-notes" className="scroll-mt-24">
+          <LdNotes ldNumber={ld_number} notes={notes} />
+        </div>
 
         {/* Election takeaways live near the bottom of the LD page —
             they're long-term memory, not daily-use. The user adds them
             as institutional knowledge for future LD officers. */}
-        <ElectionTakeaways
-          ld_number={ld_number}
-          election_key="2026_primary"
-          election_label="2026 Primary"
-          takeaways={primary_takeaways}
-        />
+        <div id="ld-takeaways" className="scroll-mt-24">
+          <ElectionTakeaways
+            ld_number={ld_number}
+            election_key="2026_primary"
+            election_label="2026 Primary"
+            takeaways={primary_takeaways}
+          />
+        </div>
 
         {staleCount > 0 && (
           <Link
@@ -318,13 +328,17 @@ export default async function LdDetailPage({
         )}
 
         {/* Early voting in this LD — time-sensitive during primary window */}
-        <EvSection ld={ld_number} locations={evLocations} />
+        <div id="ld-early-voting" className="scroll-mt-24">
+          <EvSection ld={ld_number} locations={evLocations} />
+        </div>
 
         {/* Precinct captains on file */}
-        <PcSection ld={ld_number} precinctCount={precincts.length} pcs={pcs} />
+        <div id="ld-captains" className="scroll-mt-24">
+          <PcSection ld={ld_number} precinctCount={precincts.length} pcs={pcs} />
+        </div>
 
         {/* Strategy mix summary */}
-        <section className="mb-8">
+        <section id="ld-strategy" className="mb-8 scroll-mt-24">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Strategy mix · {precincts.length} precincts
           </h2>
@@ -351,7 +365,7 @@ export default async function LdDetailPage({
 
         {/* Races on the ballot */}
         {(candidates.hd.length > 0 || candidates.mc.length > 0) && (
-          <section className="mb-8">
+          <section id="ld-races" className="mb-8 scroll-mt-24">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
               Races on the 2026 ballot that your LD&apos;s work moves
             </h2>
@@ -385,7 +399,7 @@ export default async function LdDetailPage({
 
         {/* Precinct playbook — all buckets collapsed by default so the
             page doesn't become a wall on LDs with 40+ precincts */}
-        <section className="mb-8">
+        <section id="ld-playbook" className="mb-8 scroll-mt-24">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
             Precinct playbook
           </h2>
