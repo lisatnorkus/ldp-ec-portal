@@ -485,12 +485,30 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
           c.status_label = "Unopposed in November";
         } else if (nonpartisan) {
           c.status_label = "Top-two — advances to November";
-        } else if (c.party === "D") {
-          c.status_label = "Won D primary — Democratic nominee";
-        } else if (c.party === "R") {
-          c.status_label = "Won R primary — Republican nominee";
         } else {
-          c.status_label = "Advances to November";
+          // Did the candidate's party actually have a contested primary?
+          // If they were the only filer in their party, calling them
+          // "primary winner" misrepresents what happened — they're the
+          // nominee, but there was no primary.
+          const samePartyWithVotes = bucket.filter(
+            (o) => o.party === c.party && (o.votes ?? 0) > 0
+          ).length;
+          const partyLabel =
+            c.party === "D"
+              ? "Democratic"
+              : c.party === "R"
+                ? "Republican"
+                : "";
+          if (samePartyWithVotes > 1) {
+            c.status_label =
+              c.party === "R"
+                ? "Won R primary — Republican nominee"
+                : "Won D primary — Democratic nominee";
+          } else if (partyLabel) {
+            c.status_label = `${partyLabel} nominee — no primary opponent`;
+          } else {
+            c.status_label = "Advances to November";
+          }
         }
       } else if (c.votes == null) {
         c.status_label = "Filed, no primary recorded";
