@@ -72,6 +72,19 @@ const MONTH_NAMES = [
   "December",
 ];
 
+// The KDP statewide CEC meeting is the 3rd Tuesday of every month at
+// 7pm ET, hosted by Morgan Eaves. Computes the date in the given
+// month/year so the This Month card can surface it (and call it out
+// when it's tonight).
+function kdpEcMeetingDate(year: number, month: number): Date {
+  // First day of the month
+  const d = new Date(year, month - 1, 1);
+  // Tuesday is dayOfWeek 2
+  const firstTuesday = new Date(year, month - 1, 1 + ((2 - d.getDay() + 7) % 7));
+  // Third Tuesday = first + 14 days
+  return new Date(firstTuesday.getFullYear(), firstTuesday.getMonth(), firstTuesday.getDate() + 14);
+}
+
 export default async function ThisMonthPage() {
   const now = new Date();
   const currentMonth = now.getMonth() + 1;
@@ -79,6 +92,12 @@ export default async function ThisMonthPage() {
   const monthStart = new Date(currentYear, currentMonth - 1, 1);
   const monthEnd = new Date(currentYear, currentMonth, 1);
   const yearStart = new Date(currentYear, 0, 1);
+
+  // KDP statewide CEC meeting for this month
+  const kdpMeeting = kdpEcMeetingDate(currentYear, currentMonth);
+  const isKdpToday =
+    kdpMeeting.toDateString() === now.toDateString();
+  const isKdpUpcoming = kdpMeeting >= now && kdpMeeting < monthEnd;
 
   const [cards, calendarUrl, voterGuideUrl, calendarEvents] = await Promise.all([
     fetchMonthCards(),
@@ -112,6 +131,39 @@ export default async function ThisMonthPage() {
       maxWidthClass="max-w-4xl"
     >
       <SpecialMeetingBanner />
+
+      {(isKdpToday || isKdpUpcoming) && (
+        <section
+          className={`mb-6 overflow-hidden rounded-xl border-2 shadow-sm ${
+            isKdpToday
+              ? "border-[var(--color-ldp-red)] bg-white"
+              : "border-[var(--color-ldp-navy-700)] bg-white"
+          }`}
+        >
+          <div
+            className={`flex items-center gap-2 px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white ${
+              isKdpToday ? "bg-[var(--color-ldp-red)]" : "bg-[var(--color-ldp-navy-700)]"
+            }`}
+          >
+            {isKdpToday && (
+              <span aria-hidden className="flex size-2 animate-pulse rounded-full bg-white" />
+            )}
+            {isKdpToday ? "Tonight" : "This month"} · KDP statewide CEC meeting
+          </div>
+          <div className="p-5">
+            <h2 className="text-lg font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+              {isKdpToday ? "KDP EC meeting tonight at 7pm ET." : `KDP EC meeting on ${kdpMeeting.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} at 7pm ET.`}
+            </h2>
+            <p className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
+              Hosted by Morgan Eaves (KDP Executive Director). All LDPEC members welcome — every
+              county&apos;s EC in one room. The 3rd Tuesday of every month, 7pm Eastern.
+            </p>
+            <p className="mt-2 text-[11px] text-[var(--color-ldp-ink-700)]">
+              Zoom link + post-meeting decks live in the KDP County Exec Committee Hub on Drive.
+            </p>
+          </div>
+        </section>
+      )}
 
       <div className="mb-8">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium">

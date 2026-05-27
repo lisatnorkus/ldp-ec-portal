@@ -59,7 +59,7 @@ const EVENT_THEME: Record<
     pitch: string;
   }
 > = {
-  CELEBRATION_OF_DEMOCRACY: {
+  WENDELL_FORD_DINNER: {
     accent: "#C8102E",
     bgTint: "#FFF5F6",
     tagline: "Spring flagship · Wendell Ford Dinner",

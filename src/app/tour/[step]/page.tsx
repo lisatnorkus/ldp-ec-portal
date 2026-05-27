@@ -405,6 +405,22 @@ function Step4() {
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+          KDP statewide monthly meeting
+        </h3>
+        <p className="text-sm text-white/85">
+          The Kentucky Democratic Party runs a statewide CEC meeting the{" "}
+          <strong className="text-white">3rd Tuesday of every month at 7pm ET</strong>, hosted
+          by Morgan Eaves (KDP Executive Director). It&apos;s every county&apos;s EC in one room
+          — agendas, training, statewide coordination. All LDPEC members are welcome.
+        </p>
+        <p className="mt-2 text-xs text-white/60">
+          Zoom link is on the KDP County Exec Committee Hub. Decks are posted there after each
+          meeting; missed-meeting decks land in the same folder.
+        </p>
+      </section>
+
+      <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           If you can&apos;t make it: proxy
         </h3>
         <p className="text-sm text-white/85">
@@ -678,7 +694,7 @@ function Step5() {
         <TourTile
           href="/events"
           title="Signature Events"
-          body="Celebration of Democracy, Women Deliver Democracy, Dems at the Downs — the three events that fund the party. Your $500 annual raise runs through their ticket links."
+          body="Wendell Ford Dinner, Women Deliver Democracy, Dems at the Downs — the three events that fund the party. Your $500 annual raise runs through their ticket links."
           primary
         />
         <TourTile

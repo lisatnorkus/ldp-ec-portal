@@ -130,7 +130,7 @@ export default function CommsPage() {
             icon={<Mail aria-hidden="true" className="size-4" />}
             tag="Route through intake"
             title="Use the form."
-            body="All comms asks — graphics, social posts, calendar listings, printed materials, volunteer leads — go through the Event Request form."
+            body="Everything goes through the Event Request form: turfs, Mobilize, HQ space bookings, holds, putting a private event on the internal calendar, social posts about events, pre-approved ad details, and printed-materials requests — fliers, posters, signs for events and outreach."
             cta={{ label: "Event Request form", href: "https://loukydemparty.fillout.com/eventrequest" }}
           />
         </div>
