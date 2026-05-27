@@ -62,9 +62,9 @@ const EVENT_THEME: Record<
   CELEBRATION_OF_DEMOCRACY: {
     accent: "#C8102E",
     bgTint: "#FFF5F6",
-    tagline: "Spring flagship · Last Saturday in March",
+    tagline: "Spring flagship · Wendell Ford Dinner",
     pitch:
-      "Our biggest dinner of the year. Sells out every time. If you bring one table of 10, you're halfway to your $500.",
+      "Our biggest dinner of the year. Sells out every time. Tickets are $125 a person — 4 tickets through your link covers your full $500 raise. A table of 10 is $1,250, 2½× your goal.",
   },
   WOMEN_DELIVER_DEMOCRACY: {
     accent: "#D4A017",

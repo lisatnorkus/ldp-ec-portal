@@ -248,6 +248,28 @@ export default async function LdDetailPage({
           </p>
         </div>
 
+        {/* "This Week" target box — pinned at the very top of the LD
+            page, always rendered. When the rules engine matches a
+            specific play, we surface it. When it doesn't, we fall back
+            to the phase-level guidance so the box never disappears. */}
+        <section id="ld-play" className="mb-8 scroll-mt-24 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-6 shadow-sm">
+          <div className="flex items-start gap-3">
+            <Target className="mt-1 size-5 shrink-0 text-[var(--color-ldp-red)]" />
+            <div className="flex-1">
+              <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
+                Your highest-leverage move this week
+              </div>
+              <p className="mt-2 text-base leading-relaxed text-[var(--color-ldp-ink-900)]">
+                {recommendation?.text ?? fallbackPlayForPhase(currentPhase, counts.DEFEND, counts.PRIMARY)}
+              </p>
+              <div className="mt-3 text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                Current cycle phase: {currentPhase.replace(/_/g, " ").toLowerCase()}
+                {recommendation && ` · rule #${recommendation.rule_id}`}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* 2026 Primary results — institutional memory. Race-by-race
             detail collapses by default so the LD workspace below stays
             close to the top of the page. */}
@@ -261,30 +283,11 @@ export default async function LdDetailPage({
           />
         </div>
 
-        {/* Tasks go at the top — this is what the chair looks at first */}
+        {/* Tasks go at the top of the workspace — this is what the
+            chair touches every visit */}
         <div id="ld-tasks" className="scroll-mt-24">
           <LdTasks ldNumber={ld_number} tasks={tasks} assignables={assignables} />
         </div>
-
-        {/* Highest-leverage move this week */}
-        {recommendation && (
-          <section id="ld-play" className="mb-8 scroll-mt-24 rounded-xl border-2 border-[var(--color-ldp-red)] bg-white p-6 shadow-sm">
-            <div className="flex items-start gap-3">
-              <Target className="mt-1 size-5 shrink-0 text-[var(--color-ldp-red)]" />
-              <div className="flex-1">
-                <div className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
-                  Your highest-leverage move this week
-                </div>
-                <p className="mt-2 text-base leading-relaxed text-[var(--color-ldp-ink-900)]">
-                  {recommendation.text}
-                </p>
-                <div className="mt-3 text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
-                  Current cycle phase: {currentPhase.replace(/_/g, " ").toLowerCase()} · rule #{recommendation.rule_id}
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* Leadership */}
         <section id="ld-leadership" className="mb-8 grid scroll-mt-24 gap-3 md:grid-cols-2">
@@ -470,6 +473,40 @@ export default async function LdDetailPage({
         </div>
     </HubShell>
   );
+}
+
+// Phase-level guidance the target box falls back to when no rule
+// in the highest-leverage engine matches the current LD's context.
+// Each phase gets a short, action-oriented sentence rooted in the
+// strategy buckets so the box is never empty.
+function fallbackPlayForPhase(
+  phase: string,
+  hold_the_line_count: number,
+  power_base_count: number
+): string {
+  switch (phase) {
+    case "PRIMARY":
+    case "PRIMARY_LOCKDOWN":
+      return power_base_count > 0
+        ? `Doors in your ${power_base_count} Power Base precincts. Primary turnout is the whole game right now — every reliable Democrat you turn out is the margin.`
+        : "Doors and turnout in your Power Base precincts. Primary turnout is the whole game right now.";
+    case "POST_PRIMARY":
+      return "Recruit the volunteers who showed up in May. The fall canvass team starts with the people who knocked doors this spring — call them by name and lock them in.";
+    case "SUMMER":
+      return hold_the_line_count > 0
+        ? `Get a captain in every one of your ${hold_the_line_count} Hold-the-Line precincts before September. Summer is the recruitment window — doors don't start in October.`
+        : "Captain recruitment and voter registration. Summer is the runway — by September the work has to be operational.";
+    case "GENERAL":
+      return hold_the_line_count > 0
+        ? `Weekly canvass cadence in your ${hold_the_line_count} Hold-the-Line precincts. Every voter gets a face-to-face touch before November. Layer mail + text + call.`
+        : "Weekly canvass cadence in Hold-the-Line precincts. Layered contact — mail, text, call, door — between now and November 3.";
+    case "GENERAL_LOCKDOWN":
+      return "Election week — early voting Thu/Fri/Sat, Election Day Tuesday. Doors, phones, rides. Rest after Tuesday.";
+    case "POST_GENERAL":
+      return "Debrief: which Hold-the-Line precincts moved and which didn't. Thank every volunteer by name. This is where the next cycle's strategy gets written.";
+    default:
+      return "Captain coverage and relationship-building. The work doesn't stop between cycles — every door knocked off-cycle is a vote you didn't have to chase later.";
+  }
 }
 
 function EvSection({ ld, locations }: { ld: number; locations: EvLocationLite[] }) {
