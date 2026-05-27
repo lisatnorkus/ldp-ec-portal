@@ -500,7 +500,7 @@ export default function HelpPage() {
 
         <Section id="events" icon={<Ticket />} title="Events, ticket links, and the $620 math">
           <P>
-            Three signature events fund the party: Wendell Ford Dinner (spring), Women
+            Three signature events fund the party: Celebration of Democracy (spring), Women
             Deliver Democracy (late August), and Dems at the Downs (post-election).
           </P>
           <P>

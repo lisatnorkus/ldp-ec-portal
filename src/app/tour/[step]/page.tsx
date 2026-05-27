@@ -694,7 +694,7 @@ function Step5() {
         <TourTile
           href="/events"
           title="Signature Events"
-          body="Wendell Ford Dinner, Women Deliver Democracy, Dems at the Downs — the three events that fund the party. Your $500 annual raise runs through their ticket links."
+          body="Celebration of Democracy, Women Deliver Democracy, Dems at the Downs — the three events that fund the party. Your $500 annual raise runs through their ticket links."
           primary
         />
         <TourTile

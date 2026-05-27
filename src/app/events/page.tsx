@@ -59,10 +59,10 @@ const EVENT_THEME: Record<
     pitch: string;
   }
 > = {
-  WENDELL_FORD_DINNER: {
+  CELEBRATION_OF_DEMOCRACY: {
     accent: "#C8102E",
     bgTint: "#FFF5F6",
-    tagline: "Spring flagship · Wendell Ford Dinner",
+    tagline: "Spring flagship · Celebration of Democracy",
     pitch:
       "Our biggest dinner of the year. Sells out every time. Tickets are $125 a person — 4 tickets through your link covers your full $500 raise. A table of 10 is $1,250, 2½× your goal.",
   },
