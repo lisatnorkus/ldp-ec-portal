@@ -245,26 +245,18 @@ function bucketKeyForResultRow(
 }
 
 // Walk the results table for every (party, office, district) primary
-// race and synthesize EnrichedCandidate entries for the winners that
-// the seeded `candidates` table doesn't already cover. This is how
-// Republican nominees (Barr, Rodriguez, Adams, Corley, Guthrie, Shultz
-// …) land on the November ballot view without each one being hand-
-// seeded. Also catches D winners the seed missed (e.g. Jennifer Hardin
-// in HD33).
+// race and synthesize EnrichedCandidate entries for everyone who ran but
+// isn't already in the seed. This includes losers — /candidates needs
+// to show them as "Eliminated" with vote totals. The advance status is
+// not set here; the merged list runs through computeAdvances() in the
+// main fetch function.
 function deriveSyntheticCandidates(
   seeded: EnrichedCandidate[],
   all: ResultRowAll[]
 ): EnrichedCandidate[] {
-  // Index seeded candidates by (race_bucket_key + normalized name) so
-  // synth can skip anyone already present.
-  const seededIndex = new Set<string>();
-  for (const c of seeded) {
-    seededIndex.add(`${c.race_bucket_key}|${normalize(c.full_name)}`);
-  }
-
   // First aggregate every result row up to a countywide candidate total
   // keyed by (officeType, race-bucket, party, candidate). US Senate
-  // gets district collapsed to "" because it's statewide.
+  // gets district collapsed to 0 because it's statewide.
   type Agg = {
     officeType: OfficeType;
     countySubOff: string | null;
@@ -310,49 +302,26 @@ function deriveSyntheticCandidates(
 
   const synthetic: EnrichedCandidate[] = [];
   for (const [bucketKey, agg] of buckets) {
-    const nonpartisan =
-      agg.officeType === "MAYOR" || agg.officeType === "METRO_COUNCIL";
-    // For nonpartisan results party=='' but we want top-two. For partisan
-    // we want only the top-one per party.
-    const n = nonpartisan ? 2 : 1;
-    const sorted = [...agg.candidates.entries()].sort((a, b) => b[1] - a[1]);
-    for (let i = 0; i < Math.min(n, sorted.length); i++) {
-      const [rawName, votes] = sorted[i];
-      if (votes <= 0) continue;
-      const race_bucket_key = bucketKeyForResultRow(
-        agg.officeType,
-        agg.district_number,
-        agg.countySubOff
-      );
-      // Skip if the seeded candidates table already has this person.
-      // The name match is loose to handle "Charles BOOKER" vs "Charles
-      // Booker" and the maiden-name variants in the seed.
-      const indexKey = `${race_bucket_key}|${normalize(rawName)}`;
-      if (seededIndex.has(indexKey)) continue;
-      // Last name + first initial fallback against the seeded set in
-      // this bucket — catches things like "S. Brett GUTHRIE" vs
-      // "Brett Guthrie" if both ever co-exist.
-      const seededInBucket = seeded.filter(
-        (s) => s.race_bucket_key === race_bucket_key
-      );
-      if (
-        seededInBucket.some((s) => matchName(s.full_name, rawName))
-      ) {
-        continue;
-      }
-
+    const race_bucket_key = bucketKeyForResultRow(
+      agg.officeType,
+      agg.district_number,
+      agg.countySubOff
+    );
+    const seededInBucket = seeded.filter(
+      (s) => s.race_bucket_key === race_bucket_key
+    );
+    for (const [rawName, votes] of agg.candidates) {
+      // Skip if this person is already seeded. Loose name match catches
+      // "Charles BOOKER" vs "Charles Booker" and "S. Brett GUTHRIE" vs
+      // "Brett Guthrie".
+      if (seededInBucket.some((s) => matchName(s.full_name, rawName))) continue;
       const dbParty =
         agg.party === "DEM" ? "D" : agg.party === "REP" ? "R" : "NP";
-      // Convert the all-caps result name into Title Case so it reads
-      // alongside the seeded names. Leave embedded uppercase initials
-      // (e.g. "TJ") alone-ish by only lowercasing characters following
-      // a letter.
-      const displayName = toTitleCase(rawName);
       synthetic.push({
         id: `synth-${bucketKey}-${rawName}`,
         office_type: agg.officeType,
         district_number: agg.district_number,
-        full_name: displayName,
+        full_name: toTitleCase(rawName),
         party: dbParty,
         is_incumbent: false,
         is_endorsed: false,
@@ -360,14 +329,9 @@ function deriveSyntheticCandidates(
         website_url: null,
         email: null,
         votes,
-        pct: null,
-        advances: true,
-        status_label:
-          dbParty === "R"
-            ? "Won R primary — Republican nominee"
-            : dbParty === "D"
-              ? "Won D primary — Democratic nominee"
-              : "Top-two — advances to November",
+        pct: null, // recomputed in the merged advance pass
+        advances: false,
+        status_label: "",
         was_on_ballot: true,
         race_bucket_key,
         county_sub_office: agg.countySubOff,
@@ -457,8 +421,9 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
   const candidates = (candidatesRes.data ?? []) as CandidateRow[];
   const all = (allResultsRes.data ?? []) as ResultRowAll[];
 
-  // First pass: attach countywide vote totals + race bucket info.
-  const enriched: EnrichedCandidate[] = candidates.map((c) => {
+  // First pass: attach countywide vote totals + race bucket info to
+  // every seeded candidate.
+  const seededEnriched: EnrichedCandidate[] = candidates.map((c) => {
     const totals = countywideTotalsFor(c, all);
     return {
       ...c,
@@ -473,52 +438,63 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
     };
   });
 
-  // Second pass: bucket candidates into actual races (County Office
-  // splits into Attorney / Clerk / Sheriff / PVA / Judge Executive via
-  // notes) and compute advances per bucket.
+  // Second pass: synthesize any primary candidate (winner or loser) the
+  // seed doesn't already cover. This makes results the source of truth
+  // for who actually ran.
+  const synthetic = deriveSyntheticCandidates(seededEnriched, all);
+  const enriched: EnrichedCandidate[] = [...seededEnriched, ...synthetic];
+
+  // Third pass: bucket every candidate into their race (COUNTY_OFFICE
+  // splits via notes / sub-office) and compute advances on the merged
+  // seed + synth list. Then recompute pct against each race's actual
+  // total vote count.
   const buckets = new Map<string, EnrichedCandidate[]>();
   for (const c of enriched) {
-    const key = raceBucketKey(c);
+    const key = c.race_bucket_key;
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key)!.push(c);
   }
+
   for (const [key, bucket] of buckets) {
-    const office = key.split("|")[0] as OfficeType;
+    const office = bucket[0].office_type;
+    const nonpartisan = office === "MAYOR" || office === "METRO_COUNCIL";
     const advanced = computeAdvances(bucket, office);
+
+    // Recompute each candidate's percentage of their own primary's
+    // total. For partisan races, "their primary" is their party group;
+    // for nonpartisan it's the whole bucket.
+    const partyTotal = (party: string) =>
+      bucket
+        .filter((c) => (nonpartisan ? true : c.party === party))
+        .reduce((s, c) => s + (c.votes ?? 0), 0);
+
+    // Count how many advance in the full bucket — used to label the
+    // "Unopposed in November" status correctly (vs unopposed in the
+    // *primary*, which is a different thing).
+    const totalAdvancingInBucket = bucket.filter((c) => advanced.has(c.id))
+      .length;
+
     for (const c of bucket) {
+      const ownTotal = partyTotal(c.party);
+      if (ownTotal > 0 && c.votes != null) {
+        c.pct = (c.votes / ownTotal) * 100;
+      }
       if (advanced.has(c.id)) {
         c.advances = true;
-        const sameParty = bucket.filter(
-          (o) =>
-            office === "MAYOR" || office === "METRO_COUNCIL"
-              ? true
-              : o.party === c.party
-        );
-        if (sameParty.length === 1) {
-          c.status_label = "Advances unopposed";
+        if (totalAdvancingInBucket === 1) {
+          c.status_label = "Unopposed in November";
+        } else if (nonpartisan) {
+          c.status_label = "Top-two — advances to November";
+        } else if (c.party === "D") {
+          c.status_label = "Won D primary — Democratic nominee";
+        } else if (c.party === "R") {
+          c.status_label = "Won R primary — Republican nominee";
         } else {
-          c.status_label =
-            office === "MAYOR" || office === "METRO_COUNCIL"
-              ? "Top-two — advances to November"
-              : "Won primary — advances to November";
+          c.status_label = "Advances to November";
         }
       } else if (c.votes == null) {
-        // No primary result is recorded. If this was an unopposed county
-        // office (PVA / Judge Executive — no primary at all), the lone
-        // filer effectively advances; otherwise mark pending.
-        const sameParty = bucket.filter(
-          (o) =>
-            office === "MAYOR" || office === "METRO_COUNCIL"
-              ? true
-              : o.party === c.party
-        );
-        if (sameParty.length === 1) {
-          c.advances = true;
-          c.status_label = "Advances unopposed";
-        } else {
-          c.status_label = "Result pending";
-        }
-      } else if ((c.votes ?? 0) === 0) {
+        c.status_label = "Filed, no primary recorded";
+      } else if (c.votes === 0) {
         c.status_label = "Withdrew / no votes recorded";
       } else {
         c.status_label = "Eliminated";
@@ -526,10 +502,7 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
     }
   }
 
-  // Add the November opponents (and any D winner the seed missed) by
-  // deriving them from the primary results table.
-  const synthetic = deriveSyntheticCandidates(enriched, all);
-  return [...enriched, ...synthetic];
+  return enriched;
 }
 
 // Helper for UI: derive a friendly sub-office label from a county
