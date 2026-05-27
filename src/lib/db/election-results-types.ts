@@ -44,6 +44,11 @@ export type GroupedRace = {
 // race (Mayor, Senate, etc.) appears up to 18 times. We aggregate by
 // candidate name within each race, sum votes, sum precincts_reporting
 // across the LDs that race covers, and recompute percentages.
+//
+// US SENATOR is statewide but the source PDF stored it per congressional
+// district overlap (2 + 3). We normalize district to "" for that office
+// so a countywide rollup produces one DEM card and one REP card instead
+// of four.
 export function groupRaces(rows: ResultRow[]): GroupedRace[] {
   type Agg = {
     party: RaceParty;
@@ -54,13 +59,15 @@ export function groupRaces(rows: ResultRow[]): GroupedRace[] {
   };
   const map = new Map<string, Agg>();
   for (const r of rows) {
-    const key = `${r.party}|${r.office}|${r.district}`;
+    const effectiveDistrict =
+      r.office === "U.S. SENATOR" ? "" : r.district;
+    const key = `${r.party}|${r.office}|${effectiveDistrict}`;
     let g = map.get(key);
     if (!g) {
       g = {
         party: r.party,
         office: r.office,
-        district: r.district,
+        district: effectiveDistrict,
         candidates: new Map<string, number>(),
         ld_precincts: new Map<number, number>(),
       };
