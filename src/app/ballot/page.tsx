@@ -95,6 +95,33 @@ export default async function BallotPage({
       title="Your fall ballot."
       subtitle="What you'll actually choose on Tuesday, November 3, 2026 — finalists only. No primary noise."
     >
+      {/* Sample Ballot Mobile App — Robert + Beth's public-facing tool.
+          Surface it here so EC members can hand it to neighbors who
+          want a take-it-to-the-booth voter guide. */}
+      <section className="mb-6 overflow-hidden rounded-xl border-2 border-[var(--color-ldp-navy-700)] bg-white shadow-sm">
+        <div className="bg-[var(--color-ldp-navy-700)] px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+          Take to the booth · Sample Ballot mobile app
+        </div>
+        <div className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
+              Public-facing sample-ballot lookup with LDP endorsements + party affiliations.
+              Saves to the voter&apos;s phone gallery so they can carry it into the booth.
+              Built by Robert Kahne + Beth Thorpe. Share this with anyone who&apos;s asked
+              you what&apos;s on the ballot.
+            </p>
+          </div>
+          <a
+            href="https://sample-ballot-2026.louisvilledems.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-[var(--color-ldp-red)] px-3 py-2 text-xs font-semibold text-white hover:bg-[var(--color-ldp-red)]/90"
+          >
+            Open the app →
+          </a>
+        </div>
+      </section>
+
       <BallotLdPicker
         lds={overlaps.map((o) => o.number)}
         selected_ld={selected_ld_num}

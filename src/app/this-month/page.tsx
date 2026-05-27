@@ -99,6 +99,21 @@ export default async function ThisMonthPage() {
     kdpMeeting.toDateString() === now.toDateString();
   const isKdpUpcoming = kdpMeeting >= now && kdpMeeting < monthEnd;
 
+  // HQ renovation calendar from the May 27, 2026 Facilities report.
+  // Carolyn Benedict (Facilities Chair) needs volunteers on every
+  // labelled date except drywall (contractor). Schedule lives here as
+  // a static array; flip to a meetings/events table when v2.1 lands
+  // the broader facilities surface.
+  const HQ_RENO_DATES: Array<{ date: string; label: string; volunteer: boolean; signup_url?: string }> = [
+    { date: "2026-06-06", label: "Painting prep", volunteer: true },
+    { date: "2026-06-07", label: "Drywall completion", volunteer: false },
+    { date: "2026-06-13", label: "Painting + decorating", volunteer: true },
+    { date: "2026-06-14", label: "Ceiling grid + furniture move", volunteer: true },
+    { date: "2026-06-20", label: "Flooring installation", volunteer: true },
+  ];
+  const todayISO = now.toISOString().slice(0, 10);
+  const nextHqDate = HQ_RENO_DATES.find((d) => d.date >= todayISO);
+
   const [cards, calendarUrl, voterGuideUrl, calendarEvents] = await Promise.all([
     fetchMonthCards(),
     fetchCalendarUrl(),
@@ -131,6 +146,59 @@ export default async function ThisMonthPage() {
       maxWidthClass="max-w-4xl"
     >
       <SpecialMeetingBanner />
+
+      {nextHqDate && (
+        <section className="mb-6 overflow-hidden rounded-xl border-2 border-[var(--color-ldp-gold,#c89a3b)] bg-white shadow-sm">
+          <div className="bg-[var(--color-ldp-gold,#c89a3b)] px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-900)]">
+            HQ renovation · Facilities Committee
+          </div>
+          <div className="p-5">
+            <h2 className="text-base font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+              Carolyn needs volunteers. Every EC member is expected to sign up for at least one date.
+            </h2>
+            <p className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
+              Demolition of the EC room is complete. Major dates scheduled — by the next EC
+              meeting the room should be done. New keypad lock approved at the May 27 meeting
+              ($2,010 budget). Front three rooms already cleaned + back in working order.
+            </p>
+            <ul className="mt-3 space-y-1.5 text-sm">
+              {HQ_RENO_DATES.map((d) => {
+                const isPast = d.date < todayISO;
+                const isNext = d.date === nextHqDate.date;
+                return (
+                  <li
+                    key={d.date}
+                    className={`flex items-baseline gap-3 ${isPast ? "opacity-50" : ""}`}
+                  >
+                    <span
+                      className={`min-w-[120px] text-[11px] font-bold uppercase tracking-widest ${
+                        isNext
+                          ? "text-[var(--color-ldp-red)]"
+                          : "text-[var(--color-ldp-ink-700)]"
+                      }`}
+                    >
+                      {new Date(d.date + "T00:00:00").toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                      {isNext ? " · next" : ""}
+                    </span>
+                    <span className="flex-1 text-[var(--color-ldp-ink-900)]">{d.label}</span>
+                    <span className="shrink-0 text-[10px] uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+                      {d.volunteer ? "Volunteers needed" : "Contractor"}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-3 text-[11px] italic text-[var(--color-ldp-ink-700)]">
+              Sign up through the Facilities Committee Sign-up Geniuses (Carolyn Benedict
+              distributes the links). Also accepting book donations for the foyer Book Nook:
+              Local + Kentucky politics, U.S. politics, local/state/U.S. history, banned books.
+            </p>
+          </div>
+        </section>
+      )}
 
       {(isKdpToday || isKdpUpcoming) && (
         <section

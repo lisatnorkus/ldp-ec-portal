@@ -78,6 +78,41 @@ export default async function CaptainCoveragePage() {
         </Link>
       }
     >
+      {/* Nominate-a-PC card — links to the louisvilledems.com precinct
+          leader application that Robert + Beth built. Surfaced here
+          because the captains page is where vacancies get spotted. */}
+      <section className="mb-6 overflow-hidden rounded-xl border-2 border-[var(--color-ldp-gold,#c89a3b)] bg-white shadow-sm">
+        <div className="bg-[var(--color-ldp-gold,#c89a3b)] px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-900)]">
+          Nominate a precinct leader
+        </div>
+        <div className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
+              See a vacancy in your LD? Submit a nomination — the form goes straight onto
+              the next EC meeting&apos;s vote calendar.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            <a
+              href="https://precinct-leaders.louisvilledems.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-red)] px-3 py-2 text-xs font-semibold text-white hover:bg-[var(--color-ldp-red)]/90"
+            >
+              Open the application →
+            </a>
+            <a
+              href="https://loukydemparty.fillout.com/t/arWWS3ygX6us"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-ldp-navy-700)] bg-white px-3 py-2 text-xs font-semibold text-[var(--color-ldp-navy-900)] hover:bg-[var(--color-ldp-navy-100,#eef0f4)]"
+            >
+              Nomination form (Fillout)
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Overall headline tile. */}
       <section className="mb-6 rounded-xl border-2 border-[var(--color-ldp-navy-900)] bg-white p-5">
         <h2 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-800)]">
