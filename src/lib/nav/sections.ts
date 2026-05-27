@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale, Clock, ArrowLeftRight, CheckSquare } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale, Clock, ArrowLeftRight, CheckSquare, FileText } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -14,6 +14,9 @@ export const SECTION_NAV: SectionNavItem[] = [
   { slug: "plan-map", label: "Plan & Map", href: "/plan-map", icon: Map,
     description: "Strategy map, the 2026 plan, precinct targeting countywide.",
     accent: "#0E4C9E" },
+  { slug: "general-plan", label: "General Plan", href: "/general-plan", icon: FileText,
+    description: "The 2026 General Strategic Plan — Phase 2 of the cycle. Priority races, strategy zones, what every LD chair runs from June through November.",
+    accent: "#C8102E" },
   { slug: "my-ld", label: "My LD", href: "/my-ld", icon: Home,
     description: "Your district: precincts, leadership, races on the ballot.",
     accent: "#C8102E" },

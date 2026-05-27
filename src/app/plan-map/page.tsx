@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ExternalLink, MapPin } from "lucide-react";
+import { ExternalLink, MapPin, FileText } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
 import { getKypoliticsServer } from "@/lib/supabase/kypolitics";
 
@@ -60,6 +59,35 @@ export default async function PlanMapPage() {
             Map visualizes this — click below to jump in. The counts here are the countywide baseline.
           </p>
         </div>
+
+        {/* The general strategic plan is now the operating plan — primary is wrapped. */}
+        <section className="mb-8 overflow-hidden rounded-xl border-2 border-[var(--color-ldp-navy-700)] bg-white shadow-sm">
+          <div className="bg-gradient-to-r from-[var(--color-ldp-navy-900)] to-[var(--color-ldp-navy-700)] px-5 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-gold,#c89a3b)]">
+            Live · Phase 2 general coordinated campaign
+          </div>
+          <div className="grid gap-4 p-5 md:grid-cols-[1fr,auto]">
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
+                2026 General Strategic Plan
+              </h2>
+              <p className="mt-1 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
+                The plan for the November 3 general election. Same strategy zones, same
+                LD chair structure — now with real primary data and a final candidate slate.
+                Seven priority Metro Council races (D11 flip; D7/9/17/21 R-defense; D1/5
+                nonpartisan defense) plus HD 48 (Kulkarni offensive flip) and Booker for
+                U.S. Senate.
+              </p>
+              <Link
+                href="/general-plan"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-red)] px-3 py-2 text-xs font-semibold text-white hover:bg-[var(--color-ldp-red)]/90"
+              >
+                <FileText aria-hidden className="size-3.5" />
+                Open the general plan
+              </Link>
+            </div>
+          </div>
+        </section>
+
 
         <section className="mb-8">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
@@ -157,7 +185,9 @@ export default async function PlanMapPage() {
             >
               <div className="text-base font-semibold text-[var(--color-ldp-navy-900)]">Canvass Tools →</div>
               <p className="mt-2 text-sm text-[var(--color-ldp-ink-700)]">
-                Priority MC districts (17, 7, 21), volunteer pipeline, VoteBuilder, canvass guides.
+                Phase 2 priority races (D11 offensive flip; D7/9/17/21 R-defense; D1/5
+                nonpartisan defense; HD 48 Kulkarni). VoteBuilder, volunteer pipeline,
+                canvass guides.
               </p>
             </Link>
           </div>
