@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BarChart3, Layers, MapPin, Trophy, Vote } from "lucide-react";
+import { ArrowRight, BarChart3, ChevronDown, ChevronUp, Layers, MapPin, Trophy, Vote } from "lucide-react";
 import { useUserProfile } from "@/lib/userContext";
 import {
   fmtRaceLabel,
@@ -29,6 +29,10 @@ export function PrimaryResults2026Card({
   all_turnout,
 }: Props) {
   const [view, setView] = useState<"ld" | "county">("ld");
+  // Race-by-race detail is collapsed by default — it dominates the page
+  // otherwise and pushes the LD's actual workspace far down. Turnout +
+  // a one-line race summary stay visible.
+  const [expanded, setExpanded] = useState(false);
   const { profile, hydrated } = useUserProfile();
 
   // At-Large members are countywide by mandate; default their view to
@@ -76,22 +80,78 @@ export function PrimaryResults2026Card({
             No contested races recorded for {scope_label}.
           </p>
         ) : (
-          <div className="mt-6 space-y-5">
-            {races.map((r) => (
-              <RaceRow key={r.key} r={r} />
-            ))}
-          </div>
+          <RaceListSection
+            races={races}
+            expanded={expanded}
+            onToggle={() => setExpanded((v) => !v)}
+          />
         )}
-
-        <p className="mt-5 text-[11px] italic text-[var(--color-ldp-ink-700)]">
-          Loaded from the Jefferson County clerk&apos;s precinct-level report,
-          rolled up by LD letter prefix. This is how fast we can put real
-          numbers in front of the EC when the data is structured well.
-        </p>
       </div>
 
       <WhyThisMattersForNovember scope_label={scope_label} />
     </section>
+  );
+}
+
+// The race-by-race section. Collapsed by default — shows a one-line
+// summary ("8 races, 17 candidates advanced — tap to expand"). Expanded
+// shows every race card with vote bars. Keeps the heavy detail tucked
+// away so the LD page stays usable.
+function RaceListSection({
+  races,
+  expanded,
+  onToggle,
+}: {
+  races: GroupedRace[];
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  const total_races = races.length;
+  const total_candidates = races.reduce((s, r) => s + r.candidates.length, 0);
+  const total_votes = races.reduce((s, r) => s + r.total_votes, 0);
+
+  return (
+    <div className="mt-6">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={expanded}
+        className="flex w-full flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--color-ldp-line)] bg-[var(--color-ldp-cream,#fbf8f1)] px-4 py-3 text-left transition-colors hover:bg-white"
+      >
+        <div className="min-w-0">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-ldp-navy-700)]">
+            Race-by-race breakdown
+          </div>
+          <div className="mt-0.5 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+            {total_races} {total_races === 1 ? "race" : "races"} ·{" "}
+            {total_candidates} candidate{total_candidates === 1 ? "" : "s"} ·{" "}
+            {total_votes.toLocaleString()} votes cast
+          </div>
+        </div>
+        <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-[var(--color-ldp-navy-700)]">
+          {expanded ? "Hide" : "Show"} detail
+          {expanded ? (
+            <ChevronUp aria-hidden className="size-4" />
+          ) : (
+            <ChevronDown aria-hidden className="size-4" />
+          )}
+        </span>
+      </button>
+
+      {expanded && (
+        <>
+          <div className="mt-4 space-y-5">
+            {races.map((r) => (
+              <RaceRow key={r.key} r={r} />
+            ))}
+          </div>
+          <p className="mt-5 text-[11px] italic text-[var(--color-ldp-ink-700)]">
+            Loaded from the Jefferson County clerk&apos;s precinct-level report,
+            rolled up by LD letter prefix.
+          </p>
+        </>
+      )}
+    </div>
   );
 }
 

@@ -246,21 +246,15 @@ export default async function LdDetailPage({
           </p>
         </div>
 
-        {/* 2026 Primary results — institutional memory. Two days old as
-            of this build; the speed of putting it on the page is part of
-            the demo. */}
+        {/* 2026 Primary results — institutional memory. Race-by-race
+            detail collapses by default so the LD workspace below stays
+            close to the top of the page. */}
         <PrimaryResults2026Card
           ld_number={ld_number}
           ld_results={primary_ld_results}
           ld_turnout={primary_ld_turnout}
           all_results={primary_all_results}
           all_turnout={primary_all_turnout}
-        />
-        <ElectionTakeaways
-          ld_number={ld_number}
-          election_key="2026_primary"
-          election_label="2026 Primary"
-          takeaways={primary_takeaways}
         />
 
         {/* Tasks go at the top — this is what the chair looks at first */}
@@ -293,6 +287,16 @@ export default async function LdDetailPage({
         </section>
 
         <LdNotes ldNumber={ld_number} notes={notes} />
+
+        {/* Election takeaways live near the bottom of the LD page —
+            they're long-term memory, not daily-use. The user adds them
+            as institutional knowledge for future LD officers. */}
+        <ElectionTakeaways
+          ld_number={ld_number}
+          election_key="2026_primary"
+          election_label="2026 Primary"
+          takeaways={primary_takeaways}
+        />
 
         {staleCount > 0 && (
           <Link
