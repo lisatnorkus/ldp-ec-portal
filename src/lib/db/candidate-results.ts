@@ -527,6 +527,14 @@ export async function fetchEnrichedCandidates(): Promise<EnrichedCandidate[]> {
       if (ownTotal > 0 && c.votes != null) {
         c.pct = (c.votes / ownTotal) * 100;
       }
+      // Candidates with "withdrew" in their seeded notes are not on the
+      // ballot — they filed but pulled out before primary day. Label
+      // them honestly and keep them off the November ballot.
+      if (c.notes && /withdrew/i.test(c.notes)) {
+        c.advances = false;
+        c.status_label = "Withdrew before the primary";
+        continue;
+      }
       if (advanced.has(c.id)) {
         c.advances = true;
         if (totalAdvancingInBucket === 1) {
