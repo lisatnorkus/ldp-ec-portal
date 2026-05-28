@@ -360,10 +360,72 @@ export default function GovernancePage() {
         </p>
       </section>
 
+      {/* Top-of-stack reference. The DNC Charter is what KDP and LJCDP
+          bylaws inherit from. Surfaced here so anyone digging into rule
+          drift has the federal source-of-truth one click away. */}
+      <section className="mb-8 rounded-xl border-2 border-[var(--color-ldp-navy-700)] bg-white p-5">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-700)]">
+          <Scale aria-hidden="true" className="size-4" />
+          Top of the stack
+        </div>
+        <h2 className="mt-1 text-lg font-bold text-[var(--color-ldp-navy-900)]">
+          DNC Charter &amp; Bylaws — what KDP + LJCDP inherit from.
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
+          Everything on this page sits below the{" "}
+          <a
+            href="https://www.documentcloud.org/documents/24416228-dnc-charter-bylaws/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-[var(--color-ldp-navy-700)] underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            DNC Charter &amp; Bylaws
+          </a>{" "}
+          (last amended <strong>March 12, 2022</strong> by the Democratic National Committee).
+          State parties must file their rules and any amendments with the DNC within{" "}
+          <strong>30 days</strong> of adoption (Art. 10 §4). When LJCDP bylaws drift, the fix
+          has to roll up through KDP&apos;s filings.
+        </p>
+        <ul className="mt-3 space-y-1.5 text-sm text-[var(--color-ldp-ink-900)]">
+          <li>
+            <strong>Art. 8 §2 — Non-discrimination floor.</strong> Sex, race, age (of voting age),
+            color, creed, national origin, religion, economic status, sexual orientation, gender
+            identity, ethnic identity, disability. Binds LDP at every level.
+          </li>
+          <li>
+            <strong>Art. 9 §16 — Gender equal division.</strong> All committee positions, state
+            central committees included, &ldquo;shall be as equally divided as practicable&rdquo;
+            (variance ≤ 1). LJCDP §6.6 woman-exception paperwork is the local compliance mechanism.
+          </li>
+          <li>
+            <strong>Art. 9 §11 — Proxy voting.</strong> Not permitted at National Convention; allowed
+            elsewhere &ldquo;as provided in the Bylaws of the Democratic Party.&rdquo; LJCDP §23
+            applies the local exclusion for officer elections, removal, and endorsement votes.
+          </li>
+          <li>
+            <strong>Art. 9 §12 — Open meetings, no secret ballot, no unit rule.</strong> Worth knowing
+            when reviewing the LDPEC 60% secret-ballot endorsement process — the DNC rule applies
+            primarily to convention/delegate bodies, not county endorsement votes.
+          </li>
+          <li>
+            <strong>Art. 9 §14 — Robert&apos;s Rules</strong> govern all meetings &ldquo;in the absence
+            of other provisions.&rdquo; LJCDP §28 inherits this.
+          </li>
+        </ul>
+        <a
+          href="https://www.documentcloud.org/documents/24416228-dnc-charter-bylaws/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-[var(--color-ldp-navy-700)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--color-ldp-navy-900)]"
+        >
+          Read the full DNC Charter →
+        </a>
+      </section>
+
       <p className="text-[11px] italic text-[var(--color-ldp-ink-700)]">
-        If a rule here looks wrong or stale, tell Lisa. Sources: KDP Bylaws (ratified 6/26/2021,
-        last amended 3/1/2025) and LJCDP Bylaws (louisvilledems.com). This page should be updated
-        whenever either is amended.
+        If a rule here looks wrong or stale, tell Lisa. Sources: DNC Charter &amp; Bylaws
+        (amended 3/12/2022), KDP Bylaws (ratified 6/26/2021, last amended 3/1/2025), and LJCDP
+        Bylaws (louisvilledems.com). This page should be updated whenever any of them is amended.
       </p>
     </HubShell>
   );

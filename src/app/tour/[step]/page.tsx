@@ -92,6 +92,29 @@ function Step1() {
           County, recruit and endorse local candidates, and deliver turnout in the only place where
           Kentucky Democrats consistently win.
         </p>
+
+        <div className="mt-4 rounded border border-white/15 bg-white/5 p-3 text-xs text-white/75">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+            Top of the stack
+          </div>
+          <p className="mt-1.5 leading-relaxed">
+            Everything flows down from the{" "}
+            <a
+              href="https://www.documentcloud.org/documents/24416228-dnc-charter-bylaws/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-[var(--color-ldp-gold-tint)] underline decoration-dotted underline-offset-2"
+            >
+              DNC Charter &amp; Bylaws
+            </a>{" "}
+            (as amended March 12, 2022). KDP&apos;s bylaws inherit from the Charter; LJCDP&apos;s
+            bylaws inherit from KDP&apos;s. State parties must file their rules and any amendments
+            with the DNC within 30 days (Art. 10 §4). The Charter is also the source of the
+            gender equal-division rule (§9.16) and the no-proxy rule for officer elections + the
+            non-discrimination floor (Art. 8). When LJCDP bylaws drift from these, the Bylaws
+            Committee has to bring them back.
+          </p>
+        </div>
       </section>
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
