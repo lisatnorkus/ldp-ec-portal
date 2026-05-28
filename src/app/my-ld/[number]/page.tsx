@@ -460,7 +460,7 @@ export default async function LdDetailPage({
         <div className="mt-8 flex flex-wrap gap-3">
           <Button asChild variant="ldp" size="lg">
             <a
-              href={`https://26ldp-strategy-map.vercel.app/?ld=${ld_number}`}
+              href={`https://26ldp-strategy-map.vercel.app/map.html?ld=${ld_number}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2"

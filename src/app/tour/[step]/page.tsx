@@ -381,8 +381,8 @@ function Step4() {
   return (
     <>
       <p className="mb-6 text-sm text-white/85">
-        LDPEC meets quarterly at minimum (per LJCDP §11.2). In practice, Logan calls meetings
-        monthly. Here&apos;s what you need to know to participate.
+        LDPEC meets quarterly at minimum (per LJCDP §11.2). In practice, the Chair calls
+        meetings monthly. Here&apos;s what you need to know to participate.
       </p>
 
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">

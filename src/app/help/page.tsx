@@ -64,7 +64,7 @@ export default function HelpPage() {
         <Section id="login" icon={<AlertCircle />} title="Logging in">
           <P>
             Right now we&apos;re in preview mode. You got the passphrase in your welcome email from
-            Logan or Lisa — enter it once and the browser remembers you for the session. The
+            Lisa or the interim Chair — enter it once and the browser remembers you for the session. The
             portal will move to per-person email sign-in before we open this up to the full EC,
             but nothing about your data will change.
           </P>
@@ -460,7 +460,7 @@ export default function HelpPage() {
             <Link href="/plan-map" className="underline">Plan & Map</Link> shows all Jefferson
             County precincts scored into four strategies. The{" "}
             <a
-              href="https://26ldp-strategy-map.vercel.app"
+              href="https://26ldp-strategy-map.vercel.app/map.html"
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
@@ -468,7 +468,9 @@ export default function HelpPage() {
               2026 LDP Strategy Map
             </a>{" "}
             is the interactive version; it accepts <code>?ld=N</code>, <code>?mc=N</code>, and
-            <code> ?precinct=CODE</code> so portal deep-links scope automatically.
+            <code> ?precinct=CODE</code> so portal deep-links scope automatically. The map&apos;s
+            root URL serves the General Strategic Plan doc; the interactive precinct view
+            lives at <code>/map.html</code>.
           </P>
           <Ul>
             <li>

@@ -127,7 +127,7 @@ export default async function CanvassToolsPage() {
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Button asChild variant="ldp" size="sm">
                       <a
-                        href={`https://26ldp-strategy-map.vercel.app/?mc=${mc.mc_number}`}
+                        href={`https://26ldp-strategy-map.vercel.app/map.html?mc=${mc.mc_number}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

@@ -128,7 +128,7 @@ export default async function PrecinctDetailPage({
       actions={
         <Button asChild variant="ldp" size="sm" className="border border-white/20 bg-white/10 hover:bg-white/20">
           <a
-            href={`https://26ldp-strategy-map.vercel.app/?precinct=${encodeURIComponent(code)}`}
+            href={`https://26ldp-strategy-map.vercel.app/map.html?precinct=${encodeURIComponent(code)}`}
             target="_blank"
             rel="noopener noreferrer"
           >

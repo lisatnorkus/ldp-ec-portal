@@ -152,7 +152,7 @@ export default async function PlanMapPage() {
           </h2>
           <div className="grid gap-3 md:grid-cols-2">
             <a
-              href="https://26ldp-strategy-map.vercel.app"
+              href="https://26ldp-strategy-map.vercel.app/map.html"
               target="_blank"
               rel="noopener noreferrer"
               className="group rounded-xl border-2 border-[var(--color-ldp-navy-900)] bg-[var(--color-ldp-navy-900)] p-5 text-white transition-colors hover:bg-[var(--color-ldp-navy-800)]"
