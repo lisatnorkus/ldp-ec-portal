@@ -102,6 +102,7 @@ export const NAV_GROUPS: NavGroup[] = [
     accent: "#0891b2",
     items: [
       { href: "/governance", label: "Governance Reference", icon: Gavel },
+      { href: "/compliance-chat", label: "Compliance Q&A", icon: Scale, accent: "#b45309" },
       { href: "/endorsement", label: "Endorsement Process", icon: Scale },
       { href: "/comms", label: "Communications", icon: Megaphone },
       { href: "/transitions", label: "Transitions", icon: ArrowLeftRight, accent: "#64748b" },

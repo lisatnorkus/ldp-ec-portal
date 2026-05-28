@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  outputFileTracingIncludes: {
+    "/api/compliance-chat": ["./docs/legal-corpus/**/*"],
+  },
 };
 
 export default nextConfig;
