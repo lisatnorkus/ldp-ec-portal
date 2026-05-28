@@ -2,6 +2,8 @@
 
 import { useCallback, useRef, useState, type FormEvent } from "react";
 import { Scale, Send, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 
 const SAMPLE_QUESTIONS: { label: string; question: string }[] = [
@@ -189,11 +191,12 @@ export function ChatInterface() {
             <div className="text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-900)]">
               Answer
             </div>
-            <div className="prose prose-sm mt-2 max-w-none whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
-              {answer || (isStreaming ? <em className="text-[var(--color-ldp-ink-700)]">Loading…</em> : null)}
-              {isStreaming && answer && (
-                <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse bg-[var(--color-ldp-navy-700)] align-middle" />
-              )}
+            <div className="mt-3 text-sm leading-relaxed text-[var(--color-ldp-ink-900)]">
+              {answer ? (
+                <MarkdownAnswer text={answer} streaming={isStreaming} />
+              ) : isStreaming ? (
+                <em className="text-[var(--color-ldp-ink-700)]">Thinking…</em>
+              ) : null}
             </div>
             {!isStreaming && answer && (
               <div className="mt-4 border-t border-[var(--color-ldp-line)] pt-3 text-[11px] leading-relaxed text-[var(--color-ldp-ink-700)]">
@@ -204,6 +207,114 @@ export function ChatInterface() {
             )}
           </div>
         </section>
+      )}
+    </div>
+  );
+}
+
+function MarkdownAnswer({ text, streaming }: { text: string; streaming: boolean }) {
+  return (
+    <div className="space-y-3">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          h1: ({ children }) => (
+            <h2 className="mt-4 text-base font-bold text-[var(--color-ldp-navy-900)]">{children}</h2>
+          ),
+          h2: ({ children }) => (
+            <h3 className="mt-4 text-sm font-bold text-[var(--color-ldp-navy-900)]">{children}</h3>
+          ),
+          h3: ({ children }) => (
+            <h4 className="mt-3 text-sm font-semibold text-[var(--color-ldp-navy-900)]">
+              {children}
+            </h4>
+          ),
+          h4: ({ children }) => (
+            <h5 className="mt-3 text-xs font-semibold uppercase tracking-wider text-[var(--color-ldp-ink-700)]">
+              {children}
+            </h5>
+          ),
+          p: ({ children }) => <p className="leading-relaxed">{children}</p>,
+          strong: ({ children }) => (
+            <strong className="font-semibold text-[var(--color-ldp-navy-900)]">{children}</strong>
+          ),
+          em: ({ children }) => <em className="italic">{children}</em>,
+          ul: ({ children }) => (
+            <ul className="ml-5 list-disc space-y-1 marker:text-[var(--color-ldp-ink-700)]">
+              {children}
+            </ul>
+          ),
+          ol: ({ children }) => (
+            <ol className="ml-5 list-decimal space-y-1 marker:text-[var(--color-ldp-ink-700)]">
+              {children}
+            </ol>
+          ),
+          li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-[var(--color-ldp-navy-700)] underline underline-offset-2 hover:text-[var(--color-ldp-red)]"
+            >
+              {children}
+            </a>
+          ),
+          blockquote: ({ children }) => (
+            <blockquote className="my-2 border-l-4 border-[var(--color-ldp-gold)] bg-[#FFFBEB] px-3 py-2 text-[13px] italic text-[var(--color-ldp-ink-900)]">
+              {children}
+            </blockquote>
+          ),
+          code: ({ children, className }) => {
+            const isBlock = className?.includes("language-");
+            if (isBlock) {
+              return (
+                <code className={`${className} block`}>{children}</code>
+              );
+            }
+            return (
+              <code className="rounded bg-[#FEF3C7] px-1.5 py-0.5 font-mono text-[12px] font-semibold text-[var(--color-ldp-navy-900)] ring-1 ring-[#FDE68A]">
+                {children}
+              </code>
+            );
+          },
+          pre: ({ children }) => (
+            <pre className="overflow-x-auto rounded-md border border-[var(--color-ldp-line)] bg-[#0B2F66] p-3 text-[12px] leading-relaxed text-white">
+              {children}
+            </pre>
+          ),
+          table: ({ children }) => (
+            <div className="my-3 overflow-x-auto rounded-md border border-[var(--color-ldp-line)]">
+              <table className="w-full border-collapse text-[13px]">{children}</table>
+            </div>
+          ),
+          thead: ({ children }) => (
+            <thead className="bg-[var(--color-ldp-navy-900)] text-white">{children}</thead>
+          ),
+          tbody: ({ children }) => (
+            <tbody className="divide-y divide-[var(--color-ldp-line)] bg-white">{children}</tbody>
+          ),
+          tr: ({ children }) => <tr>{children}</tr>,
+          th: ({ children }) => (
+            <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider">
+              {children}
+            </th>
+          ),
+          td: ({ children }) => (
+            <td className="px-3 py-2 align-top text-[13px] leading-snug text-[var(--color-ldp-ink-900)]">
+              {children}
+            </td>
+          ),
+          hr: () => <hr className="my-4 border-t border-[var(--color-ldp-line)]" />,
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+      {streaming && (
+        <span
+          aria-hidden
+          className="-mt-1 inline-block h-4 w-1.5 animate-pulse bg-[var(--color-ldp-navy-700)] align-middle"
+        />
       )}
     </div>
   );
