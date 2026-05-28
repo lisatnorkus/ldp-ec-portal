@@ -45,7 +45,7 @@ export const SECTION_NAV: SectionNavItem[] = [
     description: "How the LDP endorses — 60% threshold, secret ballot, Jan-Feb timeline per cycle.",
     accent: "#b45309" },
   { slug: "compliance-chat", label: "Compliance Q&A", href: "/compliance-chat", icon: Scale,
-    description: "Ask KY + federal campaign finance questions. Citation-first answers from KRS 121, 32 KAR, FECA/BCRA, and Canon 4. Reference tool — not legal advice.",
+    description: "Ask campaign-finance OR bylaws questions. Citation-first answers from KRS 121, 32 KAR, FECA/BCRA, Canon 4, DNC Charter, KDP, LJCDP, Robert's Rules. Reference tool — not legal advice.",
     accent: "#b45309" },
   { slug: "comms", label: "Communications", href: "/comms", icon: Megaphone,
     description: "How the party gets heard — social, email, ads, printed, photography.",

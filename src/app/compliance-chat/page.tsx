@@ -8,8 +8,8 @@ export default function ComplianceChatPage() {
   return (
     <HubShell
       eyebrow="Compliance Q&A"
-      title="Party-funding law, citation-first."
-      subtitle="Kentucky (KRS 121, 32 KAR, HB 388) + federal (FECA/BCRA, 11 CFR) + judicial conduct (Canon 4). Ask a question, get an answer with verbatim citations from the JCDEC reference corpus."
+      title="Finance + bylaws, citation-first."
+      subtitle="Campaign finance (KRS 121, 32 KAR, HB 388, FECA/BCRA, 11 CFR, Canon 4) and party governance (DNC Charter, KDP, LJCDP, Robert's Rules). Ask a question, get verbatim citations from the JCDEC reference corpora."
       maxWidthClass="max-w-4xl"
       accent="#b45309"
     >

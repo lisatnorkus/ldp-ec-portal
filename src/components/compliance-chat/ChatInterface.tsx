@@ -6,24 +6,24 @@ import { Button } from "@/components/ui/button";
 
 const SAMPLE_QUESTIONS: { label: string; question: string }[] = [
   {
-    label: "Can JCDEC contribute to a Metro Council race?",
+    label: "Can JCDEC contribute to a Metro Council race? (finance)",
     question:
       "Can JCDEC contribute money or in-kind support to a Metro Council candidate now that Louisville-area Metro Council races are nonpartisan under HB 388?",
   },
   {
-    label: "What are the federal coordinated party expenditure limits for 2026?",
+    label: "What's the quorum to remove the County Chair? (bylaws)",
     question:
-      "What are the federal coordinated party expenditure limits that apply to JCDEC's role under 11 CFR 109.33 for the 2026 cycle?",
+      "What quorum and vote threshold are required to remove the JCDEC County Chair without cause? Do proxies count?",
   },
   {
-    label: "How do Levin/non-federal funds work for FEA?",
+    label: "Is this proxy valid? (bylaws)",
+    question:
+      "An LD Chair wants to assign their proxy to another LD Chair for the next CEC meeting, where we're voting to fill a vacancy. Is that proxy valid?",
+  },
+  {
+    label: "How do Levin/non-federal funds work for FEA? (finance)",
     question:
       "How does the Levin amendment work for funding Federal Election Activity (FEA), and what activity qualifies as FEA for JCDEC?",
-  },
-  {
-    label: "Can a judicial candidate's committee solicit at our event?",
-    question:
-      "Can a Kentucky judicial candidate's committee solicit contributions at a JCDEC event, and what are the limits under Canon 4 / SCR 4.300?",
   },
 ];
 
@@ -107,10 +107,12 @@ export function ChatInterface() {
               Reference tool — not legal advice.
             </p>
             <p className="mt-1">
-              Answers cite Kentucky statutes (KRS 121, 32 KAR), federal law (FECA / BCRA / 11 CFR),
-              and the Kentucky Code of Judicial Conduct. For a binding answer on your specific
-              situation, consult JCDEC counsel or file a KREF / FEC advisory opinion. The model
-              cites only from the loaded corpus; if it doesn&apos;t know, it&apos;ll say so.
+              Covers <strong>campaign finance</strong> (KRS 121, 32 KAR, HB 388, FECA / BCRA / 11
+              CFR, Canon 4) and <strong>party bylaws</strong> (DNC Charter, KDP, LJCDP, Robert&apos;s
+              Rules). Answers cite verbatim. For a binding answer on your specific situation,
+              consult JCDEC counsel, file a KREF / FEC advisory opinion (finance), or raise it with
+              the Bylaws Committee Chair (governance). If the corpus is silent, the model will say
+              so rather than guess.
             </p>
           </div>
         </div>
@@ -127,7 +129,7 @@ export function ChatInterface() {
           id="compliance-question"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="e.g. Can JCDEC pay for a slate-card mailer that includes a Metro Council candidate?"
+          placeholder="e.g. Can JCDEC pay for a slate-card mailer that includes a Metro Council candidate? Or: what's the quorum to fill a Vice Chair vacancy?"
           rows={3}
           maxLength={4000}
           disabled={isStreaming}
@@ -195,9 +197,9 @@ export function ChatInterface() {
             </div>
             {!isStreaming && answer && (
               <div className="mt-4 border-t border-[var(--color-ldp-line)] pt-3 text-[11px] leading-relaxed text-[var(--color-ldp-ink-700)]">
-                <strong>Reminder:</strong> this is a reference tool. For a binding answer, contact
-                JCDEC counsel, file a KREF advisory opinion (state law), or an FEC advisory opinion
-                (federal law).
+                <strong>Reminder:</strong> reference tool, not legal advice. For a binding answer:
+                JCDEC counsel; KREF (state finance) or FEC (federal finance) advisory opinion; or
+                the JCDEC Chair / Bylaws Committee Chair for governance.
               </div>
             )}
           </div>
