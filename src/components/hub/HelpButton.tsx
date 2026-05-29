@@ -7,6 +7,7 @@ import {
   Bug,
   HelpCircle,
   Lightbulb,
+  Mail,
   MessageSquare,
   X,
 } from "lucide-react";
@@ -66,6 +67,7 @@ export function HelpButton() {
             <div className="p-5">
               {tab === "menu" && (
                 <MenuTab
+                  pathname={pathname ?? ""}
                   onFaq={() => setOpen(false)}
                   onRequest={() => setTab("request")}
                   onBug={() => setTab("bug")}
@@ -97,14 +99,22 @@ export function HelpButton() {
 }
 
 function MenuTab({
+  pathname,
   onFaq,
   onRequest,
   onBug,
 }: {
+  pathname: string;
   onFaq: () => void;
   onRequest: () => void;
   onBug: () => void;
 }) {
+  const mailtoBody = encodeURIComponent(
+    `What's happening:\n\n\n--\nSent from: ${pathname || "the portal"}`
+  );
+  const mailtoHref = `mailto:lisatnorkus@gmail.com?subject=${encodeURIComponent(
+    "LDPEC Portal Support"
+  )}&body=${mailtoBody}`;
   return (
     <div className="space-y-2">
       <p className="text-sm text-[var(--color-ldp-ink-700)]">What do you need?</p>
@@ -155,16 +165,20 @@ function MenuTab({
           </div>
         </div>
       </button>
-      <div className="border-t border-[var(--color-ldp-line)] pt-3 text-[11px] text-[var(--color-ldp-ink-700)]">
-        Urgent? Email{" "}
-        <a
-          href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20Portal%20-%20urgent"
-          className="text-[var(--color-ldp-navy-700)] underline"
-        >
-          Lisa directly
-        </a>
-        .
-      </div>
+      <a
+        href={mailtoHref}
+        className="flex w-full items-start gap-3 rounded-lg border-2 border-[var(--color-ldp-navy-900)] bg-[var(--color-ldp-navy-900)] p-3 text-left text-white transition-colors hover:bg-[var(--color-ldp-navy-800)]"
+      >
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-white text-[var(--color-ldp-navy-900)]">
+          <Mail aria-hidden="true" className="size-4" />
+        </span>
+        <div>
+          <div className="text-sm font-semibold">Email Lisa for support</div>
+          <div className="mt-0.5 text-xs text-white/80">
+            Direct to Lisa. Subject: LDPEC Portal Support. Best for anything urgent or off-script.
+          </div>
+        </div>
+      </a>
     </div>
   );
 }

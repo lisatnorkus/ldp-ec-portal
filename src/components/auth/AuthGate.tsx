@@ -123,6 +123,18 @@ export function AuthGate({ children }: { children: ReactNode }) {
           needs help getting started. We do not store the content of compliance-chat questions, and
           we do not track which pages you visit. NDAs per LJCDP §2.2 apply.
         </p>
+
+        <div className="mt-5 rounded-md border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-3 text-center">
+          <p className="text-[11px] text-[var(--color-ldp-ink-700)]">
+            Something not working? Or can&apos;t get in?
+          </p>
+          <a
+            href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20Portal%20Support&body=What%27s%20happening%3A%0A%0A%0A--%0ASent%20from%20the%20portal%20login%20page."
+            className="mt-1 inline-block text-sm font-semibold text-[var(--color-ldp-navy-700)] underline underline-offset-2 hover:text-[var(--color-ldp-red)]"
+          >
+            Email Lisa for support →
+          </a>
+        </div>
       </div>
     </div>
   );

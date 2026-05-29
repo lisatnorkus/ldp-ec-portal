@@ -54,9 +54,15 @@ export async function POST(req: Request) {
   };
 
   const issueTitle = `${prefixFor[kind]} ${title}`;
+  // Mailto subject is kept short + consistent — Lisa filters her inbox
+  // on the literal string "LDPEC Portal Support" regardless of feature/
+  // bug/feedback kind. The kind tag moves into the body.
+  const mailSubject = "LDPEC Portal Support";
   const issueBody = [
     `**Submitted by:** ${body.author_name?.trim() || "anonymous"}${body.author_email ? ` · ${body.author_email}` : ""}`,
     body.page ? `**Page:** \`${body.page}\`` : null,
+    `**Type:** ${prefixFor[kind]}`,
+    `**Title:** ${title}`,
     "",
     "---",
     "",
@@ -69,7 +75,7 @@ export async function POST(req: Request) {
   if (!token) {
     // Fallback: return a mailto URL the client can open. The feedback
     // still reaches a human (Communications) instead of being dropped.
-    const mailto = `mailto:${FALLBACK_EMAIL}?subject=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}`;
+    const mailto = `mailto:${FALLBACK_EMAIL}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(issueBody)}`;
     return NextResponse.json({
       ok: true,
       fallback: "mailto",
