@@ -1,6 +1,14 @@
 import { HubShell } from "@/components/hub/HubShell";
 import { fetchAllMembers } from "@/lib/db/members";
 import { fetchEngagement, type EngagementRow } from "@/lib/db/engagement";
+import {
+  fetchAuthBuckets,
+  fetchTourFunnel,
+  fetchChatUsage,
+  type AuthBuckets,
+  type TourFunnel,
+  type ChatUsage,
+} from "@/lib/db/portal-usage";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Admin · Engagement" };
@@ -28,22 +36,39 @@ const BUCKET_STYLE: Record<EngagementRow["bucket"], { label: string; bg: string;
 };
 
 export default async function AdminEngagementPage() {
-  const members = await fetchAllMembers();
+  const [members, auth, tour, chat] = await Promise.all([
+    fetchAllMembers(),
+    fetchAuthBuckets(),
+    fetchTourFunnel(),
+    fetchChatUsage(),
+  ]);
   const { rows, summary } = await fetchEngagement(members);
 
   return (
     <HubShell
       eyebrow="Admin · Engagement"
       title="Who's actually using the portal."
-      subtitle="Contributions only — notes written, tasks taken on, interactions logged, continuity work. Not page views, not surveillance. Dark members are first — those are the conversations you'll want to have."
+      subtitle="Three signals: presence (sign-ins), onboarding (tour funnel), and contributions (work done). No page-view tracking — the portal is a work surface, not surveillance. Dark members are first — those are the conversations you'll want to have."
       maxWidthClass="max-w-6xl"
     >
       <div className="mb-4 rounded-md border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-3 text-[11px] text-[var(--color-ldp-ink-700)]">
         <strong className="text-[var(--color-ldp-navy-900)]">Preview-mode admin view.</strong>{" "}
         Gated by a token cookie. When EC-wide magic-link auth lands, access switches to role-based
         (you + designated officers). Until then this URL stays private — rotate the token in
-        Vercel anytime to invalidate.
+        Vercel anytime to invalidate.{" "}
+        <strong className="text-[var(--color-ldp-navy-900)]">Phase 1 note:</strong> sign-ins and
+        compliance-chat queries log anonymously during the passphrase era — the per-person view
+        lights up when Google OAuth is added in Phase 2.
       </div>
+
+      <PresenceCard auth={auth} />
+      <TourFunnelCard tour={tour} totalMembers={members.length} />
+      <ChatUsageCard chat={chat} />
+
+      <SectionHeading
+        title="Contributions"
+        subtitle="What people have actually built in the portal — notes, tasks, interactions, continuity work. The work signal."
+      />
 
       <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-5">
         <SummaryTile label="Tracked" value={summary.total} color="var(--color-ldp-navy-900)" />
@@ -149,3 +174,132 @@ function SummaryTile({
     </div>
   );
 }
+
+function SectionHeading({ title, subtitle }: { title: string; subtitle: string }) {
+  return (
+    <div className="mb-3 mt-2">
+      <h2 className="text-base font-bold text-[var(--color-ldp-navy-900)]">{title}</h2>
+      <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-ldp-ink-700)]">{subtitle}</p>
+    </div>
+  );
+}
+
+function PresenceCard({ auth }: { auth: AuthBuckets }) {
+  return (
+    <section className="mb-8">
+      <SectionHeading
+        title="Presence — sign-ins"
+        subtitle="Did people open the portal at all? Anonymous aggregate during Phase 1 — once OAuth is on, each row attaches to a member."
+      />
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+        <SummaryTile label="Sign-ins · 24h" value={auth.last_24h} color="#059669" />
+        <SummaryTile label="Sign-ins · 7d" value={auth.last_7d} color="var(--color-ldp-navy-700)" />
+        <SummaryTile label="Sign-ins · 30d" value={auth.last_30d} color="var(--color-ldp-navy-900)" />
+        <SummaryTile label="Devices · 7d" value={auth.distinct_devices_7d} color="#0891b2" />
+        <SummaryTile label="Total ever" value={auth.total} color="#7c3aed" />
+      </div>
+      <p className="mt-2 text-[11px] italic text-[var(--color-ldp-ink-700)]">
+        Distinct devices is a rough lower bound on distinct people during Phase 1. Once Google
+        OAuth lands, this becomes a real per-person view.
+      </p>
+    </section>
+  );
+}
+
+function TourFunnelCard({
+  tour,
+  totalMembers,
+}: {
+  tour: TourFunnel;
+  totalMembers: number;
+}) {
+  const notStarted = Math.max(0, totalMembers - tour.started);
+  return (
+    <section className="mb-8">
+      <SectionHeading
+        title="Onboarding — Tour funnel"
+        subtitle="Where first-term members land in the six-step tour. Step-3 drop-off is the canary that the applied-education layer needs work."
+      />
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <SummaryTile label="Members" value={totalMembers} color="var(--color-ldp-navy-900)" />
+        <SummaryTile label="Started" value={tour.started} color="var(--color-ldp-navy-700)" />
+        <SummaryTile label="Completed" value={tour.completed} color="#059669" />
+        <SummaryTile label="Not started" value={notStarted} color="var(--color-ldp-red)" />
+      </div>
+      <div className="mt-3 overflow-hidden rounded-lg border border-[var(--color-ldp-line)] bg-white">
+        <table className="w-full text-sm">
+          <thead className="bg-[#FAFAFA] text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ldp-ink-700)]">
+            <tr>
+              <th className="px-3 py-2 text-left">Step</th>
+              <th className="px-3 py-2 text-left">Title</th>
+              <th className="px-3 py-2 text-right">Currently here</th>
+              <th className="px-3 py-2 text-left">Bar</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[var(--color-ldp-line)]">
+            {tour.current_distribution.map((row) => (
+              <tr key={row.step}>
+                <td className="px-3 py-2 font-semibold text-[var(--color-ldp-navy-900)]">
+                  Step {row.step}
+                </td>
+                <td className="px-3 py-2 text-xs text-[var(--color-ldp-ink-700)]">
+                  {STEP_TITLES[row.step - 1]}
+                </td>
+                <td className="px-3 py-2 text-right font-semibold text-[var(--color-ldp-navy-900)]">
+                  {row.count}
+                </td>
+                <td className="px-3 py-2">
+                  <div
+                    className="h-2 rounded-full bg-[var(--color-ldp-navy-700)]"
+                    style={{
+                      width: tour.started > 0
+                        ? `${Math.round((row.count / Math.max(tour.started, 1)) * 100)}%`
+                        : "0%",
+                      minWidth: row.count > 0 ? "2px" : "0",
+                    }}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function ChatUsageCard({ chat }: { chat: ChatUsage }) {
+  return (
+    <section className="mb-8">
+      <SectionHeading
+        title="Compliance chat — usage"
+        subtitle="Counts and topic tags only. The question text is NEVER stored. Tells you whether the chat is being used and which body of law is on people's minds."
+      />
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <SummaryTile label="Queries · 24h" value={chat.last_24h} color="#059669" />
+        <SummaryTile label="Queries · 7d" value={chat.last_7d} color="var(--color-ldp-navy-700)" />
+        <SummaryTile label="Total ever" value={chat.total} color="var(--color-ldp-navy-900)" />
+        <SummaryTile
+          label="Avg length · 7d"
+          value={chat.recent_7d_avg_length ?? 0}
+          color="#0891b2"
+        />
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <SummaryTile label="Finance" value={chat.by_topic.finance} color="var(--color-ldp-red)" />
+        <SummaryTile label="Bylaws" value={chat.by_topic.bylaws} color="var(--color-ldp-navy-700)" />
+        <SummaryTile label="Both" value={chat.by_topic.both} color="#7c3aed" />
+        <SummaryTile label="Other" value={chat.by_topic.other} color="var(--color-ldp-ink-700)" />
+      </div>
+    </section>
+  );
+}
+
+const STEP_TITLES = [
+  "Orientation",
+  "Your Role",
+  "Your District",
+  "How We Meet",
+  "Current Work",
+  "The 2028 Cycle",
+];

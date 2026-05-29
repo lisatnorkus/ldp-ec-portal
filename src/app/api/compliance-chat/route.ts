@@ -1,5 +1,38 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { loadAllCorpora } from "@/lib/legal-corpus";
+import { getSupabaseServer } from "@/lib/supabase/server";
+
+// Topic-tag the question server-side. We never store the question
+// text itself — only the tag + char count. Keywords are loose; a
+// question that hits both buckets gets "both", neither gets "other".
+
+const FINANCE_KEYWORDS =
+  /\b(KRS\s*121|32\s*KAR|FECA|BCRA|11\s*CFR|FEC|KREF|contribution|contribute|donor|donation|fundrais|coordinated|Levin|FEA|federal\s*election\s*activity|judicial|Canon\s*4|SCR\s*4\.300|in-kind|hard\s*money|soft\s*money|disclosure|disclos|cap|limit|source\s*prohibition|corporate|union|foreign|earmark|conduit|reimburs)/i;
+
+const BYLAWS_KEYWORDS =
+  /\b(bylaws?|charter|DNC|KDP|LJCDP|reorgani[sz]|convention|precinct\s*committee|LD\s*chair|vice\s*chair|at-large|quorum|proxy|vacancy|reorg|election|removal|dismissal|amend|standing\s*rule|robert['']?s?\s*rules|committee\s*chair|appoint|SCEC|CEC|LDPEC|JCDEC|county\s*chair|nominating|delegate|presid|fiduciary|NDA|endorsement\s*process)/i;
+
+function topicTagFor(q: string): "finance" | "bylaws" | "both" | "other" {
+  const finance = FINANCE_KEYWORDS.test(q);
+  const bylaws = BYLAWS_KEYWORDS.test(q);
+  if (finance && bylaws) return "both";
+  if (finance) return "finance";
+  if (bylaws) return "bylaws";
+  return "other";
+}
+
+async function logQuery(question: string) {
+  try {
+    const supabase = await getSupabaseServer();
+    await supabase.from("chat_queries").insert({
+      user_id: null,
+      topic_tag: topicTagFor(question),
+      question_length: question.length,
+    });
+  } catch (err) {
+    console.error("[compliance-chat] usage log failed", err);
+  }
+}
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -77,6 +110,9 @@ export async function POST(req: Request) {
   if (question.length > 4000) {
     return jsonError(400, "Question is too long. Keep it under 4,000 characters.");
   }
+
+  // Fire-and-forget usage log; do not block the stream on telemetry.
+  void logQuery(question);
 
   const { finance, bylaws } = await loadAllCorpora();
   const client = new Anthropic();

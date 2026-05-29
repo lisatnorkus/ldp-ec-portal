@@ -22,6 +22,17 @@ export function AuthGate({ children }: { children: ReactNode }) {
       markUnlocked();
       setUnlocked(true);
       setError(null);
+      // Fire-and-forget sign-in event. Beacon survives the next nav,
+      // doesn't block rendering, doesn't matter if it fails.
+      try {
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon("/api/log/signin");
+        } else {
+          void fetch("/api/log/signin", { method: "POST", keepalive: true });
+        }
+      } catch {
+        // Telemetry only — never let it break sign-in.
+      }
     } else {
       setError("That passphrase doesn't match. Email communications@louisvilledems.com if you need it.");
     }
@@ -106,6 +117,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
           >
             Ask the Communications Committee.
           </a>
+        </p>
+        <p className="mt-3 text-[10px] leading-relaxed text-[var(--color-ldp-ink-700)]">
+          We log sign-ins and the work you do here (notes, tasks, interactions) so we can see who
+          needs help getting started. We do not store the content of compliance-chat questions, and
+          we do not track which pages you visit. NDAs per LJCDP §2.2 apply.
         </p>
       </div>
     </div>
