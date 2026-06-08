@@ -1,0 +1,25 @@
+<!doctype html><html><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;}
+  body.ldp{padding:0;background:var(--color-ldp-navy-900);font-family:var(--font-sans);min-height:200px;position:relative;overflow:hidden;}
+  body::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.06) 6px,rgba(255,255,255,0.06) 7px);pointer-events:none;}
+  .wrap{position:relative;z-index:1;padding:28px 32px;}
+  .label{font-family:var(--font-sans);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-red-bright);margin-bottom:18px;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .btn-cta{background:var(--color-ldp-red);color:#fff;padding:12px 32px;font-weight:500;font-size:16px;border:0;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;letter-spacing:-0.005em;}
+  .btn-cta:hover{background:#a90d26;}
+  .btn-ghost{background:transparent;color:#fff;padding:12px 4px;font-weight:500;font-size:16px;display:inline-flex;align-items:center;gap:6px;text-decoration:none;}
+  .btn-outline{background:transparent;color:#fff;padding:11px 22px;font-weight:500;font-size:16px;border:1px solid rgba(255,255,255,0.25);border-radius:8px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;letter-spacing:-0.005em;}
+  .btn-outline:hover{border-color:#fff;}
+</style></head><body class="ldp">
+<div class="wrap">
+  <div class="label">Buttons — navy surface</div>
+  <div class="row">
+    <a class="btn-cta">Open dashboard</a>
+    <a class="btn-outline">View playbook</a>
+    <a class="btn-ghost">Skip to dashboard →</a>
+  </div>
+</div>
+</body></html>

@@ -496,6 +496,35 @@ function Step4() {
         </ul>
       </section>
 
+      <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+          Minutes + official records
+        </h3>
+        <p className="text-sm leading-relaxed text-white/85">
+          Every committee has a workspace. The Secretary (or the committee chair for committee
+          meetings) writes minutes there as a NOTES post — and treasurer reports the same way.
+          Then those posts get published on{" "}
+          <Link
+            href="/official-records"
+            className="font-semibold text-[var(--color-ldp-gold-tint)] underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            Official Records
+          </Link>{" "}
+          (status: PUBLISHED). At the next meeting, the body ratifies — click{" "}
+          <strong className="text-white">Approve</strong> on the record to move it to APPROVED.
+        </p>
+        <p className="mt-2 text-xs text-white/60">
+          The point: no more chasing minutes by email. Anyone on the EC can read the record;
+          Officers and the Secretary publish.
+        </p>
+        <Link
+          href="/official-records"
+          className="mt-3 inline-flex text-xs font-semibold text-[var(--color-ldp-gold-tint)] hover:underline"
+        >
+          Open Official Records →
+        </Link>
+      </section>
+
       <section className="mb-6 rounded-lg border border-[var(--color-ldp-gold)] bg-white/5 p-5">
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
           Quarterly LD reports (LD officers only)
@@ -783,6 +812,23 @@ function TourTile({
 function Step6() {
   return (
     <>
+      <section className="mb-6 rounded-lg border-2 border-[var(--color-ldp-gold)] bg-white/5 p-5">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-gold-tint)]">
+          Just elected Chair or Vice Chair?
+        </h3>
+        <p className="text-sm leading-relaxed text-white/85">
+          Your incoming briefing is auto-generated from live workspace activity — the year
+          on the record, what&apos;s on deck, who&apos;s in the room, and exactly which
+          levers your role unlocks. Read it before your first meeting.
+        </p>
+        <Link
+          href="/leadership-transition"
+          className="mt-3 inline-flex items-center gap-1 rounded-md bg-[var(--color-ldp-gold)] px-3 py-1.5 text-xs font-bold text-[var(--color-ldp-navy-900)] hover:bg-[var(--color-ldp-gold)]/90"
+        >
+          Open your briefing →
+        </Link>
+      </section>
+
       <section className="mb-6 rounded-lg border border-white/10 bg-white/5 p-5">
         <h3 className="mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-red)]">
           Why you&apos;re reading this

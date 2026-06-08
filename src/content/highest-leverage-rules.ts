@@ -16,6 +16,10 @@ export type Phase =
 
 export type RoleKey =
   | "OFFICER"
+  | "OFFICER_CHAIR"
+  | "OFFICER_VC"
+  | "OFFICER_SECRETARY"
+  | "OFFICER_TREASURER"
   | "LD_CHAIR"
   | "LD_VC"
   | "AT_LARGE"
@@ -23,6 +27,24 @@ export type RoleKey =
   | "WOMENS_CLUB_PRES"
   | "PRECINCT_CAPTAIN"
   | "COMMITTEE_CHAIR_ONLY";
+
+// Short, picker-friendly label per role. Used by the dashboard role
+// picker + the "View as" switcher. Kept here next to RoleKey so adding
+// a new role doesn't drift between the enum and the label table.
+export const ROLE_KEY_LABEL: Record<RoleKey, string> = {
+  OFFICER: "LDP Officer (generic)",
+  OFFICER_CHAIR: "LDP Chair",
+  OFFICER_VC: "LDP Vice Chair",
+  OFFICER_SECRETARY: "LDP Secretary",
+  OFFICER_TREASURER: "LDP Treasurer",
+  LD_CHAIR: "LD Chair",
+  LD_VC: "LD Vice Chair",
+  AT_LARGE: "At-Large Member",
+  LYD_PRES: "LYD President",
+  WOMENS_CLUB_PRES: "JCDWC President",
+  PRECINCT_CAPTAIN: "Precinct Captain",
+  COMMITTEE_CHAIR_ONLY: "Committee Chair / Member",
+};
 
 export type UserContext = {
   role: RoleKey;

@@ -1,0 +1,33 @@
+<!doctype html><html><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;}
+  body{padding:24px 28px;background:#fff;font-family:var(--font-sans);}
+  .label{font-family:var(--font-sans);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-red-bright);margin-bottom:14px;}
+  .row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;align-items:baseline;}
+  .item{display:flex;flex-direction:column;gap:4px;}
+  .item .tok{font-family:var(--font-mono);font-size:10px;letter-spacing:0.04em;color:var(--color-ldp-ink-700);text-transform:uppercase;}
+  .item .ex{font-family:var(--font-sans);color:var(--color-ldp-ink-900);font-weight:500;letter-spacing:-0.011em;}
+  .item.s1 .ex{font-size:12px;line-height:1.33;}
+  .item.s2 .ex{font-size:14px;line-height:1.43;}
+  .item.s3 .ex{font-size:16px;line-height:1.5;}
+  .item.s4 .ex{font-size:20px;line-height:1.4;}
+  .item.s5 .ex{font-size:30px;line-height:1.2;font-weight:700;letter-spacing:-0.025em;}
+  .row2{margin-top:24px;display:flex;gap:24px;align-items:baseline;}
+  .label-wide{font-family:var(--font-sans);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-navy-900);}
+  .label-mid{font-family:var(--font-sans);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-navy-900);}
+</style></head><body class="ldp">
+<div class="label">Type scale &amp; labels — Inter</div>
+<div class="row">
+  <div class="item s1"><div class="tok">text-xs · 12/1.33</div><div class="ex">Caption text</div></div>
+  <div class="item s2"><div class="tok">text-sm · 14/1.43</div><div class="ex">Small body</div></div>
+  <div class="item s3"><div class="tok">text-base · 16/1.5</div><div class="ex">Body copy</div></div>
+  <div class="item s4"><div class="tok">text-xl · 20/1.4</div><div class="ex">Subhead</div></div>
+  <div class="item s5"><div class="tok">text-3xl · 30/1.2 · 700</div><div class="ex">Section heading</div></div>
+</div>
+<div class="row2">
+  <div class="label-wide">Louisville Democratic Party</div>
+  <div class="label-mid">Subsection · widest</div>
+</div>
+</body></html>

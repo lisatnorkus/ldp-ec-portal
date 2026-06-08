@@ -1,0 +1,39 @@
+<!doctype html><html><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;}
+  body{padding:22px 26px;background:#fff;font-family:var(--font-sans);}
+  .label{font-family:var(--font-sans);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-red-bright);margin-bottom:14px;}
+  .grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:14px;}
+  .sw{height:54px;border-radius:6px;padding:6px 8px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgba(0,0,0,0.06);}
+  .n{font-family:var(--font-mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;font-weight:500;}
+  .hex{font-family:var(--font-mono);font-size:9px;opacity:0.85;}
+  .dk{color:#fff;}
+  .lt{color:var(--color-ldp-navy-900);}
+  .group-label{font-family:var(--font-sans);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-ink-700);margin-bottom:6px;}
+</style></head><body class="ldp">
+<div class="label">Semantic + Supporting</div>
+<div class="group-label">Shadcn semantic tokens</div>
+<div class="grid">
+  <div class="sw lt" style="background:#ffffff;border-color:var(--border)"><div class="n">background</div><div class="hex">#ffffff</div></div>
+  <div class="sw dk" style="background:#09090b"><div class="n">foreground</div><div class="hex">#09090b</div></div>
+  <div class="sw dk" style="background:#18181b"><div class="n">primary</div><div class="hex">#18181b</div></div>
+  <div class="sw lt" style="background:#f4f4f5"><div class="n">muted</div><div class="hex">#f4f4f5</div></div>
+  <div class="sw dk" style="background:#71717b"><div class="n">muted-fg</div><div class="hex">#71717b</div></div>
+  <div class="sw dk" style="background:#e40014"><div class="n">destructive</div><div class="hex">#e40014</div></div>
+  <div class="sw lt" style="background:#e4e4e7"><div class="n">border</div><div class="hex">#e4e4e7</div></div>
+  <div class="sw dk" style="background:#9f9fa9"><div class="n">ring</div><div class="hex">#9f9fa9</div></div>
+</div>
+<div class="group-label">Supporting</div>
+<div class="grid">
+  <div class="sw dk" style="background:var(--red-500)"><div class="n">Red 500</div><div class="hex">#fb2c36</div></div>
+  <div class="sw lt" style="background:var(--amber-400)"><div class="n">Amber 400</div><div class="hex">#fcbb00</div></div>
+  <div class="sw dk" style="background:var(--amber-500)"><div class="n">Amber 500</div><div class="hex">#f99c00</div></div>
+  <div class="sw dk" style="background:var(--amber-700)"><div class="n">Amber 700</div><div class="hex">#b75000</div></div>
+  <div class="sw dk" style="background:var(--emerald-500)"><div class="n">Emerald 500</div><div class="hex">#00bb7f</div></div>
+  <div class="sw dk" style="background:var(--emerald-600)"><div class="n">Emerald 600</div><div class="hex">#009767</div></div>
+  <div class="sw dk" style="background:var(--emerald-700)"><div class="n">Emerald 700</div><div class="hex">#007956</div></div>
+  <div class="sw lt" style="background:var(--gray-300)"><div class="n">Gray 300</div><div class="hex">#d1d5dc</div></div>
+</div>
+</body></html>

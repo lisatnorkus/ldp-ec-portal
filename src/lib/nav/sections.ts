@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale, Clock, ArrowLeftRight, CheckSquare, FileText } from "lucide-react";
+import { Calendar, Users, FolderOpen, Map, Home, Vote, Building2, Ticket, Handshake, ClipboardList, Megaphone, Scale, Clock, ArrowLeftRight, CheckSquare, FileText, ScrollText } from "lucide-react";
 
 export type SectionNavItem = {
   slug: string;
@@ -41,6 +41,9 @@ export const SECTION_NAV: SectionNavItem[] = [
   { slug: "committees", label: "Committees", href: "/committees", icon: Building2,
     description: "All 11 committees: responsibilities, workflow, members, Drive folders.",
     accent: "#0891b2" },
+  { slug: "official-records", label: "Official Records", href: "/official-records", icon: ScrollText,
+    description: "LDPEC + committee minutes and treasurer reports. Draft → Published → Approved. Secretary and Officers publish; everyone on the EC can read.",
+    accent: "#0E4C9E" },
   { slug: "endorsement", label: "Endorsement Process", href: "/endorsement", icon: Scale,
     description: "How the LDP endorses — 60% threshold, secret ballot, Jan-Feb timeline per cycle.",
     accent: "#b45309" },

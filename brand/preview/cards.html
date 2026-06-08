@@ -1,0 +1,38 @@
+<!doctype html><html><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;}
+  body.ldp{padding:0;background:var(--color-ldp-navy-900);font-family:var(--font-sans);min-height:280px;position:relative;overflow:hidden;}
+  body::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0,transparent 6px,rgba(255,255,255,0.06) 6px,rgba(255,255,255,0.06) 7px);pointer-events:none;}
+  .wrap{position:relative;z-index:1;padding:28px 32px;}
+  .label{font-family:var(--font-sans);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-red-bright);margin-bottom:14px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);backdrop-filter:blur(6px);border-radius:12px;padding:20px;color:#fafafa;}
+  .card h4{font-family:var(--font-sans);font-size:14px;font-weight:600;color:#fff;margin:0 0 6px;letter-spacing:-0.011em;}
+  .card .tag{font-family:var(--font-sans);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-gold-tint);margin-bottom:12px;}
+  .card p{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,0.75);}
+  .note{font-family:var(--font-sans);font-size:11px;color:rgba(255,255,255,0.5);margin-top:14px;letter-spacing:0.04em;}
+</style></head><body class="ldp">
+<div class="wrap">
+  <div class="label">Cards — translucent over navy</div>
+  <div class="grid">
+    <div class="card">
+      <div class="tag">Module 01</div>
+      <h4>Field operations</h4>
+      <p>Turf cutting, knock quotas, debrief schedule, volunteer ops. The play-by-play.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Module 02</div>
+      <h4>Compliance &amp; finance</h4>
+      <p>Reporting calendar, contribution caps, vendor onboarding. Everything the committee owes the Registry.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Module 03</div>
+      <h4>Communications</h4>
+      <p>Voice guidelines, approved talking points, social calendar, press contact list.</p>
+    </div>
+  </div>
+  <div class="note">bg-white/5 · border-white/15 · backdrop-blur-sm · rounded-xl (12px)</div>
+</div>
+</body></html>

@@ -13,6 +13,11 @@ import {
 import { CommitteeNotes } from "@/components/ld-workspace/CommitteeNotes";
 import { CommitteeTasks } from "@/components/ld-workspace/CommitteeTasks";
 import type { Assignable } from "@/lib/db/ld-tasks";
+import {
+  fetchAssignablesForCommittee,
+  fetchPosts,
+} from "@/lib/db/workspace";
+import { WorkspaceSection } from "@/components/workspace/WorkspaceSection";
 
 export const dynamic = "force-dynamic";
 
@@ -35,13 +40,23 @@ export default async function CommitteeDetailPage({
   const committee = await fetchCommitteeByCode(code);
   if (!committee) notFound();
 
-  const [members, notes, tasks] = await Promise.all([
+  const [members, notes, tasks, posts, workspaceAssignables] = await Promise.all([
     fetchAllMembers(),
     fetchCommitteeNotes(committee.code),
     fetchCommitteeTasks(committee.code),
+    fetchPosts(committee.code),
+    fetchAssignablesForCommittee(committee.code),
   ]);
   const byId = new Map(members.map((m) => [m.id, m]));
   const chair = committee.chair_id ? byId.get(committee.chair_id) : null;
+
+  // Member-id → display name map for the workspace's per-assignee
+  // rendering. Workspace assignments FK to ec_members.id; this lets the
+  // client component render names without a second query.
+  const memberNamesById: Record<string, string> = {};
+  for (const a of workspaceAssignables) {
+    memberNamesById[a.member_id] = a.name;
+  }
 
   // Resolve member_codes (names) against ec_members. Try exact display-name
   // match first, then fall back to first-token + last-token so casual names
@@ -237,6 +252,13 @@ export default async function CommitteeDetailPage({
             </div>
           </div>
         )}
+
+        <WorkspaceSection
+          committeeCode={committee.code}
+          posts={posts}
+          assignables={workspaceAssignables}
+          memberNamesById={memberNamesById}
+        />
 
         <CommitteeTasks committeeCode={committee.code} tasks={tasks} assignables={assignables} />
         <CommitteeNotes committeeCode={committee.code} notes={notes} />

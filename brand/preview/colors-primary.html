@@ -1,0 +1,24 @@
+<!doctype html><html><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;}
+  body{padding:22px 26px;background:#fff;font-family:var(--font-sans);}
+  .label{font-family:var(--font-sans);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-red-bright);margin-bottom:14px;}
+  .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+  .sw{height:80px;border-radius:var(--radius-md);padding:10px 12px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgba(0,0,0,0.06);}
+  .n{font-family:var(--font-sans);font-weight:600;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;}
+  .hex{font-family:var(--font-mono);font-size:10px;opacity:0.85;}
+  .dk{color:#fff;}
+  .lt{color:var(--color-ldp-navy-900);}
+</style></head><body class="ldp">
+<div class="label">Brand palette — Navy / Red / "Gold" (blue)</div>
+<div class="grid">
+  <div class="sw dk" style="background:var(--color-ldp-navy-900)"><div class="n">Navy 900 ★</div><div class="hex">#051b3c</div></div>
+  <div class="sw dk" style="background:var(--color-ldp-navy-800)"><div class="n">Navy 800</div><div class="hex">#0a3772</div></div>
+  <div class="sw dk" style="background:var(--color-ldp-navy-700)"><div class="n">Navy 700</div><div class="hex">#0e4c9e</div></div>
+  <div class="sw dk" style="background:var(--color-ldp-red)"><div class="n">LDP Red ★</div><div class="hex">#c8102e</div></div>
+  <div class="sw lt" style="background:var(--color-ldp-gold)"><div class="n">"Gold"</div><div class="hex">#60a5fa</div></div>
+</div>
+<div style="margin-top:14px;font-size:12px;color:var(--color-ldp-ink-700);line-height:1.5;">Note: <code style="font-family:var(--font-mono);">--color-ldp-gold</code> is blue (#60a5fa), kept named "gold" to match the codebase. It anchors the headline gradient (gold → white).</div>
+</body></html>

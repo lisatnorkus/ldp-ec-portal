@@ -80,3 +80,11 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+
+a,
+p,
+li,
+dt,
+dd {
+  overflow-wrap: anywhere;
+}

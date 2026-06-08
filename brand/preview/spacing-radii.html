@@ -1,0 +1,49 @@
+<!doctype html><html><head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;}
+  body{padding:24px 28px;background:#fff;font-family:var(--font-sans);}
+  .label{font-family:var(--font-sans);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;color:var(--color-ldp-red-bright);margin-bottom:14px;}
+  .row{display:flex;gap:36px;align-items:flex-end;flex-wrap:wrap;}
+  .group{display:flex;gap:10px;align-items:flex-end;}
+  .col{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .sq{width:62px;height:62px;background:var(--color-ldp-navy-800);display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;}
+  .sq.s8{border-radius:8px;}
+  .sq.s10{border-radius:10px;}
+  .sq.s12{border-radius:12px;}
+  .sq.s16{border-radius:16px;}
+  .sq.spill{border-radius:9999px;width:84px;}
+  .vv{font-family:var(--font-mono);font-size:11px;color:#fff;}
+  .n{font-family:var(--font-mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-ldp-ink-700);text-align:center;}
+  h4{font-family:var(--font-sans);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-ldp-ink-700);margin:0 0 8px 0;font-weight:600;}
+  .stepbox{display:flex;gap:10px;align-items:flex-end;}
+  .bar{background:var(--color-ldp-navy-800);width:34px;border-radius:4px;}
+  .step{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .step .v{font-family:var(--font-mono);font-size:10px;color:var(--color-ldp-ink-700);}
+</style></head><body class="ldp">
+<div class="label">Radii &amp; spacing</div>
+<div class="row">
+  <div>
+    <h4>Radii — Tailwind scale</h4>
+    <div class="group">
+      <div class="col"><div class="sq s8"><span class="vv">8 (md)</span></div><div class="n">buttons</div></div>
+      <div class="col"><div class="sq s10"><span class="vv">10 ★</span></div><div class="n">default</div></div>
+      <div class="col"><div class="sq s12"><span class="vv">12 (xl)</span></div><div class="n">cards</div></div>
+      <div class="col"><div class="sq s16"><span class="vv">16 (2xl)</span></div><div class="n">2xl</div></div>
+      <div class="col"><div class="sq spill"><span class="vv">pill</span></div><div class="n">bars / tags</div></div>
+    </div>
+  </div>
+  <div>
+    <h4>Spacing — 4px base</h4>
+    <div class="stepbox">
+      <div class="step"><div class="bar" style="height:4px"></div><div class="v">4</div></div>
+      <div class="step"><div class="bar" style="height:8px"></div><div class="v">8</div></div>
+      <div class="step"><div class="bar" style="height:16px"></div><div class="v">16</div></div>
+      <div class="step"><div class="bar" style="height:24px"></div><div class="v">24</div></div>
+      <div class="step"><div class="bar" style="height:48px"></div><div class="v">48</div></div>
+      <div class="step"><div class="bar" style="height:64px"></div><div class="v">64</div></div>
+    </div>
+  </div>
+</div>
+</body></html>

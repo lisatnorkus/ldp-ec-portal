@@ -25,6 +25,8 @@ export type EcMember = {
   committee_member_codes: string[];
   notes: string | null;
   active: boolean;
+  term_start: string | null; // ISO date — when this member's current term began
+  term_end: string | null;   // ISO date — when it ends
   attendance_present: number | null;
   attendance_excused: number | null;
   attendance_absent: number | null;
