@@ -295,6 +295,12 @@ export default async function EventsPage() {
                 until one lands. The earlier you have your link, the longer you have to share it.
                 Once it&apos;s live, every ticket sold through it counts toward your $500 raise.
               </p>
+              <p className="mt-2 rounded-md bg-[var(--color-ldp-gold)]/10 px-3 py-2 text-xs font-medium text-[var(--color-ldp-ink-900)]">
+                <strong className="text-[var(--color-ldp-navy-900)]">Not wired up yet:</strong>{" "}
+                the per-link ticket tracking isn&apos;t connected to live sales data at this stage.
+                The $500 shown here is the target, not a running tally — your actual raise isn&apos;t
+                yet displayed on this page.
+              </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button asChild variant="outline" size="sm">
                   <a
