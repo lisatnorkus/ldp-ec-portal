@@ -64,3 +64,9 @@ supabase/.env
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# docs scratch — PDF exports of the portal + Google Drive pointers stay local
+docs/*.pdf
+docs/*.gdoc
+docs/*.gsheet
+docs/*.gslides
