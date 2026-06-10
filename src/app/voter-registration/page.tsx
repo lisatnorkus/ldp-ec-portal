@@ -21,6 +21,7 @@ import {
 import { fetchUpcomingVoterRegEvents } from "@/lib/db/voter-reg-events";
 import { VOTER_REG_TARGETS, targetLabel } from "@/lib/db/voter-reg-events-types";
 import { VoterRegEventForm } from "@/components/voter-reg/VoterRegEventForm";
+import { VoterRegSectionNav } from "@/components/voter-reg/VoterRegSectionNav";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Voter Registration · Jefferson County KY" };
@@ -72,6 +73,10 @@ export default async function VoterRegPage() {
         </a>
       }
     >
+      {/* Sticky in-page nav — breaks up a long, dense page and signals
+          its structure. Anchors to id="vr-<slug>" on each section. */}
+      <VoterRegSectionNav />
+
       {/* EC-facing callout: KDP just launched IWillVote.com and is asking
           for QA before broad share. Lives here because this is where
           voter-tools live; remove once KDP signals general availability. */}
@@ -117,7 +122,7 @@ export default async function VoterRegPage() {
       {imminent && <DeadlineBanner label={imminent.label} date={imminent.date} kind={imminent.kind} />}
 
       {/* All deadlines at a glance. */}
-      <section className="mb-10">
+      <section id="vr-deadlines" className="mb-10 scroll-mt-28">
         <h2 className="mb-3 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
           All KY deadlines that matter right now
         </h2>
@@ -164,7 +169,7 @@ export default async function VoterRegPage() {
       </section>
 
       {/* How to register — the three methods. */}
-      <section className="mb-10">
+      <section id="vr-register" className="mb-10 scroll-mt-28">
         <h2 className="mb-3 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
           How to register in Jefferson County
         </h2>
@@ -203,7 +208,7 @@ export default async function VoterRegPage() {
       </section>
 
       {/* Eligibility + voter ID — the table of rules. */}
-      <section className="mb-10 rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
+      <section id="vr-eligibility" className="mb-10 scroll-mt-28 rounded-xl border border-[var(--color-ldp-line)] bg-white p-5">
         <h2 className="text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
           Who can register, and what to bring to vote
         </h2>
@@ -231,12 +236,22 @@ export default async function VoterRegPage() {
             <p className="mt-2 text-sm text-[var(--color-ldp-ink-900)]">
               Kentucky requires a photo ID to vote (SB 2, 2020 — KRS 117.228). Acceptable:
             </p>
-            <ul className="mt-2 space-y-1 text-sm text-[var(--color-ldp-ink-900)]">
-              <li>• KY driver&apos;s license or state ID</li>
-              <li>• U.S. military or federal government ID</li>
-              <li>• Kentucky college or public-university ID</li>
-              <li>• Kentucky county-issued photo ID</li>
-              <li>• Free KY voter ID card (apply at Circuit Clerk)</li>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {[
+                "KY driver's license or state ID",
+                "U.S. military or federal government ID",
+                "Kentucky college or public-university ID",
+                "Kentucky county-issued photo ID",
+                "Free KY voter ID card (apply at Circuit Clerk)",
+              ].map((id) => (
+                <li
+                  key={id}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-ldp-line)] bg-[#FAFBFC] px-3 py-1 text-xs font-medium text-[var(--color-ldp-navy-900)]"
+                >
+                  <IdCard aria-hidden="true" className="size-3.5 text-[var(--color-ldp-navy-700)]" />
+                  {id}
+                </li>
+              ))}
             </ul>
             <p className="mt-2 text-xs text-[var(--color-ldp-ink-700)]">
               No photo ID? You can still vote by signing a form affirming a reasonable impediment,
@@ -247,7 +262,7 @@ export default async function VoterRegPage() {
       </section>
 
       {/* Returning citizens — KY-specific process. */}
-      <section className="mb-10 rounded-xl border-2 border-[var(--color-ldp-gold)] bg-[#FEF9E7] p-5">
+      <section id="vr-restoration" className="mb-10 scroll-mt-28 rounded-xl border-2 border-[var(--color-ldp-gold)] bg-[#FEF9E7] p-5">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
           <IdCard aria-hidden="true" className="size-4" />
           Returning citizens · post-felony voter restoration
@@ -255,22 +270,27 @@ export default async function VoterRegPage() {
         <h3 className="mt-1 text-base font-bold text-[var(--color-ldp-navy-900)]">
           Kentucky is one of the most restrictive states — but many are eligible.
         </h3>
-        <ul className="mt-3 space-y-2 text-sm text-[var(--color-ldp-ink-900)]">
-          <li>
-            <strong>Non-violent felonies:</strong> Governor Beshear&apos;s Executive Order 2019-003
-            restores voting rights automatically after completion of sentence, including parole and
-            probation. No application required.
-          </li>
-          <li>
-            <strong>Violent felonies, Class C/D where excluded, or federal offenses:</strong>{" "}
-            Require an individual pardon or restoration by the Governor. Apply through the
-            Department of Corrections / Governor&apos;s Office.
-          </li>
-          <li>
-            <strong>Pending charges:</strong> You retain the right to vote until convicted.
-          </li>
-        </ul>
-        <p className="mt-3 text-xs text-[var(--color-ldp-ink-700)]">
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <RestorationCard
+            accent="#059669"
+            status="Auto-restored"
+            title="Non-violent felonies"
+            body="Governor Beshear's Executive Order 2019-003 restores voting rights automatically after completion of sentence, including parole and probation. No application required."
+          />
+          <RestorationCard
+            accent="#F59E0B"
+            status="Needs a pardon"
+            title="Violent felonies, Class C/D where excluded, or federal offenses"
+            body="Require an individual pardon or restoration by the Governor. Apply through the Department of Corrections / Governor's Office."
+          />
+          <RestorationCard
+            accent="var(--color-ldp-navy-800)"
+            status="You keep your vote"
+            title="Pending charges"
+            body="You retain the right to vote until convicted."
+          />
+        </div>
+        <p className="mt-4 text-xs text-[var(--color-ldp-ink-700)]">
           If unsure:{" "}
           <a
             href="https://corrections.ky.gov/Community/Pages/Voting-Rights.aspx"
@@ -294,7 +314,7 @@ export default async function VoterRegPage() {
       </section>
 
       {/* Target populations. */}
-      <section className="mb-10">
+      <section id="vr-targets" className="mb-10 scroll-mt-28">
         <h2 className="mb-3 text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
           Who the party prioritizes for registration
         </h2>
@@ -319,7 +339,7 @@ export default async function VoterRegPage() {
       </section>
 
       {/* Upcoming LDPEC voter reg events. */}
-      <section className="mb-10">
+      <section id="vr-events" className="mb-10 scroll-mt-28">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="text-sm font-bold tracking-tight text-[var(--color-ldp-navy-900)]">
             Upcoming LDPEC voter registration events
@@ -408,7 +428,7 @@ export default async function VoterRegPage() {
       </section>
 
       {/* Authority + official sources. */}
-      <section className="rounded-xl border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-5">
+      <section id="vr-sources" className="scroll-mt-28 rounded-xl border border-[var(--color-ldp-line)] bg-[#FAFBFC] p-5">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--color-ldp-navy-800)]">
           Official sources · trust these over us
         </h2>
@@ -570,6 +590,34 @@ function MethodCard({
       >
         {cta.label} <ExternalLink aria-hidden="true" className="size-3" />
       </a>
+    </article>
+  );
+}
+
+function RestorationCard({
+  accent,
+  status,
+  title,
+  body,
+}: {
+  accent: string;
+  status: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <article
+      className="flex flex-col rounded-lg border bg-white p-3"
+      style={{ borderLeftWidth: 4, borderLeftColor: accent }}
+    >
+      <span
+        className="inline-flex w-fit items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white"
+        style={{ backgroundColor: accent }}
+      >
+        {status}
+      </span>
+      <h4 className="mt-2 text-sm font-bold text-[var(--color-ldp-navy-900)]">{title}</h4>
+      <p className="mt-1 text-xs leading-relaxed text-[var(--color-ldp-ink-900)]">{body}</p>
     </article>
   );
 }
