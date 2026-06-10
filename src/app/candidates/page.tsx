@@ -192,8 +192,8 @@ export default async function CandidatesPage() {
           <p className="mt-1 text-[var(--color-ldp-ink-900)]">
             If a candidate is missing, miscategorized, or an endorsement flag needs updating
             after a committee vote, send the change to{" "}
-            <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
-              communications@louisvilledems.com
+            <a href="mailto:lisatnorkus@gmail.com" className="text-[var(--color-ldp-navy-700)] underline">
+              lisatnorkus@gmail.com
             </a>
             . Source of record is the Jefferson County Clerk&apos;s ballot filing + LDPEC
             Endorsement Process Committee votes.

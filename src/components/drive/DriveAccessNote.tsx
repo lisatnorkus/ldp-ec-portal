@@ -75,12 +75,12 @@ export function DriveAccessBanner() {
                 Everything should open without permission prompts. If you still see &ldquo;Request
                 access,&rdquo; email{" "}
                 <a
-                  href="mailto:communications@louisvilledems.com"
+                  href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20Drive%20access"
                   className="text-[var(--color-ldp-navy-700)] underline"
                 >
-                  communications@louisvilledems.com
+                  lisatnorkus@gmail.com
                 </a>{" "}
-                — they own Drive access requests.
+                — Lisa handles Drive access requests until Comms is operational.
               </>
             }
           />

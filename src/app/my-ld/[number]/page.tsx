@@ -844,8 +844,8 @@ function PcSection({
           (Man / Woman / Youth). Many PCs on this list don&apos;t have a specific role recorded
           yet — they&apos;re counted as &ldquo;on file&rdquo; without being pinned to a seat. Send
           corrections to{" "}
-          <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
-            communications@louisvilledems.com
+          <a href="mailto:lisatnorkus@gmail.com" className="text-[var(--color-ldp-navy-700)] underline">
+            lisatnorkus@gmail.com
           </a>
           .
         </p>
@@ -883,8 +883,8 @@ function PcSection({
             <strong className="text-[var(--color-ldp-red)]">No PCs on file for LD{ld}.</strong>{" "}
             If your LD elected Precinct Captains at the 2025 Convention, send the roster (names,
             precincts, roles, emails, phones) to{" "}
-            <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
-              communications@louisvilledems.com
+            <a href="mailto:lisatnorkus@gmail.com" className="text-[var(--color-ldp-navy-700)] underline">
+              lisatnorkus@gmail.com
             </a>
             .
           </div>

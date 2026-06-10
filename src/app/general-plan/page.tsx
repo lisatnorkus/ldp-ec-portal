@@ -484,8 +484,8 @@ export default function GeneralPlanPage() {
         Prepared by Lisa Norkus, 41st LD Vice Chair · May 2026
         <br />
         For VoteBuilder access or questions:{" "}
-        <a href="mailto:info@louisvilledems.com" className="underline">
-          info@louisvilledems.com
+        <a href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20General%20Plan%20question" className="underline">
+          lisatnorkus@gmail.com
         </a>
       </footer>
     </HubShell>

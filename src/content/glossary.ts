@@ -91,17 +91,32 @@ export const GLOSSARY: GlossaryTerm[] = [
 
   // ---- Governance / compliance ----
   {
+    term: "LDP",
+    short: "Louisville Democratic Party — the party itself. The brand we use in public-facing copy.",
+    long: "Formally the Louisville-Jefferson County Democratic Party (LJCDP). 'LDP' is the everyday name; 'LJCDP' shows up in bylaw citations.",
+    seeAlso: ["LDPEC", "LJCDP", "KDP"],
+  },
+  {
+    term: "LDPEC",
+    short: "LDP Executive Committee — the 56+ voting members who govern the party between conventions.",
+    long: "Four countywide officers, 18 LD Chairs, 18 LD Vice Chairs, 18 At-Large Chairs, plus the LYD and JCDWC Presidents. Governed by KDP bylaws + LJCDP bylaws. Audience of this portal.",
+    seeAlso: ["LDP", "JCDEC", "CEC", "LJCDP"],
+  },
+  {
     term: "JCDEC",
-    short: "Jefferson County Democratic Executive Committee — the official county committee.",
-    long: "Also called LDPEC, LJCDP, or 'the board' depending on who's talking. Governed by KDP bylaws + LJCDP bylaws. 56+ voting members.",
+    short: "Jefferson County Democratic Executive Committee — older name for the LDPEC.",
+    long: "Same body as LDPEC. The internal-bylaws name. User-facing copy uses LDPEC.",
+    seeAlso: ["LDPEC"],
   },
   {
     term: "CEC",
-    short: "County Executive Committee — same as JCDEC.",
+    short: "County Executive Committee — same body as LDPEC.",
+    seeAlso: ["LDPEC"],
   },
   {
     term: "SCEC",
     short: "State Central Executive Committee — KDP's statewide governing body.",
+    long: "Meets quarterly in Frankfort plus called meetings. More formal than LDPEC — your countywide officers serve as the link.",
   },
   {
     term: "KDP",
@@ -109,7 +124,8 @@ export const GLOSSARY: GlossaryTerm[] = [
   },
   {
     term: "LJCDP",
-    short: "Louisville-Jefferson County Democratic Party — the legal name of JCDEC in bylaws.",
+    short: "Louisville-Jefferson County Democratic Party — the legal name of the LDP in bylaws.",
+    seeAlso: ["LDP"],
   },
   {
     term: "KREF",
@@ -139,6 +155,42 @@ export const GLOSSARY: GlossaryTerm[] = [
     term: "LD bloc",
     short: "LD Chairs + LD Vice Chairs + LD At-Large members combined — the core voting body.",
   },
+  {
+    term: "DNC Charter",
+    short: "The national party's foundational document — what the DNC is and how it works.",
+    long: "Cited alongside KDP bylaws, LJCDP bylaws, and Robert's Rules in the portal's Compliance Q&A. Read the cited section before acting on anything load-bearing.",
+    seeAlso: ["Compliance Q&A", "KDP", "LJCDP"],
+  },
+  {
+    term: "Robert's Rules",
+    short: "Robert's Rules of Order — the parliamentary procedure that governs how LDPEC meetings run.",
+    long: "Motion, second, debate, vote. The Chair runs the room by Robert's Rules unless the bylaws say otherwise. The Compliance Q&A chat answers procedural questions citing it.",
+    seeAlso: ["Compliance Q&A", "Proxy", "Quorum"],
+  },
+  {
+    term: "§26 drift",
+    short: "LJCDP §26 lists 10 standing committees; practice runs 8 standing + 3 ad hoc. The bylaws need amending.",
+    long: "§26 still names Youth and Labor as standing (they aren't running) and omits Branding, Endorsement Process, and Platform (which are running as ad hoc). The Bylaws Committee will amend. Until then, the portal flags this drift wherever committees are listed.",
+    seeAlso: ["LJCDP"],
+  },
+  {
+    term: "Reorg",
+    short: "The party-wide reorganization that elects every LDPEC seat. Presidential-year cadence: 2028, 2032, 2036.",
+    long: "Two-step process: Precinct Conventions elect PCs (and resolve LD officer races if uncontested), then LD Conventions seat LD officers. KDP postponed the 2024 reorg to 2025 as a one-time shift; the cycle is back on presidential-year cadence going forward. Tour Step 6 is the load-bearing reference.",
+    seeAlso: ["Precinct Convention", "LD Convention", "SCEC"],
+  },
+  {
+    term: "Precinct Convention",
+    short: "The local reorg meeting in each precinct where PCs are elected.",
+    long: "Called and advertised by the LDPEC Chair (KDP Art. II.B.f). Party Officers — in practice LD Chairs — preside as Convention Chairs (Art. II.B.g). 7–30 days advance notice required, using ≥3 of 6 notification methods. No prefiling for PC seats — elected at the convention itself.",
+    seeAlso: ["Reorg", "Precinct Captain"],
+  },
+  {
+    term: "LD Convention",
+    short: "The reorg meeting where LD Chair, Vice Chair, and LD At-Large seats get seated.",
+    long: "Held after Precinct Conventions in each LD. Prefiling for LD Chair / VC / LD At-Large runs Oct 1 (year-before) through the 5pm filing deadline of the reorg year, per LJCDP §4.2.1. Nominations from the floor also allowed.",
+    seeAlso: ["Reorg", "Precinct Convention"],
+  },
 
   // ---- Portal-specific ----
   {
@@ -154,6 +206,78 @@ export const GLOSSARY: GlossaryTerm[] = [
   {
     term: "Amplify",
     short: "The board-share board — Comms publishes a post, every EC member one-click shares to their networks.",
+  },
+  {
+    term: "Workspace",
+    short: "The shared work surface for an LD or a committee: posts, action items, meeting records, continuity tools.",
+    long: "Every LD has one (at /my-ld/[n]) and every standing/ad-hoc committee has one (at /committees/[code]). Same pattern in both places. The 'work happens here, not in side-channel emails' surface.",
+    seeAlso: ["Action Items", "Meeting Records", "Continuity Package"],
+  },
+  {
+    term: "Action Items",
+    short: "Discrete to-dos assigned to a specific LDPEC member with accept/decline. Distinct from tasks.",
+    long: "Action items have an owner, an optional due date, and a state (open / accepted / declined / done). Live inside committee + LD workspaces and roll up to your dashboard's 'Your Week' panel. Extracted automatically by the ingest pipeline from meeting minutes.",
+    seeAlso: ["Workspace", "Meeting Records"],
+  },
+  {
+    term: "Meeting Records",
+    short: "Verbatim LDPEC and committee meeting minutes with motions, decisions, action items, and attendance pre-parsed.",
+    long: "The ingest pipeline reads the canonical minutes and writes a structured annotations block alongside the verbatim text. Powers the rollups on /official-records, the per-committee record list, and the dashboard's published-awaiting-approval count.",
+    seeAlso: ["Official Records", "Ingest pipeline", "Action Items"],
+  },
+  {
+    term: "Official Records",
+    short: "The portal's full audit trail of approved LDPEC meeting records.",
+    long: "Lives at /official-records. The reference behind every governance claim — quorum, attendance, motions, finance decisions. Officers see a published-awaiting-approval queue on their dashboard.",
+    seeAlso: ["Meeting Records", "Officer Dashboard"],
+  },
+  {
+    term: "Ingest pipeline",
+    short: "The script that reads raw meeting minutes and writes the parsed annotations back to Supabase.",
+    long: "Run by Lisa after each LDPEC meeting. Pulls motions, decisions, action items, and attendance out of the verbatim minutes so the rest of the portal can filter and roll them up. The verbatim content stays canonical.",
+    seeAlso: ["Meeting Records"],
+  },
+  {
+    term: "Role Banner",
+    short: "The colored strip at the top of the dashboard that names which role you're currently viewing as.",
+    long: "Color-coded by role family — officers navy, LD chair/VC red, At-Large/LYD/JCDWC violet, Precinct Captain emerald. Tells you at a glance which lens the dashboard is rendering in.",
+    seeAlso: ["View as", "Officer Dashboard"],
+  },
+  {
+    term: "View as",
+    short: "The dropdown that lets multi-hat LDPEC members swap which role the dashboard renders for.",
+    long: "Lives in the 'Signed in as' strip just below the Role Banner. Only shows up if you've declared more than one hat in your profile. Swapping doesn't change your permissions — it changes the layout the dashboard renders.",
+    seeAlso: ["Role Banner", "Officer Dashboard"],
+  },
+  {
+    term: "Officer Dashboard",
+    short: "The dashboard layout shown to LDPEC officers: countywide governance focus.",
+    long: "Committee health, transitions in the last 90 days, signature-event countdown, total open action items, published-awaiting-approval records. LD chairs and VCs see the district-flavored layout instead. Multi-hat members can switch via 'View as'.",
+    seeAlso: ["Role Banner", "View as"],
+  },
+  {
+    term: "Leadership Transition",
+    short: "The post-meeting officer roster — who holds what seat right now after the latest LDPEC meeting.",
+    long: "Lives at /leadership-transition. Distinct from /transitions (which is the historical change log). The reference for the current state of the roster.",
+    seeAlso: ["Officer Dashboard"],
+  },
+  {
+    term: "Compliance Q&A",
+    short: "The portal's chat that answers party-rules questions with citations to the DNC Charter, KDP bylaws, LJCDP bylaws, and Robert's Rules.",
+    long: "Lives at /compliance-chat. Research assistant, not the bylaws themselves — every answer cites the section, and load-bearing decisions should be verified against the source.",
+    seeAlso: ["DNC Charter", "Robert's Rules", "LJCDP", "KDP"],
+  },
+  {
+    term: "$120 Club",
+    short: "The annual personal-give component of the LDPEC member commitment — $120/year, typically $10/month auto-pay.",
+    long: "Half of the $620 math. The other half is the $500 raise from signature-event ticket-link sales.",
+    seeAlso: ["$620 math"],
+  },
+  {
+    term: "$620 math",
+    short: "Each LDPEC member's annual financial commitment — $120 personal give + $500 raised.",
+    long: "Funds the party's operating budget. The $500 raise comes from personalized ticket-sale links to the three signature events (Celebration of Democracy, Women Deliver Democracy, Dems at the Downs). Automatic per-member credit tracking isn't wired up yet — for 2026 it's tracked manually by Communications.",
+    seeAlso: ["$120 Club"],
   },
 
   // ---- Cycle phases ----

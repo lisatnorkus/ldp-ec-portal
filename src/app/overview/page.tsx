@@ -2,12 +2,14 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
+  ArrowRightLeft,
   BookOpen,
   Building2,
   CalendarCheck,
   ClipboardList,
   Compass,
   FileCheck,
+  FileText,
   Gavel,
   HandHeart,
   HeartHandshake,
@@ -16,11 +18,14 @@ import {
   IdCard,
   LayoutDashboard,
   ListChecks,
+  Map,
+  MessageSquare,
   Repeat,
   Share2,
   Target,
   Ticket,
   UserPlus,
+  Users,
   Vote,
 } from "lucide-react";
 import { HubShell } from "@/components/hub/HubShell";
@@ -38,7 +43,7 @@ const EVERYONE: Tile[] = [
   {
     href: "/dashboard",
     label: "Dashboard — state of the party",
-    body: "Six KPIs at the top, a 'needs attention' queue, your personal task list, cycle phase, and a live activity feed. One glance = what's urgent.",
+    body: "Role-aware: officers see a committee-health and transitions-focused view; LD chairs and VCs land on a district-flavored layout. A 'View as' switch lets multi-hat members swap lenses. Six KPIs, a needs-attention queue, your personal tasks, cycle phase, and a live activity feed.",
     Icon: LayoutDashboard,
   },
   {
@@ -56,7 +61,7 @@ const EVERYONE: Tile[] = [
   {
     href: "/events",
     label: "Events + the $620 math",
-    body: "Three signature fundraisers with per-member ticket-link tracking. Push your link, get credit, hit your $500 raise target.",
+    body: "Three signature fundraisers (Celebration of Democracy, Women Deliver Democracy, Dems at the Downs) with the $120-give + $500-raise math. Per-member ticket-link tracking is on the roadmap; for now the page is the master event reference.",
     Icon: Ticket,
   },
   {
@@ -64,6 +69,12 @@ const EVERYONE: Tile[] = [
     label: "This Month",
     body: "What's live right now. Theme-coded monthly playbook tied to the cycle phase, plus the full 12-month Rock Star Playbook grid.",
     Icon: CalendarCheck,
+  },
+  {
+    href: "/people",
+    label: "EC directory",
+    body: "Every LDPEC member with role, LD, committees, and a quick path to their profile page. Replaces hunting through Drive for contact info.",
+    Icon: Users,
   },
 ];
 
@@ -99,6 +110,12 @@ const LD: Tile[] = [
     Icon: Compass,
   },
   {
+    href: "/plan-map",
+    label: "Plan & Map",
+    body: "The 2026 General Strategic Plan paired with the interactive precinct map. Zoom into any LD or precinct, see the strategy tag, the D-margin, and who's already assigned.",
+    Icon: Map,
+  },
+  {
     href: "/transitions",
     label: "Continuity + handoff",
     body: "The 7-section package every outgoing LD chair writes so the next person hits the ground running. Mirrored for committee chairs too.",
@@ -109,8 +126,8 @@ const LD: Tile[] = [
 const COMMITTEE: Tile[] = [
   {
     href: "/committees",
-    label: "Committee workspace",
-    body: "Same notes / tasks / email-all / continuity tools as My LD, scoped to your committee.",
+    label: "Committee workspaces",
+    body: "Each of the 8 standing committees + 3 ad hoc has a workspace: posts, action items assigned to specific members, meeting records pulled in from official minutes, and continuity handoff tools. Same pattern as My LD, scoped to your committee.",
     Icon: Building2,
   },
   {
@@ -124,6 +141,12 @@ const COMMITTEE: Tile[] = [
     label: "Coalition partners",
     body: "Six Louisville constituencies (Black, labor, LGBTQ+, Latino, youth, faith) with named partners and year-round engagement notes.",
     Icon: HandHeart,
+  },
+  {
+    href: "/comms",
+    label: "Comms channels reference",
+    body: "Every owned LDP channel (FB, IG, TikTok, X, Threads, Bluesky, YouTube) with handles, the boosted-post price points, and the protocol for asks. The shared map of how the party gets heard.",
+    Icon: Share2,
   },
   {
     href: "/voter-registration",
@@ -141,8 +164,20 @@ const OFFICER: Tile[] = [
     Icon: Gavel,
   },
   {
+    href: "/leadership-transition",
+    label: "Leadership transition tracker",
+    body: "Post-May-27 officer roster with every announced change, vacancy, and successor. The reference for who holds what seat right now — distinct from the historical transitions log.",
+    Icon: ArrowRightLeft,
+  },
+  {
+    href: "/official-records",
+    label: "Official records",
+    body: "Verbatim EC meeting minutes with parsed motions, decisions, action items, and attendance pulled in by the ingest pipeline. The audit trail behind every governance claim in the portal.",
+    Icon: FileText,
+  },
+  {
     href: "/transitions",
-    label: "Transitions & vacancies",
+    label: "Transitions & vacancies log",
     body: "Every announced change and open seat with the 30/90-day fill rules surfaced. Distinguishes announced-but-not-departed from currently vacant.",
     Icon: ListChecks,
   },
@@ -160,6 +195,12 @@ const REFERENCE: Tile[] = [
     label: "Glossary",
     body: "Every bit of lingo defined — Power Base, sleeper Dems, GOTV, D-margin, layering, pipeline, KREF, JCDEC, and more. Terms stay in the portal copy; definitions are one click away.",
     Icon: BookOpen,
+  },
+  {
+    href: "/compliance-chat",
+    label: "Compliance Q&A",
+    body: "Ask a plain-English question and get an answer backed by the DNC Charter, KDP bylaws, LJCDP bylaws, Robert's Rules, and KREF party-funding rules. Cites the section so you can verify.",
+    Icon: MessageSquare,
   },
   {
     href: "/targeting",

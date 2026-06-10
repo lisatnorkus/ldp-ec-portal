@@ -700,10 +700,10 @@ function EventCard({ event, chair }: { event: Event; chair: Chair | null | undef
               <div className="mt-1 text-xs text-[var(--color-ldp-ink-700)]">
                 Check your email from Comms. Can&apos;t find it?{" "}
                 <a
-                  href="mailto:communications@louisvilledems.com"
+                  href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20ticket%20link%20missing"
                   className="text-[var(--color-ldp-navy-700)] underline"
                 >
-                  Email Communications
+                  Email Lisa
                 </a>
                 .
               </div>

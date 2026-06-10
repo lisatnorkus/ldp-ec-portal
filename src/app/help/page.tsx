@@ -26,7 +26,7 @@ export default function HelpPage() {
     <HubShell
       eyebrow="Help & Getting Started"
       title="How the portal works."
-      subtitle="Short answers to the questions we expect. If something isn't here, email Communications — every fourth question gets added to this page."
+      subtitle="Short answers to the questions we expect. If something isn't here, email Lisa — every fourth question gets added to this page."
       maxWidthClass="max-w-4xl"
     >
       {/* Quick-start tiles */}
@@ -109,6 +109,28 @@ export default function HelpPage() {
             you see. It answers &ldquo;how&apos;s the operation today?&rdquo; in one glance and
             then hands you the things on YOUR plate.
           </P>
+          <P className="font-semibold text-[var(--color-ldp-navy-900)]">
+            Role-aware layout
+          </P>
+          <P>
+            Officers (Chair / Vice Chair / Secretary / Treasurer) see a layout focused on countywide
+            governance — committee health, transitions, signature-event countdown, total open
+            action items. LD chairs and VCs land on the district-flavored layout (KPIs, needs
+            attention, your week, jump tiles). The colored <strong>Role Banner</strong> at the top
+            of the page tells you which lens you&apos;re in.
+          </P>
+          <P className="font-semibold text-[var(--color-ldp-navy-900)]">
+            Multi-hat &ldquo;View as&rdquo; switcher
+          </P>
+          <P>
+            If you wear more than one hat (e.g., LD VC + Committee Chair, or At-Large + LYD
+            President), declare each one when you set your profile. The compact &ldquo;Signed in
+            as&rdquo; strip below the banner has a <strong>View as ▾</strong> dropdown — swap
+            lenses any time and the whole dashboard re-renders for that role.
+          </P>
+          <P className="font-semibold text-[var(--color-ldp-navy-900)]">
+            What lives on the page
+          </P>
           <Ul>
             <li>
               <strong>Six KPIs up top</strong> — days to the next election, priority-precinct captain
@@ -130,9 +152,8 @@ export default function HelpPage() {
               auto-computed next 3rd-Tuesday KDP monthly Zoom.
             </li>
             <li>
-              <strong>Jump to</strong> — 6 tiles (My LD, Targeting, Captains, Events, Volunteers,
-              Amplify) for the most-used destinations. Full surface list lives at{" "}
-              <Link href="/overview" className="underline">/overview</Link>.
+              <strong>Jump to</strong> — role-aware tile set for the most-used destinations. Full
+              surface list lives at <Link href="/overview" className="underline">/overview</Link>.
             </li>
             <li>
               <strong>Activity feed</strong> — last 2 weeks of notes, tasks, interactions, new
@@ -167,11 +188,11 @@ export default function HelpPage() {
             </li>
             <li>
               <strong>Governance</strong> — Governance Reference, Endorsement Process,
-              Communications, Transitions.
+              Communications, Transitions, Leadership Transition, Official Records.
             </li>
             <li>
-              <strong>Resources</strong> — What this portal does, Glossary, Drive, Welcome Tour,
-              Help &amp; FAQ.
+              <strong>Resources</strong> — What this portal does, Glossary, Compliance Q&amp;A,
+              Drive, Welcome Tour, Help &amp; FAQ.
             </li>
           </Ul>
           <P>
@@ -183,8 +204,8 @@ export default function HelpPage() {
 
         <Section id="tools" icon={<Target />} title="Tools to know">
           <P>
-            Ten surfaces to know about on top of the basics (tasks, notes, CRM, continuity). Each
-            is a full page with its own workflow; one-liners here to orient you.
+            Surfaces to know about on top of the basics (tasks, notes, CRM, continuity). Each is a
+            full page with its own workflow; one-liners here to orient you.
           </P>
           <Ul>
             <li>
@@ -194,6 +215,13 @@ export default function HelpPage() {
               — when Comms needs the board pushing a message, it lands here pre-filled for
               Facebook / X / Threads / Bluesky / LinkedIn / email / texts. Copy-buttons for
               Instagram and TikTok.
+            </li>
+            <li>
+              <strong>
+                <Link href="/plan-map" className="underline">Plan &amp; Map</Link>
+              </strong>{" "}
+              — the 2026 General Strategic Plan paired with the interactive precinct map. Deep-link
+              into any LD or precinct.
             </li>
             <li>
               <strong>
@@ -251,6 +279,29 @@ export default function HelpPage() {
               </strong>{" "}
               — 30+ terms defined. Power Base, sleeper Dems, GOTV, D-margin, layering, pipeline,
               JCDEC, KREF, and more. We don&apos;t dumb the copy down; we teach the lingo.
+            </li>
+            <li>
+              <strong>
+                <Link href="/compliance-chat" className="underline">Compliance Q&amp;A</Link>
+              </strong>{" "}
+              — ask a plain-English party-rules question (quorum, proxies, finance tiers, KREF,
+              endorsement bylaw, Robert&apos;s Rules). Answers cite the section from the DNC
+              Charter, KDP bylaws, LJCDP bylaws, or Robert&apos;s Rules so you can verify.
+            </li>
+            <li>
+              <strong>
+                <Link href="/leadership-transition" className="underline">Leadership Transition</Link>
+              </strong>{" "}
+              — post-May-27 officer roster with every announced change, vacancy, and successor.
+              The reference for who holds what seat right now.
+            </li>
+            <li>
+              <strong>
+                <Link href="/official-records" className="underline">Official Records</Link>
+              </strong>{" "}
+              — verbatim EC meeting minutes with parsed motions, decisions, action items, and
+              attendance pulled in by the ingest pipeline. The audit trail behind every governance
+              claim in the portal.
             </li>
             <li>
               <strong>
@@ -438,20 +489,23 @@ export default function HelpPage() {
             Committee chairs — you have the same workspace tools as LD chairs
           </P>
           <P>
-            Click into your committee page and you&apos;ll see notes, tasks, email-all, and a
-            continuity-package option scoped to the committee. Same flow as /my-ld, just
-            committee-scoped. Write the continuity package before you step down so the next chair
-            isn&apos;t starting from scratch.
+            Click into your committee page and you&apos;ll see <strong>posts</strong> (longer-form
+            updates the whole committee can read), <strong>action items</strong> assigned to
+            specific members with accept/decline, <strong>meeting records</strong> (verbatim
+            minutes pulled in by the ingest pipeline with motions/decisions/action items already
+            parsed), and a <strong>continuity package</strong> option. Write the continuity package
+            before you step down so the next chair isn&apos;t starting from scratch.
           </P>
           <P className="font-semibold text-[var(--color-ldp-navy-900)]">
-            Note on Endorsement Process Committee
+            What runs vs. what the bylaws say
           </P>
           <P>
-            Endorsement Process is reclassified as an <strong>ad-hoc</strong> committee (not
-            standing). It seats under LJCDP §11.6 and reconvenes after each primary to refine the
-            process for the next cycle. The 10 standing committees are Bylaws, Facilities,
-            Finance, Events, Volunteering, Youth, Communication, Labor, Training, Candidate
-            Recruitment — see <Link href="/governance" className="underline">/governance</Link>.
+            Practice runs <strong>8 standing committees</strong> — Bylaws, Candidate Recruitment,
+            Communications, Events, Facilities, Finance, Training, Volunteer — plus{" "}
+            <strong>3 ad hoc</strong>: Branding, Endorsement Process, Platform. LJCDP §26 still
+            lists Youth and Labor as standing and omits the three ad hoc — that&apos;s known drift
+            the Bylaws Committee will amend. See{" "}
+            <Link href="/governance" className="underline">/governance</Link> for the cited rules.
           </P>
         </Section>
 
@@ -506,15 +560,17 @@ export default function HelpPage() {
             Deliver Democracy (late August), and Dems at the Downs (post-election).
           </P>
           <P>
-            Every board member gets a personalized ticket-sale link for each event, typically
-            ~30 days before. Tickets purchased through your link credit to you — no spreadsheets,
-            tracked automatically. Your annual raise target is $500 across all three events.
-            Combined with the $120/year $120 Club dues, that&apos;s $620 per member, per year.
+            The annual member commitment is <strong>$620</strong> — $120 personal give ($10/mo
+            auto-pay) plus a $500 raise. The raise comes primarily from personalized ticket-sale
+            links that go out ~30 days before each signature event; tickets sold through your link
+            count toward your $500.
           </P>
           <P>
-            Links go out automatically from Communications. Watch your email ~30 days before
-            each event. If the window is open but you haven&apos;t received yours, there&apos;s a
-            direct &ldquo;Email Communications&rdquo; link on the event card.
+            <strong>Heads up:</strong> automatic per-member credit tracking from those ticket
+            links isn&apos;t wired up yet. For 2026 it&apos;s being tracked manually by
+            Communications. Watch your email ~30 days before each event for your link; if the
+            window is open and you don&apos;t have one, use the &ldquo;Email Lisa&rdquo;
+            link on the event card.
           </P>
         </Section>
 
@@ -551,20 +607,26 @@ export default function HelpPage() {
               chair can see who wrote what.
             </li>
             <li>
-              <strong>&ldquo;The map loads the default view instead of my LD&rdquo;</strong> — as
-              of April 22, 2026 this is fixed on both sides. If you&apos;re still seeing it,
-              hard-refresh with Cmd/Ctrl + Shift + R.
+              <strong>&ldquo;The dashboard is blank or won&apos;t load&rdquo;</strong> — try a
+              hard refresh (Cmd/Ctrl + Shift + R) first. If that doesn&apos;t fix it, email
+              Lisa with what you were doing and any error message you saw.
             </li>
             <li>
               <strong>&ldquo;A committee member is missing their LD&rdquo;</strong> — committee
               rosters use casual names (&ldquo;Lisa Norkus&rdquo;) but the EC directory uses
               formal names (&ldquo;Lisa Tanner Norkus&rdquo;). The matcher handles common
-              variations; if someone&apos;s still missing, email Communications.
+              variations; if someone&apos;s still missing, email Lisa.
             </li>
             <li>
               <strong>&ldquo;I don&apos;t have my ticket link yet&rdquo;</strong> — they go out
               ~30 days before each event. If it&apos;s within 30 days and you don&apos;t have one,
-              use the Email Communications link on the event card.
+              use the Email Lisa link on the event card.
+            </li>
+            <li>
+              <strong>&ldquo;Compliance Q&amp;A gave me an answer I&apos;m not sure about&rdquo;</strong>{" "}
+              — every answer cites the source (DNC Charter, KDP bylaws, LJCDP bylaws, Robert&apos;s
+              Rules). Click through to read the cited section yourself before acting on anything
+              load-bearing. The chat is a research assistant, not the bylaws themselves.
             </li>
           </Ul>
         </Section>
@@ -581,10 +643,10 @@ export default function HelpPage() {
               <p className="mt-1 text-sm text-[var(--color-ldp-ink-900)]">
                 Email{" "}
                 <a
-                  href="mailto:communications@louisvilledems.com?subject=LDPEC%20Portal%20question"
+                  href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20Portal%20question"
                   className="font-semibold text-[var(--color-ldp-navy-700)] underline"
                 >
-                  communications@louisvilledems.com
+                  lisatnorkus@gmail.com
                 </a>
                 . Every recurring question gets added back to this page so the next person
                 doesn&apos;t have to ask.

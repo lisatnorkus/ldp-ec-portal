@@ -390,10 +390,10 @@ export default async function PrecinctDetailPage({
             <strong className="text-[var(--color-ldp-red)]">Dark precinct — no PCs on file.</strong>{" "}
             If you know someone who should be a PC in {code}, send their name and contact to{" "}
             <a
-              href="mailto:communications@louisvilledems.com"
+              href="mailto:lisatnorkus@gmail.com"
               className="text-[var(--color-ldp-navy-700)] underline"
             >
-              communications@louisvilledems.com
+              lisatnorkus@gmail.com
             </a>
             .
           </div>

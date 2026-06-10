@@ -34,7 +34,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
         // Telemetry only — never let it break sign-in.
       }
     } else {
-      setError("That passphrase doesn't match. Email communications@louisvilledems.com if you need it.");
+      setError("That passphrase doesn't match. Email lisatnorkus@gmail.com if you need it.");
     }
   }
 
@@ -112,10 +112,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
         <p className="mt-6 text-xs text-[var(--color-ldp-ink-700)]">
           Can&apos;t remember the passphrase?{" "}
           <a
-            href="mailto:communications@louisvilledems.com"
+            href="mailto:lisatnorkus@gmail.com?subject=LDPEC%20Portal%20passphrase"
             className="font-medium text-[var(--color-ldp-navy-700)] hover:underline"
           >
-            Ask the Communications Committee.
+            Email Lisa.
           </a>
         </p>
         <p className="mt-3 text-[10px] leading-relaxed text-[var(--color-ldp-ink-700)]">

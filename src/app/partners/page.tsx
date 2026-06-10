@@ -111,8 +111,8 @@ export default async function PartnersPage() {
         <p className="mb-8 max-w-3xl text-sm text-[var(--color-ldp-ink-700)]">
           Contact information here is for official coordination — not for solicitation. If a line
           is missing or wrong, send corrections to{" "}
-          <a href="mailto:communications@louisvilledems.com" className="text-[var(--color-ldp-navy-700)] underline">
-            communications@louisvilledems.com
+          <a href="mailto:lisatnorkus@gmail.com" className="text-[var(--color-ldp-navy-700)] underline">
+            lisatnorkus@gmail.com
           </a>
           .
         </p>
@@ -230,10 +230,10 @@ export default async function PartnersPage() {
             training entries seeded from widely-recognized partners; the list is expected to grow.
             Corrections or additions:{" "}
             <a
-              href="mailto:communications@louisvilledems.com"
+              href="mailto:lisatnorkus@gmail.com"
               className="text-[var(--color-ldp-navy-700)] underline"
             >
-              communications@louisvilledems.com
+              lisatnorkus@gmail.com
             </a>
             .
           </p>

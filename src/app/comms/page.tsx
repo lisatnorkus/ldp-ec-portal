@@ -202,10 +202,10 @@ export default function CommsPage() {
             <>
               Forward to{" "}
               <a
-                href="mailto:communications@louisvilledems.com"
+                href="mailto:lisatnorkus@gmail.com"
                 className="font-medium text-[var(--color-ldp-navy-700)] underline"
               >
-                communications@louisvilledems.com
+                lisatnorkus@gmail.com
               </a>
               . Comms drafts; officers sign off.
             </>
@@ -245,10 +245,10 @@ export default function CommsPage() {
         <p className="mt-3 text-xs italic text-[var(--color-ldp-ink-700)]">
           Want in? Email{" "}
           <a
-            href="mailto:communications@louisvilledems.com"
+            href="mailto:lisatnorkus@gmail.com"
             className="text-[var(--color-ldp-navy-700)] underline"
           >
-            communications@louisvilledems.com
+            lisatnorkus@gmail.com
           </a>
           .
         </p>

@@ -109,10 +109,10 @@ export default async function VoterRegPage() {
               <ExternalLink aria-hidden="true" className="size-3" />
             </a>
             <a
-              href="mailto:communications@louisvilledems.com?subject=IWillVote.com%20issue"
+              href="mailto:lisatnorkus@gmail.com?subject=IWillVote.com%20issue"
               className="text-xs font-semibold text-[var(--color-ldp-navy-700)] hover:underline"
             >
-              Report an issue → communications@louisvilledems.com
+              Report an issue → lisatnorkus@gmail.com
             </a>
           </div>
         </div>
